@@ -24,7 +24,7 @@ public class StudentProfile {
     private Integer yearLevel;
 
     @Column(name = "active")
-    private Boolean active = true; // defaults to true
+    private Boolean active = true; 
 
     public Long getId() {
         return id;
