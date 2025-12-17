@@ -12,7 +12,7 @@ public class SkillService {
 
     private final SkillRepository skillRepository;
 
-    // Exact order: (SkillRepository)
+    
     public SkillService(SkillRepository skillRepository) {
         this.skillRepository = skillRepository;
     }

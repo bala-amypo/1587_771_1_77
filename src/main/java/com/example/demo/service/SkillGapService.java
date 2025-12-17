@@ -19,7 +19,7 @@ public class SkillGapService {
     private final SkillRepository skillRepository;
     private final AssessmentResultRepository assessmentResultRepository;
 
-    // Exact order: (SkillGapRecordRepository, SkillRepository, AssessmentResultRepository)
+   
     public SkillGapService(SkillGapRecordRepository skillGapRecordRepository,
                            SkillRepository skillRepository,
                            AssessmentResultRepository assessmentResultRepository) {
@@ -29,19 +29,19 @@ public class SkillGapService {
     }
 
     public void computeGaps(Long studentProfileId) {
-        // Clear previous gaps
+      
         skillGapRecordRepository.deleteByStudentProfileId(studentProfileId);
 
         List<Skill> activeSkills = skillRepository.findByActiveTrue();
 
         List<AssessmentResult> results = assessmentResultRepository.findByStudentProfileId(studentProfileId);
 
-        // Map skillId -> latest score
+        
         Map<Long, Double> latestScores = results.stream()
                 .collect(Collectors.toMap(
                         ar -> ar.getSkill().getId(),
                         AssessmentResult::getScoreObtained,
-                        (s1, s2) -> s2 // take the later one (assuming list is not sorted)
+                        (s1, s2) -> s2 
                 ));
 
         Timestamp now = Timestamp.from(Instant.now());

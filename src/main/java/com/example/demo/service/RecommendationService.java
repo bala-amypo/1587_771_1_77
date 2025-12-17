@@ -16,7 +16,7 @@ public class RecommendationService {
     private final StudentProfileRepository studentProfileRepository;
     private final SkillRepository skillRepository;
 
-    // Exact order: (AssessmentResultRepository, SkillGapRecommendationRepository, StudentProfileRepository, SkillRepository)
+   
     public RecommendationService(AssessmentResultRepository assessmentResultRepository,
                                  SkillGapRecommendationRepository skillGapRecommendationRepository,
                                  StudentProfileRepository studentProfileRepository,
@@ -31,7 +31,7 @@ public class RecommendationService {
         StudentProfile profile = studentProfileRepository.findById(studentProfileId)
                 .orElseThrow(() -> new IllegalArgumentException("Student profile not found"));
 
-        // Clear old recommendations
+      
         skillGapRecommendationRepository.deleteByStudentProfileId(studentProfileId);
 
         List<Skill> activeSkills = skillRepository.findByActiveTrue();

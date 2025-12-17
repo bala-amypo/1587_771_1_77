@@ -12,7 +12,6 @@ public class StudentProfileService {
 
     private final StudentProfileRepository studentProfileRepository;
 
-    // Exact order: (StudentProfileRepository)
     public StudentProfileService(StudentProfileRepository studentProfileRepository) {
         this.studentProfileRepository = studentProfileRepository;
     }

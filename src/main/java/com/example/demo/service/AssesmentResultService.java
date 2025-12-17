@@ -12,7 +12,6 @@ public class AssessmentResultService {
 
     private final AssessmentResultRepository assessmentResultRepository;
 
-    // Exact order: (AssessmentResultRepository)
     public AssessmentResultService(AssessmentResultRepository assessmentResultRepository) {
         this.assessmentResultRepository = assessmentResultRepository;
     }
