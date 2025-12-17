@@ -9,10 +9,7 @@ import java.util.List;
 
 public interface SkillGapRecordRepository extends JpaRepository<SkillGapRecord, Long> {
 
-    // Required by test suite - exact signature
     List<SkillGapRecord> findByStudentProfileId(Long studentProfileId);
-
-    // Custom delete method used in SkillGapService
     @Modifying
     @Transactional
     @Query("DELETE FROM SkillGapRecord s WHERE s.studentProfile.id = :studentProfileId")

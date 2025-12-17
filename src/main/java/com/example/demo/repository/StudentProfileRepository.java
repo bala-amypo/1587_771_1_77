@@ -6,6 +6,5 @@ import java.util.Optional;
 
 public interface StudentProfileRepository extends JpaRepository<StudentProfile, Long> {
 
-    // Required by test suite - exact signature
     Optional<StudentProfile> findByEnrollmentId(String enrollmentId);
 }

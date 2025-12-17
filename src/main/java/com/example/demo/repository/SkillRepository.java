@@ -6,6 +6,5 @@ import java.util.List;
 
 public interface SkillRepository extends JpaRepository<Skill, Long> {
 
-    // Used in SkillGapService and RecommendationService
     List<Skill> findByActiveTrue();
 }

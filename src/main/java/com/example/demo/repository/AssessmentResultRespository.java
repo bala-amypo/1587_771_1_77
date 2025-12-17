@@ -6,6 +6,5 @@ import java.util.List;
 
 public interface AssessmentResultRepository extends JpaRepository<AssessmentResult, Long> {
 
-    // Required by test suite - exact signature
     List<AssessmentResult> findByStudentProfileId(Long studentProfileId);
 }
