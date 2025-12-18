@@ -5,7 +5,11 @@ import java.util.List;
 
 public interface AssessmentResultService {
 
-    AssessmentResult saveResult(AssessmentResult result);
+    AssessmentResult saveAssessmentResult(AssessmentResult assessmentResult);
 
-    List<AssessmentResult> getResultsByStudent(Long studentId);
+    List<AssessmentResult> getAllAssessmentResults();
+
+    List<AssessmentResult> getResultsByStudentId(Long studentId);
+
+    List<AssessmentResult> getResultsByStudentAndSkill(Long studentId, Long skillId);
 }

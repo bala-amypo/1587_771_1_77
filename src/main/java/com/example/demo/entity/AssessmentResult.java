@@ -13,9 +13,17 @@ public class AssessmentResult {
 
     private double scoreObtained;
 
-    public AssessmentResult() {
-    }
+    @ManyToOne
+    @JoinColumn(name = "student_profile_id")
+    private StudentProfile studentProfile;
 
+    @ManyToOne
+    @JoinColumn(name = "skill_id")
+    private Skill skill;
+
+    public AssessmentResult() {}
+
+    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -38,5 +46,21 @@ public class AssessmentResult {
 
     public void setScoreObtained(double scoreObtained) {
         this.scoreObtained = scoreObtained;
+    }
+
+    public StudentProfile getStudentProfile() {
+        return studentProfile;
+    }
+
+    public void setStudentProfile(StudentProfile studentProfile) {
+        this.studentProfile = studentProfile;
+    }
+
+    public Skill getSkill() {
+        return skill;
+    }
+
+    public void setSkill(Skill skill) {
+        this.skill = skill;
     }
 }
