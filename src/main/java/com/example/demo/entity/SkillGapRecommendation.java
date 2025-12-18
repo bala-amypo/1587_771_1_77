@@ -38,19 +38,15 @@ public class SkillGapRecommendation {
     public void setGapScore(double gapScore) {
         this.gapScore = gapScore;
     }
-
     public String getRecommendedAction() {
         return recommendedAction;
     }
-
     public void setRecommendedAction(String recommendedAction) {
         this.recommendedAction = recommendedAction;
     }
-
     public String getPriority() {
         return priority;
     }
-
     public void setPriority(String priority) {
         this.priority = priority;
     }

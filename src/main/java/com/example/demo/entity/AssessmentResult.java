@@ -14,7 +14,6 @@ public class AssessmentResult {
     @JoinColumn(name = "skill_id")
     private Skill skill;
     public AssessmentResult() {}
-
     public Long getId() {
         return id;
     }
