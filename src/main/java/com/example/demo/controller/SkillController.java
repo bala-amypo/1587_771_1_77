@@ -9,37 +9,37 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/skills")
-@Tag(name = "Skills", description = "Operations related to skills management")
+@Tag(name = "Skills")
 public class SkillController {
 
-    private final SkillService skillService;
+    private final SkillService service;
 
-    public SkillController(SkillService skillService) {
-        this.skillService = skillService;
+    public SkillController(SkillService service) {
+        this.service = service;
     }
 
     @PostMapping
     public Skill createSkill(@RequestBody Skill skill) {
-        return skillService.createSkill(skill);
+        return service.createSkill(skill);
     }
 
     @PutMapping("/{id}")
     public Skill updateSkill(@PathVariable Long id, @RequestBody Skill skill) {
-        return skillService.updateSkill(id, skill);
+        return service.updateSkill(id, skill);
     }
 
     @GetMapping("/{id}")
     public Skill getSkillById(@PathVariable Long id) {
-        return skillService.getSkillById(id);
+        return service.getSkillById(id);
     }
 
     @GetMapping
     public List<Skill> getAllSkills() {
-        return skillService.getAllSkills();
+        return service.getAllSkills();
     }
 
     @PutMapping("/{id}/deactivate")
     public void deactivateSkill(@PathVariable Long id) {
-        skillService.deactivateSkill(id);
+        service.deactivateSkill(id);
     }
 }

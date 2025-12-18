@@ -4,6 +4,6 @@ import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.RegisterRequest;
 
 public interface AuthService {
-    void register(RegisterRequest req);
-    String login(LoginRequest req);
+    void register(RegisterRequest request);
+    String login(LoginRequest request);
 }

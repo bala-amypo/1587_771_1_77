@@ -9,8 +9,9 @@ import java.util.List;
 
 public interface SkillGapRecommendationRepository extends JpaRepository<SkillGapRecommendation, Long> {
     List<SkillGapRecommendation> findByStudentProfileIdOrderByGeneratedAtDesc(Long studentProfileId);
+
     @Modifying
     @Transactional
-    @Query("DELETE FROM SkillGapRecommendation s WHERE s.studentProfile.id = :studentProfileId")
+    @Query("DELETE FROM SkillGapRecommendation r WHERE r.studentProfile.id = :studentProfileId")
     void deleteByStudentProfileId(Long studentProfileId);
 }

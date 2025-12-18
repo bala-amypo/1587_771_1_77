@@ -6,41 +6,36 @@ import com.example.demo.repository.SkillGapRecordRepository;
 import com.example.demo.repository.SkillRepository;
 import com.example.demo.service.SkillGapService;
 import org.springframework.stereotype.Service;
-
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Service
 public class SkillGapServiceImpl implements SkillGapService {
 
-    private final SkillGapRecordRepository skillGapRecordRepository;
+    private final SkillGapRecordRepository gapRepository;
     private final SkillRepository skillRepository;
-    private final AssessmentResultRepository assessmentResultRepository;
+    private final AssessmentResultRepository assessmentRepository;
 
-    public SkillGapServiceImpl(SkillGapRecordRepository skillGapRecordRepository,
+    public SkillGapServiceImpl(SkillGapRecordRepository gapRepository,
                                SkillRepository skillRepository,
-                               AssessmentResultRepository assessmentResultRepository) {
-        this.skillGapRecordRepository = skillGapRecordRepository;
+                               AssessmentResultRepository assessmentRepository) {
+        this.gapRepository = gapRepository;
         this.skillRepository = skillRepository;
-        this.assessmentResultRepository = assessmentResultRepository;
+        this.assessmentRepository = assessmentRepository;
     }
 
     @Override
     public void computeGaps(Long studentProfileId) {
-        skillGapRecordRepository.deleteByStudentProfileId(studentProfileId);
+        gapRepository.deleteByStudentProfileId(studentProfileId);
 
         List<Skill> activeSkills = skillRepository.findByActiveTrue();
-        List<AssessmentResult> results = assessmentResultRepository.findByStudentProfileId(studentProfileId);
+        List<AssessmentResult> results = assessmentRepository.findByStudentProfileId(studentProfileId);
 
-        Map<Long, Double> latestScores = results.stream()
-                .collect(Collectors.toMap(
-                        ar -> ar.getSkill().getId(),
-                        AssessmentResult::getScoreObtained,
-                        (s1, s2) -> s2 // keep later score
-                ));
+        Map<Long, Double> latestScores = new HashMap<>();
+        for (AssessmentResult ar : results) {
+            latestScores.put(ar.getSkill().getId(), ar.getScoreObtained());
+        }
 
         Timestamp now = Timestamp.from(Instant.now());
         StudentProfile profile = new StudentProfile();
@@ -48,24 +43,22 @@ public class SkillGapServiceImpl implements SkillGapService {
 
         for (Skill skill : activeSkills) {
             Double current = latestScores.getOrDefault(skill.getId(), 0.0);
-            Double target = skill.getMinCompetencyScore();
-            Double gap = target - current;
-
+            Double gap = skill.getMinCompetencyScore() - current;
             if (gap > 0) {
                 SkillGapRecord record = new SkillGapRecord();
                 record.setStudentProfile(profile);
                 record.setSkill(skill);
                 record.setCurrentScore(current);
-                record.setTargetScore(target);
+                record.setTargetScore(skill.getMinCompetencyScore());
                 record.setGapScore(gap);
                 record.setCalculatedAt(now);
-                skillGapRecordRepository.save(record);
+                gapRepository.save(record);
             }
         }
     }
 
     @Override
     public List<SkillGapRecord> getGapsByStudent(Long studentProfileId) {
-        return skillGapRecordRepository.findByStudentProfileId(studentProfileId);
+        return gapRepository.findByStudentProfileId(studentProfileId);
     }
 }

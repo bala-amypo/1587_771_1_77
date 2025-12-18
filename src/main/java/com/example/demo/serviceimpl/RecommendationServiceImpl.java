@@ -4,25 +4,24 @@ import com.example.demo.entity.*;
 import com.example.demo.repository.*;
 import com.example.demo.service.RecommendationService;
 import org.springframework.stereotype.Service;
-
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class RecommendationServiceImpl implements RecommendationService {
 
-    private final AssessmentResultRepository assessmentResultRepository;
-    private final SkillGapRecommendationRepository skillGapRecommendationRepository;
+    private final AssessmentResultRepository assessmentRepository;
+    private final SkillGapRecommendationRepository recommendationRepository;
     private final StudentProfileRepository studentProfileRepository;
     private final SkillRepository skillRepository;
 
-    public RecommendationServiceImpl(AssessmentResultRepository assessmentResultRepository,
-                                     SkillGapRecommendationRepository skillGapRecommendationRepository,
+    public RecommendationServiceImpl(AssessmentResultRepository assessmentRepository,
+                                     SkillGapRecommendationRepository recommendationRepository,
                                      StudentProfileRepository studentProfileRepository,
                                      SkillRepository skillRepository) {
-        this.assessmentResultRepository = assessmentResultRepository;
-        this.skillGapRecommendationRepository = skillGapRecommendationRepository;
+        this.assessmentRepository = assessmentRepository;
+        this.recommendationRepository = recommendationRepository;
         this.studentProfileRepository = studentProfileRepository;
         this.skillRepository = skillRepository;
     }
@@ -32,50 +31,46 @@ public class RecommendationServiceImpl implements RecommendationService {
         StudentProfile profile = studentProfileRepository.findById(studentProfileId)
                 .orElseThrow(() -> new IllegalArgumentException("Student profile not found"));
 
-        skillGapRecommendationRepository.deleteByStudentProfileId(studentProfileId);
+        recommendationRepository.deleteByStudentProfileId(studentProfileId);
 
         List<Skill> activeSkills = skillRepository.findByActiveTrue();
+        List<SkillGapRecommendation> recommendations = new ArrayList<>();
 
-        List<SkillGapRecommendation> recommendations = activeSkills.stream()
-                .map(skill -> {
-                    Double currentScore = assessmentResultRepository.findByStudentProfileId(studentProfileId).stream()
-                            .filter(ar -> ar.getSkill().getId().equals(skill.getId()))
-                            .map(AssessmentResult::getScoreObtained)
-                            .max(Double::compareTo)
-                            .orElse(0.0);
+        for (Skill skill : activeSkills) {
+            Double currentScore = assessmentRepository.findByStudentProfileId(studentProfileId).stream()
+                    .filter(ar -> ar.getSkill().getId().equals(skill.getId()))
+                    .map(AssessmentResult::getScoreObtained)
+                    .max(Double::compareTo)
+                    .orElse(0.0);
 
-                    Double gap = skill.getMinCompetencyScore() - currentScore;
-                    if (gap <= 0) return null;
+            Double gap = skill.getMinCompetencyScore() - currentScore;
+            if (gap <= 0) continue;
 
-                    SkillGapRecommendation rec = new SkillGapRecommendation();
-                    rec.setStudentProfile(profile);
-                    rec.setSkill(skill);
-                    rec.setGapScore(gap);
+            SkillGapRecommendation rec = new SkillGapRecommendation();
+            rec.setStudentProfile(profile);
+            rec.setSkill(skill);
+            rec.setGapScore(gap);
+            rec.setGeneratedBy("SYSTEM");
 
-                    if (gap > 20) {
-                        rec.setPriority("HIGH");
-                        rec.setRecommendedAction("Intensive remediation needed for " + skill.getSkillName());
-                    } else if (gap > 10) {
-                        rec.setPriority("MEDIUM");
-                        rec.setRecommendedAction("Additional practice recommended for " + skill.getSkillName());
-                    } else {
-                        rec.setPriority("LOW");
-                        rec.setRecommendedAction("Review " + skill.getSkillName() + " periodically");
-                    }
+            if (gap > 20) {
+                rec.setPriority("HIGH");
+                rec.setRecommendedAction("Intensive practice required on " + skill.getSkillName());
+            } else if (gap > 10) {
+                rec.setPriority("MEDIUM");
+                rec.setRecommendedAction("Additional practice recommended on " + skill.getSkillName());
+            } else {
+                rec.setPriority("LOW");
+                rec.setRecommendedAction("Review " + skill.getSkillName() + " as needed");
+            }
 
-                    rec.setGeneratedAt(Timestamp.from(Instant.now()));
-                    rec.setGeneratedBy("SYSTEM");
+            recommendations.add(rec);
+        }
 
-                    return rec;
-                })
-                .filter(rec -> rec != null)
-                .toList();
-
-        skillGapRecommendationRepository.saveAll(recommendations);
+        recommendationRepository.saveAll(recommendations);
     }
 
     @Override
     public List<SkillGapRecommendation> getRecommendationsByStudent(Long studentProfileId) {
-        return skillGapRecommendationRepository.findByStudentProfileIdOrderByGeneratedAtDesc(studentProfileId);
+        return recommendationRepository.findByStudentProfileIdOrderByGeneratedAtDesc(studentProfileId);
     }
 }

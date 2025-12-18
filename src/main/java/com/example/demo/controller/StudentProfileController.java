@@ -9,32 +9,32 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/students")
-@Tag(name = "Student Profiles", description = "Operations related to student profiles")
+@Tag(name = "Student Profiles")
 public class StudentProfileController {
 
-    private final StudentProfileService studentProfileService;
+    private final StudentProfileService service;
 
-    public StudentProfileController(StudentProfileService studentProfileService) {
-        this.studentProfileService = studentProfileService;
+    public StudentProfileController(StudentProfileService service) {
+        this.service = service;
     }
 
     @PostMapping
     public StudentProfile createProfile(@RequestBody StudentProfile profile) {
-        return studentProfileService.createProfile(profile);
+        return service.createProfile(profile);
     }
 
     @GetMapping("/{id}")
     public StudentProfile getProfileById(@PathVariable Long id) {
-        return studentProfileService.getProfileById(id);
+        return service.getProfileById(id);
     }
 
     @GetMapping("/enrollment/{enrollmentId}")
     public StudentProfile getProfileByEnrollmentId(@PathVariable String enrollmentId) {
-        return studentProfileService.getProfileByEnrollmentId(enrollmentId);
+        return service.getProfileByEnrollmentId(enrollmentId);
     }
 
     @GetMapping
     public List<StudentProfile> getAllProfiles() {
-        return studentProfileService.getAllProfiles();
+        return service.getAllProfiles();
     }
 }
