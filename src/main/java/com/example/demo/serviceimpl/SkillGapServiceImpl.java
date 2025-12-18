@@ -37,6 +37,8 @@ public class SkillGapServiceImpl implements SkillGapService {
             List<AssessmentResult> results =
                     assessmentRepository.findByStudentProfileIdAndSkillId(
                             studentId, skill.getId());
+                            assessmentRepository.findByStudentProfile_IdAndSkill_Id(studentId, skillId);
+
 
             if (results.isEmpty()) continue;
 

@@ -1,26 +1,14 @@
-package com.example.demo.service.impl;
-
-import com.example.demo.entity.AssessmentResult;
-import com.example.demo.repository.AssessmentResultRepository;
-import com.example.demo.service.AssessmentResultService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-
 @Service
 public class AssessmentResultServiceImpl implements AssessmentResultService {
 
-    @Autowired
-    private AssessmentResultRepository repository;
+    private final AssessmentResultRepository repository;
 
-    @Override
-    public AssessmentResult saveResult(AssessmentResult result) {
-        return repository.save(result);
+    public AssessmentResultServiceImpl(AssessmentResultRepository repository) {
+        this.repository = repository;
     }
 
     @Override
-    public List<AssessmentResult> getResultsByStudent(Long studentId) {
-        return repository.findByStudentProfileId(studentId);
+    public List<AssessmentResult> getResultsByStudentProfile(Long studentProfileId) {
+        return repository.findByStudentProfile_Id(studentProfileId);
     }
 }
