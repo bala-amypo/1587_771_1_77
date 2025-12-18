@@ -8,10 +8,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 public interface SkillGapRecordRepository extends JpaRepository<SkillGapRecord, Long> {
-
     List<SkillGapRecord> findByStudentProfileId(Long studentProfileId);
+
     @Modifying
     @Transactional
-    @Query("DELETE FROM SkillGapRecord s WHERE s.studentProfile.id = :studentProfileId")
+    @Query("DELETE FROM SkillGapRecord g WHERE g.studentProfile.id = :studentProfileId")
     void deleteByStudentProfileId(Long studentProfileId);
 }

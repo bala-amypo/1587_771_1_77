@@ -40,67 +40,19 @@ public class SkillGapRecommendation {
     }
 
     // Getters and Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public StudentProfile getStudentProfile() {
-        return studentProfile;
-    }
-
-    public void setStudentProfile(StudentProfile studentProfile) {
-        this.studentProfile = studentProfile;
-    }
-
-    public Skill getSkill() {
-        return skill;
-    }
-
-    public void setSkill(Skill skill) {
-        this.skill = skill;
-    }
-
-    public String getRecommendedAction() {
-        return recommendedAction;
-    }
-
-    public void setRecommendedAction(String recommendedAction) {
-        this.recommendedAction = recommendedAction;
-    }
-
-    public String getPriority() {
-        return priority;
-    }
-
-    public void setPriority(String priority) {
-        this.priority = priority;
-    }
-
-    public Timestamp getGeneratedAt() {
-        return generatedAt;
-    }
-
-    public void setGeneratedAt(Timestamp generatedAt) {
-        this.generatedAt = generatedAt;
-    }
-
-    public Double getGapScore() {
-        return gapScore;
-    }
-
-    public void setGapScore(Double gapScore) {
-        this.gapScore = gapScore;
-    }
-
-    public String getGeneratedBy() {
-        return generatedBy;
-    }
-
-    public void setGeneratedBy(String generatedBy) {
-        this.generatedBy = generatedBy;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public StudentProfile getStudentProfile() { return studentProfile; }
+    public void setStudentProfile(StudentProfile studentProfile) { this.studentProfile = studentProfile; }
+    public Skill getSkill() { return skill; }
+    public void setSkill(Skill skill) { this.skill = skill; }
+    public String getRecommendedAction() { return recommendedAction; }
+    public void setRecommendedAction(String recommendedAction) { this.recommendedAction = recommendedAction; }
+    public String getPriority() { return priority; }
+    public void setPriority(String priority) { this.priority = priority; }
+    public Timestamp getGeneratedAt() { return generatedAt; }
+    public Double getGapScore() { return gapScore; }
+    public void setGapScore(Double gapScore) { this.gapScore = gapScore; }
+    public String getGeneratedBy() { return generatedBy; }
+    public void setGeneratedBy(String generatedBy) { this.generatedBy = generatedBy; }
 }
