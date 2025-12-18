@@ -69,4 +69,6 @@ public class SkillGapRecommendation {
     }
 
     public void setPriority(String priority) {
-        this.priority
+        this.priority = priority;
+    }
+}
