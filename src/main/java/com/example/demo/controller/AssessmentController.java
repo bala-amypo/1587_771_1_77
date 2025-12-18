@@ -14,14 +14,15 @@ public class AssessmentController {
     @Autowired
     private AssessmentResultService service;
 
-    @PostMapping
-    public AssessmentResult add(@RequestBody AssessmentResult result) {
-        return service.saveResult(result);
+    // Save assessment result
+    @PostMapping("/save")
+    public AssessmentResult saveAssessment(@RequestBody AssessmentResult assessmentResult) {
+        return service.saveAssessmentResult(assessmentResult); // <-- fixed method name
     }
 
-    @GetMapping("/student/{studentId}")
-    public List<AssessmentResult> getByStudent(
-            @PathVariable Long studentId) {
-        return service.getResultsByStudent(studentId);
+    // Get results by student
+    @GetMapping("/student/{id}")
+    public List<AssessmentResult> getByStudent(@PathVariable Long id) {
+        return service.getResultsByStudentId(id); // <-- fixed method name
     }
 }
