@@ -1,5 +1,6 @@
+package com.example.demo.entity;
+
 import jakarta.persistence.*;
-import java.sql.Timestamp;
 
 @Entity
 public class SkillGapRecord {
@@ -8,71 +9,33 @@ public class SkillGapRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    private StudentProfile studentProfile;
+    private String missingSkill;
+    private int requiredLevel;
 
-    @ManyToOne
-    private Skill skill;
+    public SkillGapRecord() {
+    }
 
-    private Double currentScore;
-    private Double targetScore;
-    private Double gapScore;
-    private Timestamp calculatedAt;
-
-    // Getters & Setters
     public Long getId() {
         return id;
     }
-    
+
     public void setId(Long id) {
         this.id = id;
     }
 
-    public StudentProfile getStudentProfile() {
-        return studentProfile;
-    }
-    
-    public void setStudentProfile(StudentProfile studentProfile) {
-        this.studentProfile = studentProfile;
+    public String getMissingSkill() {
+        return missingSkill;
     }
 
-    public Skill getSkill() {
-        return skill;
-    }
-    
-    public void setSkill(Skill skill) {
-        this.skill = skill;
+    public void setMissingSkill(String missingSkill) {
+        this.missingSkill = missingSkill;
     }
 
-    public Double getCurrentScore() {
-        return currentScore;
-    }
-    
-    public void setCurrentScore(Double currentScore) {
-        this.currentScore = currentScore;
+    public int getRequiredLevel() {
+        return requiredLevel;
     }
 
-    public Double getTargetScore() {
-        return targetScore;
-    }
-    
-    public void setTargetScore(Double targetScore) {
-        this.targetScore = targetScore;
-    }
-
-    public Double getGapScore() {
-        return gapScore;
-    }
-    
-    public void setGapScore(Double gapScore) {
-        this.gapScore = gapScore;
-    }
-
-    public Timestamp getCalculatedAt() {
-        return calculatedAt;
-    }
-    
-    public void setCalculatedAt(Timestamp calculatedAt) {
-        this.calculatedAt = calculatedAt;
+    public void setRequiredLevel(int requiredLevel) {
+        this.requiredLevel = requiredLevel;
     }
 }

@@ -1,3 +1,5 @@
+package com.example.demo.entity;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -7,17 +9,13 @@ public class StudentProfile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    private User user;
+    private String name;
+    private String course;
+    private int year;
 
-    @Column(unique = true)
-    private String enrollmentId;
+    public StudentProfile() {
+    }
 
-    private String cohort;
-    private Integer yearLevel;
-    private Boolean active = true;
-
-    // Getters & Setters
     public Long getId() {
         return id;
     }
@@ -26,43 +24,27 @@ public class StudentProfile {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
-    }
-    
-    public void setUser(User user) {
-        this.user = user;
+    public String getName() {
+        return name;
     }
 
-    public String getEnrollmentId() {
-        return enrollmentId;
-    }
-    
-    public void setEnrollmentId(String enrollmentId) {
-        this.enrollmentId = enrollmentId;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getCohort() {
-        return cohort;
+    public String getCourse() {
+        return course;
     }
 
-    public void setCohort(String cohort) {
-        this.cohort = cohort;
+    public void setCourse(String course) {
+        this.course = course;
     }
 
-    public Integer getYearLevel() {
-        return yearLevel;
+    public int getYear() {
+        return year;
     }
 
-    public void setYearLevel(Integer yearLevel) {
-        this.yearLevel = yearLevel;
-    }
-
-    public Boolean getActive() {
-        return active;
-    }
-    
-    public void setActive(Boolean active) {
-        this.active = active;
+    public void setYear(int year) {
+        this.year = year;
     }
 }

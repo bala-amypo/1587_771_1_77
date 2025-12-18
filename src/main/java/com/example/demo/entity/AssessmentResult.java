@@ -1,5 +1,6 @@
+package com.example.demo.entity;
+
 import jakarta.persistence.*;
-import java.sql.Timestamp;
 
 @Entity
 public class AssessmentResult {
@@ -8,62 +9,34 @@ public class AssessmentResult {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    private StudentProfile studentProfile;
+    private String subject;
 
-    @ManyToOne
-    private Skill skill;
+    private double scoreObtained;
 
-    private Double scoreObtained;
-    private Double maxScore;
-    private Timestamp assessedAt;
+    public AssessmentResult() {
+    }
 
-    // Getters & Setters
     public Long getId() {
         return id;
     }
-    
+
     public void setId(Long id) {
         this.id = id;
     }
 
-    public StudentProfile getStudentProfile() {
-        return studentProfile;
-    }
-    
-    public void setStudentProfile(StudentProfile studentProfile) {
-        this.studentProfile = studentProfile;
+    public String getSubject() {
+        return subject;
     }
 
-    public Skill getSkill() {
-        return skill;
-    }
-    
-    public void setSkill(Skill skill) {
-        this.skill = skill;
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
 
-    public Double getScoreObtained() {
+    public double getScoreObtained() {
         return scoreObtained;
     }
-    
-    public void setScoreObtained(Double scoreObtained) {
+
+    public void setScoreObtained(double scoreObtained) {
         this.scoreObtained = scoreObtained;
-    }
-
-    public Double getMaxScore() {
-        return maxScore;
-    }
-    
-    public void setMaxScore(Double maxScore) {
-        this.maxScore = maxScore;
-    }
-
-    public Timestamp getAssessedAt() {
-        return assessedAt;
-    }
-    
-    public void setAssessedAt(Timestamp assessedAt) {
-        this.assessedAt = assessedAt;
     }
 }

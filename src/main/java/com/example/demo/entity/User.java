@@ -1,5 +1,6 @@
+package com.example.demo.entity;
+
 import jakarta.persistence.*;
-import java.sql.Timestamp;
 
 @Entity
 @Table(name = "users")
@@ -9,23 +10,14 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String fullName;
-
-    @Column(unique = true)
+    private String username;
     private String email;
-
     private String password;
+    private String role;
 
-    private String role = "STUDENT";
-
-    private Timestamp createdAt;
-
-    @PrePersist
-    public void onCreate() {
-        createdAt = new Timestamp(System.currentTimeMillis());
+    public User() {
     }
 
-    // Getters & Setters
     public Long getId() {
         return id;
     }
@@ -34,12 +26,12 @@ public class User {
         this.id = id;
     }
 
-    public String getFullName() {
-        return fullName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getEmail() {
@@ -53,7 +45,7 @@ public class User {
     public String getPassword() {
         return password;
     }
-    
+
     public void setPassword(String password) {
         this.password = password;
     }
@@ -61,12 +53,8 @@ public class User {
     public String getRole() {
         return role;
     }
-    
+
     public void setRole(String role) {
         this.role = role;
-    }
-
-    public Timestamp getCreatedAt() {
-        return createdAt;
     }
 }
