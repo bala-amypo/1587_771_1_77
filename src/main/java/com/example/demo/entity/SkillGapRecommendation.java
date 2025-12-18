@@ -9,12 +9,17 @@ public class SkillGapRecommendation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String recommendation;
-
-    private String priority;
+    @ManyToOne
+    private StudentProfile studentProfile;
 
     @ManyToOne
     private Skill skill;
+
+    private double gapScore;
+
+    private String recommendedAction;
+
+    private String priority;
 
     public SkillGapRecommendation() {
     }
@@ -27,20 +32,12 @@ public class SkillGapRecommendation {
         this.id = id;
     }
 
-    public String getRecommendation() {
-        return recommendation;
+    public StudentProfile getStudentProfile() {
+        return studentProfile;
     }
 
-    public void setRecommendation(String recommendation) {
-        this.recommendation = recommendation;
-    }
-
-    public String getPriority() {
-        return priority;
-    }
-
-    public void setPriority(String priority) {
-        this.priority = priority;
+    public void setStudentProfile(StudentProfile studentProfile) {
+        this.studentProfile = studentProfile;
     }
 
     public Skill getSkill() {
@@ -50,4 +47,26 @@ public class SkillGapRecommendation {
     public void setSkill(Skill skill) {
         this.skill = skill;
     }
-}
+
+    public double getGapScore() {
+        return gapScore;
+    }
+
+    public void setGapScore(double gapScore) {
+        this.gapScore = gapScore;
+    }
+
+    public String getRecommendedAction() {
+        return recommendedAction;
+    }
+
+    public void setRecommendedAction(String recommendedAction) {
+        this.recommendedAction = recommendedAction;
+    }
+
+    public String getPriority() {
+        return priority;
+    }
+
+    public void setPriority(String priority) {
+        this.priority

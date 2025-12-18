@@ -16,6 +16,10 @@ public class SkillGapRecord {
     @ManyToOne
     private Skill skill;
 
+    private double currentScore;
+
+    private double targetScore;
+
     private double gapScore;
 
     private Timestamp calculatedAt;
@@ -45,6 +49,22 @@ public class SkillGapRecord {
 
     public void setSkill(Skill skill) {
         this.skill = skill;
+    }
+
+    public double getCurrentScore() {
+        return currentScore;
+    }
+
+    public void setCurrentScore(double currentScore) {
+        this.currentScore = currentScore;
+    }
+
+    public double getTargetScore() {
+        return targetScore;
+    }
+
+    public void setTargetScore(double targetScore) {
+        this.targetScore = targetScore;
     }
 
     public double getGapScore() {
