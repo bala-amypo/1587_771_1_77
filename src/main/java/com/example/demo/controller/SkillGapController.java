@@ -2,29 +2,30 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.SkillGapRecord;
 import com.example.demo.service.SkillGapService;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import com.example.demo.repository.SkillGapRecordRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/gaps")
-@Tag(name = "Skill Gaps")
 public class SkillGapController {
 
-    private final SkillGapService service;
+    @Autowired
+    private SkillGapService service;
 
-    public SkillGapController(SkillGapService service) {
-        this.service = service;
-    }
+    @Autowired
+    private SkillGapRecordRepository repository;
 
     @PostMapping("/compute/{studentId}")
-    public void computeGaps(@PathVariable Long studentId) {
-        service.computeGaps(studentId);
+    public String compute(@PathVariable Long studentId) {
+        service.computeSkillGaps(studentId);
+        return "Skill gaps computed successfully";
     }
 
     @GetMapping("/student/{studentId}")
-    public List<SkillGapRecord> getGapsByStudent(@PathVariable Long studentId) {
-        return service.getGapsByStudent(studentId);
+    public List<SkillGapRecord> getGaps(@PathVariable Long studentId) {
+        return repository.findByStudentProfileId(studentId);
     }
 }

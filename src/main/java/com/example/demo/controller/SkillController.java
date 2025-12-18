@@ -2,44 +2,30 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.Skill;
 import com.example.demo.service.SkillService;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/skills")
-@Tag(name = "Skills")
 public class SkillController {
 
-    private final SkillService service;
-
-    public SkillController(SkillService service) {
-        this.service = service;
-    }
+    @Autowired
+    private SkillService service;
 
     @PostMapping
-    public Skill createSkill(@RequestBody Skill skill) {
-        return service.createSkill(skill);
-    }
-
-    @PutMapping("/{id}")
-    public Skill updateSkill(@PathVariable Long id, @RequestBody Skill skill) {
-        return service.updateSkill(id, skill);
-    }
-
-    @GetMapping("/{id}")
-    public Skill getSkillById(@PathVariable Long id) {
-        return service.getSkillById(id);
+    public Skill add(@RequestBody Skill skill) {
+        return service.addSkill(skill);
     }
 
     @GetMapping
-    public List<Skill> getAllSkills() {
+    public List<Skill> getAll() {
         return service.getAllSkills();
     }
 
     @PutMapping("/{id}/deactivate")
-    public void deactivateSkill(@PathVariable Long id) {
-        service.deactivateSkill(id);
+    public Skill deactivate(@PathVariable Long id) {
+        return service.deactivateSkill(id);
     }
 }
