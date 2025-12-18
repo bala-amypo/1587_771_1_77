@@ -27,25 +27,28 @@ public class SkillGapServiceImpl implements SkillGapService {
     @Override
     public void computeSkillGaps(Long studentId) {
 
-        StudentProfile student =
-                studentRepository.findById(studentId).orElseThrow();
+        // Fetch student
+        StudentProfile student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
 
+        // Fetch all active skills
         List<Skill> skills = skillRepository.findByActiveTrue();
 
         for (Skill skill : skills) {
 
-            List<AssessmentResult> results =
-                    assessmentRepository.findByStudentProfileIdAndSkillId(
-                            studentId, skill.getId());
-                            assessmentRepository.findByStudentProfile_IdAndSkill_Id(studentId, skillId);
+            Long skillId = skill.getId(); // define skillId
 
+            // Fetch all assessment results for this student and skill
+            List<AssessmentResult> results =
+                    assessmentRepository.findByStudentProfile_IdAndSkill_Id(studentId, skillId);
 
             if (results.isEmpty()) continue;
 
+            // Get latest result
             AssessmentResult latest = results.get(results.size() - 1);
 
-            double gap = skill.getMinCompetencyScore()
-                    - latest.getScoreObtained();
+            // Calculate gap
+            double gap = skill.getMinCompetencyScore() - latest.getScoreObtained();
 
             if (gap > 0) {
                 SkillGapRecord record = new SkillGapRecord();
@@ -55,6 +58,7 @@ public class SkillGapServiceImpl implements SkillGapService {
                 record.setTargetScore(skill.getMinCompetencyScore());
                 record.setGapScore(gap);
                 record.setCalculatedAt(new Timestamp(System.currentTimeMillis()));
+
                 gapRepository.save(record);
             }
         }
