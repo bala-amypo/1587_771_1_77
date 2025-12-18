@@ -32,7 +32,7 @@ public class SkillGapRecommendation {
     private Double gapScore;
 
     @Column(name = "generated_by")
-    private String generatedBy;
+    private String generatedBy = "SYSTEM";
 
     @PrePersist
     protected void onCreate() {
