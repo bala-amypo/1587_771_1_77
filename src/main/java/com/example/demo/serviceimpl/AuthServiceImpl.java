@@ -1,28 +1,20 @@
 package com.example.demo.serviceimpl;
 
-import com.example.demo.config.JwtUtil;
 import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.RegisterRequest;
 import com.example.demo.entity.User;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.AuthService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtUtil jwtUtil;
 
-    public AuthServiceImpl(UserRepository userRepository,
-                           PasswordEncoder passwordEncoder,
-                           JwtUtil jwtUtil) {
+    public AuthServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtUtil = jwtUtil;
     }
 
     @Override
@@ -34,7 +26,7 @@ public class AuthServiceImpl implements AuthService {
         User user = new User();
         user.setFullName(req.getFullName());
         user.setEmail(req.getEmail());
-        user.setPassword(passwordEncoder.encode(req.getPassword()));
+        user.setPassword(req.getPassword()); // plain text (no hashing)
         user.setRole(req.getRole() != null ? req.getRole() : "STUDENT");
 
         userRepository.save(user);
@@ -43,12 +35,12 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public String login(LoginRequest req) {
         User user = userRepository.findByEmail(req.getEmail())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Invalid credentials"));
 
-        if (!passwordEncoder.matches(req.getPassword(), user.getPassword())) {
+        if (!req.getPassword().equals(user.getPassword())) {
             throw new IllegalArgumentException("Invalid credentials");
         }
 
-        return jwtUtil.generateToken(user.getEmail(), user.getRole());
+        return "Login successful for " + user.getEmail() + " (Role: " + user.getRole() + ")";
     }
 }
