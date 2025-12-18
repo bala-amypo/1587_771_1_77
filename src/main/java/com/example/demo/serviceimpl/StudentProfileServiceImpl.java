@@ -1,20 +1,18 @@
-package com.example.demo.serviceimpl;
+package com.example.demo.service.impl;
 
 import com.example.demo.entity.StudentProfile;
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.StudentProfileRepository;
 import com.example.demo.service.StudentProfileService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
 public class StudentProfileServiceImpl implements StudentProfileService {
 
-    private final StudentProfileRepository repository;
-
-    public StudentProfileServiceImpl(StudentProfileRepository repository) {
-        this.repository = repository;
-    }
+    @Autowired
+    private StudentProfileRepository repository;
 
     @Override
     public StudentProfile createProfile(StudentProfile profile) {
@@ -23,14 +21,7 @@ public class StudentProfileServiceImpl implements StudentProfileService {
 
     @Override
     public StudentProfile getProfileById(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Profile not found"));
-    }
-
-    @Override
-    public StudentProfile getProfileByEnrollmentId(String enrollmentId) {
-        return repository.findByEnrollmentId(enrollmentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Profile not found"));
+        return repository.findById(id).orElseThrow();
     }
 
     @Override

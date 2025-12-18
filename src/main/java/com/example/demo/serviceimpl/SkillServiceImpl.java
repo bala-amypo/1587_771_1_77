@@ -1,41 +1,27 @@
-package com.example.demo.serviceimpl;
+package com.example.demo.service.impl;
 
 import com.example.demo.entity.Skill;
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.SkillRepository;
 import com.example.demo.service.SkillService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
 public class SkillServiceImpl implements SkillService {
 
-    private final SkillRepository repository;
-
-    public SkillServiceImpl(SkillRepository repository) {
-        this.repository = repository;
-    }
+    @Autowired
+    private SkillRepository repository;
 
     @Override
-    public Skill createSkill(Skill skill) {
+    public Skill addSkill(Skill skill) {
         return repository.save(skill);
     }
 
     @Override
-    public Skill updateSkill(Long id, Skill skill) {
-        Skill existing = getSkillById(id);
-        existing.setSkillName(skill.getSkillName());
-        existing.setCategory(skill.getCategory());
-        existing.setDescription(skill.getDescription());
-        existing.setMinCompetencyScore(skill.getMinCompetencyScore());
-        existing.setActive(skill.getActive());
-        return repository.save(existing);
-    }
-
-    @Override
     public Skill getSkillById(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Skill not found"));
+        return repository.findById(id).orElseThrow();
     }
 
     @Override
@@ -44,9 +30,9 @@ public class SkillServiceImpl implements SkillService {
     }
 
     @Override
-    public void deactivateSkill(Long id) {
-        Skill skill = getSkillById(id);
+    public Skill deactivateSkill(Long id) {
+        Skill skill = repository.findById(id).orElseThrow();
         skill.setActive(false);
-        repository.save(skill);
+        return repository.save(skill);
     }
 }
