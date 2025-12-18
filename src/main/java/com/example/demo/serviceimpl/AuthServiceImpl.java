@@ -1,46 +1,44 @@
-package com.example.demo.serviceimpl;
+package com.example.demo.service.impl;
 
-import com.example.demo.dto.LoginRequest;
-import com.example.demo.dto.RegisterRequest;
 import com.example.demo.entity.User;
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.AuthService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class AuthServiceImpl implements AuthService {
 
-    private final UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-    public AuthServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    @Override
+    public User register(User user) {
+        return userRepository.save(user);
     }
 
     @Override
-    public void register(RegisterRequest req) {
-        if (userRepository.existsByEmail(req.getEmail())) {
-            throw new IllegalArgumentException("Email already exists");
+    public User login(String email, String password) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (!user.getPassword().equals(password)) {
+            throw new RuntimeException("Invalid credentials");
         }
 
-        User user = new User();
-        user.setFullName(req.getFullName());
-        user.setEmail(req.getEmail());
-        user.setPassword(req.getPassword()); // plain text
-        user.setRole(req.getRole() != null ? req.getRole() : "STUDENT");
-
-        userRepository.save(user);
+        return user;
     }
 
     @Override
-    public String login(LoginRequest req) {
-        User user = userRepository.findByEmail(req.getEmail())
-                .orElseThrow(() -> new ResourceNotFoundException("Invalid credentials"));
+    public User getUserById(Long id) {
+        return userRepository.findById(id).orElseThrow();
+    }
 
-        if (!req.getPassword().equals(user.getPassword())) {
-            throw new IllegalArgumentException("Invalid credentials");
-        }
-
-        return "Login successful for " + user.getEmail() + " (Role: " + user.getRole() + ")";
+    @Override
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 }

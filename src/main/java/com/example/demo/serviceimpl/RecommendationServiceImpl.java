@@ -1,76 +1,44 @@
-package com.example.demo.serviceimpl;
+package com.example.demo.service.impl;
 
-import com.example.demo.entity.*;
-import com.example.demo.repository.*;
+import com.example.demo.entity.SkillGapRecord;
+import com.example.demo.entity.SkillGapRecommendation;
+import com.example.demo.repository.SkillGapRecordRepository;
+import com.example.demo.repository.SkillGapRecommendationRepository;
 import com.example.demo.service.RecommendationService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.util.*;
+
+import java.util.List;
 
 @Service
 public class RecommendationServiceImpl implements RecommendationService {
 
-    private final AssessmentResultRepository assessmentRepository;
-    private final SkillGapRecommendationRepository recommendationRepository;
-    private final StudentProfileRepository studentProfileRepository;
-    private final SkillRepository skillRepository;
+    @Autowired
+    private SkillGapRecordRepository gapRepository;
 
-    public RecommendationServiceImpl(AssessmentResultRepository assessmentRepository,
-                                     SkillGapRecommendationRepository recommendationRepository,
-                                     StudentProfileRepository studentProfileRepository,
-                                     SkillRepository skillRepository) {
-        this.assessmentRepository = assessmentRepository;
-        this.recommendationRepository = recommendationRepository;
-        this.studentProfileRepository = studentProfileRepository;
-        this.skillRepository = skillRepository;
-    }
+    @Autowired
+    private SkillGapRecommendationRepository recommendationRepository;
 
     @Override
-    public void generateRecommendations(Long studentProfileId) {
-        StudentProfile profile = studentProfileRepository.findById(studentProfileId)
-                .orElseThrow(() -> new IllegalArgumentException("Student profile not found"));
+    public void generateRecommendations(Long studentId) {
 
-        recommendationRepository.deleteByStudentProfileId(studentProfileId);
+        List<SkillGapRecord> gaps =
+                gapRepository.findByStudentProfileId(studentId);
 
-        List<Skill> activeSkills = skillRepository.findByActiveTrue();
-        List<SkillGapRecommendation> recommendations = new ArrayList<>();
+        for (SkillGapRecord gap : gaps) {
 
-        for (Skill skill : activeSkills) {
-            Double currentScore = assessmentRepository.findByStudentProfileId(studentProfileId).stream()
-                    .filter(ar -> ar.getSkill().getId().equals(skill.getId()))
-                    .map(AssessmentResult::getScoreObtained)
-                    .max(Double::compareTo)
-                    .orElse(0.0);
+            SkillGapRecommendation recommendation =
+                    new SkillGapRecommendation();
 
-            Double gap = skill.getMinCompetencyScore() - currentScore;
-            if (gap <= 0) continue;
+            recommendation.setStudentProfile(gap.getStudentProfile());
+            recommendation.setSkill(gap.getSkill());
+            recommendation.setGapScore(gap.getGapScore());
+            recommendation.setRecommendedAction(
+                    "Improve skill: " + gap.getSkill().getSkillName());
+            recommendation.setPriority(
+                    gap.getGapScore() > 20 ? "HIGH" : "MEDIUM");
 
-            SkillGapRecommendation rec = new SkillGapRecommendation();
-            rec.setStudentProfile(profile);
-            rec.setSkill(skill);
-            rec.setGapScore(gap);
-            rec.setGeneratedBy("SYSTEM");
-
-            if (gap > 20) {
-                rec.setPriority("HIGH");
-                rec.setRecommendedAction("Intensive practice required on " + skill.getSkillName());
-            } else if (gap > 10) {
-                rec.setPriority("MEDIUM");
-                rec.setRecommendedAction("Additional practice recommended on " + skill.getSkillName());
-            } else {
-                rec.setPriority("LOW");
-                rec.setRecommendedAction("Review " + skill.getSkillName() + " as needed");
-            }
-
-            recommendations.add(rec);
+            recommendationRepository.save(recommendation);
         }
-
-        recommendationRepository.saveAll(recommendations);
-    }
-
-    @Override
-    public List<SkillGapRecommendation> getRecommendationsByStudent(Long studentProfileId) {
-        return recommendationRepository.findByStudentProfileIdOrderByGeneratedAtDesc(studentProfileId);
     }
 }
