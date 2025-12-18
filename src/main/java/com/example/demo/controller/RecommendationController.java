@@ -9,26 +9,22 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/recommendations")
-@Tag(
-    name = "Recommendations",
-    description = "Generate and retrieve skill gap recommendations"
-)
+@Tag(name = "Recommendations")
 public class RecommendationController {
 
-    private final RecommendationService recommendationService;
+    private final RecommendationService service;
 
-    public RecommendationController(RecommendationService recommendationService) {
-        this.recommendationService = recommendationService;
+    public RecommendationController(RecommendationService service) {
+        this.service = service;
     }
 
     @PostMapping("/generate/{studentId}")
     public void generateRecommendations(@PathVariable Long studentId) {
-        recommendationService.generateRecommendations(studentId);
+        service.generateRecommendations(studentId);
     }
 
     @GetMapping("/student/{studentId}")
-    public List<SkillGapRecommendation> getRecommendationsByStudent(
-            @PathVariable Long studentId) {
-        return recommendationService.getRecommendationsByStudent(studentId);
+    public List<SkillGapRecommendation> getRecommendationsByStudent(@PathVariable Long studentId) {
+        return service.getRecommendationsByStudent(studentId);
     }
 }
