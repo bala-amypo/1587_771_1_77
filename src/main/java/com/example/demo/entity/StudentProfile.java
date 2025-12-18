@@ -10,8 +10,13 @@ public class StudentProfile {
     private Long id;
 
     private String name;
+
     private String course;
+
     private int year;
+
+    @OneToOne
+    private User user;
 
     public StudentProfile() {
     }
@@ -46,5 +51,13 @@ public class StudentProfile {
 
     public void setYear(int year) {
         this.year = year;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

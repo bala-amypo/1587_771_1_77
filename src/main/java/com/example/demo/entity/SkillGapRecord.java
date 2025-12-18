@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import java.sql.Timestamp;
 
 @Entity
 public class SkillGapRecord {
@@ -9,8 +10,15 @@ public class SkillGapRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String missingSkill;
-    private int requiredLevel;
+    @ManyToOne
+    private StudentProfile studentProfile;
+
+    @ManyToOne
+    private Skill skill;
+
+    private double gapScore;
+
+    private Timestamp calculatedAt;
 
     public SkillGapRecord() {
     }
@@ -23,19 +31,35 @@ public class SkillGapRecord {
         this.id = id;
     }
 
-    public String getMissingSkill() {
-        return missingSkill;
+    public StudentProfile getStudentProfile() {
+        return studentProfile;
     }
 
-    public void setMissingSkill(String missingSkill) {
-        this.missingSkill = missingSkill;
+    public void setStudentProfile(StudentProfile studentProfile) {
+        this.studentProfile = studentProfile;
     }
 
-    public int getRequiredLevel() {
-        return requiredLevel;
+    public Skill getSkill() {
+        return skill;
     }
 
-    public void setRequiredLevel(int requiredLevel) {
-        this.requiredLevel = requiredLevel;
+    public void setSkill(Skill skill) {
+        this.skill = skill;
+    }
+
+    public double getGapScore() {
+        return gapScore;
+    }
+
+    public void setGapScore(double gapScore) {
+        this.gapScore = gapScore;
+    }
+
+    public Timestamp getCalculatedAt() {
+        return calculatedAt;
+    }
+
+    public void setCalculatedAt(Timestamp calculatedAt) {
+        this.calculatedAt = calculatedAt;
     }
 }
