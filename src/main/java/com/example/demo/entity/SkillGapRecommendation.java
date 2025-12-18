@@ -9,43 +9,32 @@ public class SkillGapRecommendation {
     private StudentProfile studentProfile;
     @ManyToOne
     private Skill skill;
-    private double gpScore;
-
+    private double gapScore;
     private String recommendedAction;
-
     private String priority;
-
     public SkillGapRecommendation() {
     }
-
     public Long getId() {
         return id;
     }
-
     public void setId(Long id) {
         this.id = id;
     }
-
     public StudentProfile getStudentProfile() {
         return studentProfile;
     }
-
     public void setStudentProfile(StudentProfile studentProfile) {
         this.studentProfile = studentProfile;
     }
-
     public Skill getSkill() {
         return skill;
     }
-
     public void setSkill(Skill skill) {
         this.skill = skill;
     }
-
     public double getGapScore() {
         return gapScore;
     }
-
     public void setGapScore(double gapScore) {
         this.gapScore = gapScore;
     }
