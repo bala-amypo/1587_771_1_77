@@ -1,21 +1,15 @@
 package com.example.demo.entity;
-
 import jakarta.persistence.*;
-
 @Entity
 public class SkillGapRecommendation {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @ManyToOne
     private StudentProfile studentProfile;
-
     @ManyToOne
     private Skill skill;
-
-    private double gapScore;
+    private double gpScore;
 
     private String recommendedAction;
 
