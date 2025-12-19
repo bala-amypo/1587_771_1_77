@@ -1,11 +1,3 @@
-package com.example.demo.controller;
-
-import com.example.demo.entity.AssessmentResult;
-import com.example.demo.service.AssessmentResultService;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/assessments")
 public class AssessmentController {
@@ -16,19 +8,26 @@ public class AssessmentController {
         this.service = service;
     }
 
-    // ✅ POST – Save assessment (updates DB)
+    // ✅ POST – Save Assessment (DTO based)
     @PostMapping
-    public AssessmentResult saveAssessment(@RequestBody AssessmentResult assessmentResult) {
-        return service.saveAssessmentResult(assessmentResult);
+    public AssessmentResult saveAssessment(
+            @RequestBody AssessmentResultRequest request) {
+
+        return service.saveAssessmentResult(
+                request.getSubject(),
+                request.getScoreObtained(),
+                request.getStudentId(),
+                request.getSkillId()
+        );
     }
 
-    // ✅ GET – Get all results by student
+    // ✅ GET – Student results
     @GetMapping("/student/{studentId}")
     public List<AssessmentResult> getByStudent(@PathVariable Long studentId) {
         return service.getResultsByStudentId(studentId);
     }
 
-    // ✅ GET – Get result by student + skill
+    // ✅ GET – Student + Skill
     @GetMapping("/student/{studentId}/skill/{skillId}")
     public List<AssessmentResult> getByStudentAndSkill(
             @PathVariable Long studentId,
