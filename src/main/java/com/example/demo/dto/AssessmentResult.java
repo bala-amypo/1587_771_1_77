@@ -1,9 +1,9 @@
 package com.example.demo.dto;
 
-public class AssessmentResultRequest {
+public class AssessmentRequest {
 
     private String subject;
-    private double scoreObtained;
+    private int scoreObtained;
     private Long studentId;
     private Long skillId;
 
@@ -15,11 +15,11 @@ public class AssessmentResultRequest {
         this.subject = subject;
     }
 
-    public double getScoreObtained() {
+    public int getScoreObtained() {
         return scoreObtained;
     }
 
-    public void setScoreObtained(double scoreObtained) {
+    public void setScoreObtained(int scoreObtained) {
         this.scoreObtained = scoreObtained;
     }
 
