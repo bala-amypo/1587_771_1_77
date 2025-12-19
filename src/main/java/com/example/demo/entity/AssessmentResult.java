@@ -1,40 +1,11 @@
-package com.example.demo.entity;
+package com.example.demo.dto;
 
-import jakarta.persistence.*;
-
-@Entity
-@Table(name = "assessment_results")
-public class AssessmentResult {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class AssessmentRequest {
 
     private String subject;
-
-    private double scoreObtained;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "student_profile_id", nullable = false)
-    private StudentProfile studentProfile;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "skill_id", nullable = false)
-    private Skill skill;
-
-    // 🔹 No-arg constructor
-    public AssessmentResult() {
-    }
-
-    // 🔹 Getters & Setters
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private int scoreObtained;
+    private Long studentId;
+    private Long skillId;
 
     public String getSubject() {
         return subject;
@@ -44,27 +15,27 @@ public class AssessmentResult {
         this.subject = subject;
     }
 
-    public double getScoreObtained() {
+    public int getScoreObtained() {
         return scoreObtained;
     }
 
-    public void setScoreObtained(double scoreObtained) {
+    public void setScoreObtained(int scoreObtained) {
         this.scoreObtained = scoreObtained;
     }
 
-    public StudentProfile getStudentProfile() {
-        return studentProfile;
+    public Long getStudentId() {
+        return studentId;
     }
 
-    public void setStudentProfile(StudentProfile studentProfile) {
-        this.studentProfile = studentProfile;
+    public void setStudentId(Long studentId) {
+        this.studentId = studentId;
     }
 
-    public Skill getSkill() {
-        return skill;
+    public Long getSkillId() {
+        return skillId;
     }
 
-    public void setSkill(Skill skill) {
-        this.skill = skill;
+    public void setSkillId(Long skillId) {
+        this.skillId = skillId;
     }
 }
