@@ -22,42 +22,46 @@ public class AssessmentResult {
     @JoinColumn(name = "skill_id", nullable = false)
     private Skill skill;
 
-    public AssessmentResult() {}
+    // 🔹 No-arg constructor
+    public AssessmentResult() {
+    }
+
+    // 🔹 Getters & Setters
 
     public Long getId() {
         return id;
-    }
-
-    public String getSubject() {
-        return subject;
-    }
-
-    public double getScoreObtained() {
-        return scoreObtained;
-    }
-
-    public StudentProfile getStudentProfile() {
-        return studentProfile;
-    }
-
-    public Skill getSkill() {
-        return skill;
     }
 
     public void setId(Long id) {
         this.id = id;
     }
 
+    public String getSubject() {
+        return subject;
+    }
+
     public void setSubject(String subject) {
         this.subject = subject;
+    }
+
+    public double getScoreObtained() {
+        return scoreObtained;
     }
 
     public void setScoreObtained(double scoreObtained) {
         this.scoreObtained = scoreObtained;
     }
 
+    public StudentProfile getStudentProfile() {
+        return studentProfile;
+    }
+
     public void setStudentProfile(StudentProfile studentProfile) {
         this.studentProfile = studentProfile;
+    }
+
+    public Skill getSkill() {
+        return skill;
     }
 
     public void setSkill(Skill skill) {
