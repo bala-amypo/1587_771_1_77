@@ -1,12 +1,3 @@
-package com.example.demo.controller;
-
-import com.example.demo.entity.User;
-import com.example.demo.service.AuthService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -14,14 +5,13 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-    // REGISTER
+    // REGISTER (NO CHANGE)
     @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody User user) {
-        User savedUser = authService.register(user);
-        return ResponseEntity.ok(savedUser);
+        return ResponseEntity.ok(authService.register(user));
     }
 
-    // LOGIN
+    // LOGIN (🔥 FIXED)
     @PostMapping("/login")
     public ResponseEntity<?> login(
             @RequestParam String email,
@@ -35,6 +25,13 @@ public class AuthController {
                     .body("Invalid email or password");
         }
 
-        return ResponseEntity.ok(user);
+        // 🔥 RETURN SIMPLE JSON (NO ENTITY)
+        Map<String, Object> response = new HashMap<>();
+        response.put("id", user.getId());
+        response.put("username", user.getUsername());
+        response.put("email", user.getEmail());
+        response.put("role", user.getRole());
+
+        return ResponseEntity.ok(response);
     }
 }
