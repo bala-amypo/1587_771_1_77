@@ -1,3 +1,17 @@
+package com.example.demo.serviceimpl;
+
+import com.example.demo.entity.AssessmentResult;
+import com.example.demo.entity.StudentProfile;
+import com.example.demo.entity.Skill;
+import com.example.demo.repository.AssessmentResultRepository;
+import com.example.demo.repository.StudentProfileRepository;
+import com.example.demo.repository.SkillRepository;
+import com.example.demo.service.AssessmentResultService;
+
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
 @Service
 public class AssessmentResultServiceImpl implements AssessmentResultService {
 
