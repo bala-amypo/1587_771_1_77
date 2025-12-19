@@ -15,16 +15,16 @@ public class User {
 
     private String email;
 
-    @JsonIgnore   // 🔴 IMPORTANT: prevents password from returning & avoids 500 error
+    @JsonIgnore   // IMPORTANT: prevents password from being returned
     private String password;
 
     private String role;
 
-    // ===== Constructors =====
+    // No-arg constructor
     public User() {
     }
 
-    // ===== Getters & Setters =====
+    // Getters and Setters
     public Long getId() {
         return id;
     }
