@@ -1,4 +1,4 @@
-package com.skillgap.entity;
+package com.example.demo.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
