@@ -1,52 +1,59 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.User;
-import com.example.demo.service.AuthService;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.demo.dto.UserDTO;
+import com.example.demo.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/users")
+@RequiredArgsConstructor
+@Tag(name = "User Management", description = "APIs for managing users")
 public class AuthController {
-
-    @Autowired
-    private AuthService authService;
-
-    @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody User user) {
-        User savedUser = authService.register(user);
-        return ResponseEntity.ok(savedUser);
+    
+    private final UserService userService;
+    
+    @PostMapping
+    @Operation(summary = "Create a new user")
+    public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO userDTO) {
+        return new ResponseEntity<>(userService.createUser(userDTO), HttpStatus.CREATED);
     }
-
-    @PostMapping("/login")
-    public ResponseEntity<?> login(
-            @RequestParam String email,
-            @RequestParam String password
-    ) {
-        User user = authService.login(email, password);
-
-        if (user == null) {
-            return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .body("Invalid email or password");
-        }
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("id", user.getId());
-        response.put("username", user.getUsername());
-        response.put("email", user.getEmail());
-        response.put("role", user.getRole());
-
-        return ResponseEntity.ok(response);
+    
+    @GetMapping("/{id}")
+    @Operation(summary = "Get user by ID")
+    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getUserById(id));
+    }
+    
+    @GetMapping
+    @Operation(summary = "Get all users")
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
+    }
+    
+    @PutMapping("/{id}")
+    @Operation(summary = "Update user")
+    public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @Valid @RequestBody UserDTO userDTO) {
+        return ResponseEntity.ok(userService.updateUser(id, userDTO));
+    }
+    
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Delete user")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
+    }
+    
+    @GetMapping("/role/{role}")
+    @Operation(summary = "Get users by role")
+    public ResponseEntity<List<UserDTO>> getUsersByRole(@PathVariable String role) {
+        return ResponseEntity.ok(userService.getUsersByRole(role));
     }
 }
