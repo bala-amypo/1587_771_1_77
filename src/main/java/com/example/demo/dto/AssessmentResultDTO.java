@@ -1,4 +1,4 @@
-package com.skillgap.dto;
+package com.example.demo.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AssessmentDTO {
+public class AssessmentResultDTO {
     private Long id;
     
     @NotNull(message = "Student ID is required")
