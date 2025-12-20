@@ -1,63 +1,37 @@
-package com.example.demo.entity;
-
-import jakarta.persistence.*;
-
 @Entity
-@Table(name = "assessment_results")
 public class AssessmentResult {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String subject;
+    private Long studentId;
+    private Long skillId;
+    private Integer score;
 
-    private int scoreObtained;
+    // ✅ GETTERS & SETTERS
 
-    @ManyToOne
-    @JoinColumn(name = "student_id")
-    private StudentProfile studentProfile;
-
-    @ManyToOne
-    @JoinColumn(name = "skill_id")
-    private Skill skill;
-
-    public AssessmentResult() {
+    public Long getStudentId() {
+        return studentId;
     }
 
-    public Long getId() {
-        return id;
+    public void setStudentId(Long studentId) {
+        this.studentId = studentId;
     }
 
-    public String getSubject() {
-        return subject;
+    public Long getSkillId() {
+        return skillId;
     }
 
-    public void setSubject(String subject) {
-        this.subject = subject;
+    public void setSkillId(Long skillId) {
+        this.skillId = skillId;
     }
 
-    public int getScoreObtained() {
-        return scoreObtained;
+    public Integer getScore() {
+        return score;
     }
 
-    public void setScoreObtained(int scoreObtained) {
-        this.scoreObtained = scoreObtained;
-    }
-
-    public StudentProfile getStudentProfile() {
-        return studentProfile;
-    }
-
-    public void setStudentProfile(StudentProfile studentProfile) {
-        this.studentProfile = studentProfile;
-    }
-
-    public Skill getSkill() {
-        return skill;
-    }
-
-    public void setSkill(Skill skill) {
-        this.skill = skill;
+    public void setScore(Integer score) {
+        this.score = score;
     }
 }
