@@ -7,8 +7,7 @@ public class AssessmentRequest {
     private Long studentId;
     private Long skillId;
 
-    public AssessmentRequest() {
-    }
+    public AssessmentRequest() {}
 
     public String getSubject() {
         return subject;
