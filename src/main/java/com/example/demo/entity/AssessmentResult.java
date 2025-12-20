@@ -1,25 +1,12 @@
-package com.example.demo.entity;
+package com.example.demo.dto;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-
-@Entity
-public class AssessmentResult {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class AssessmentRequest {
 
     private Long studentId;
     private Long skillId;
     private Integer score;
 
-    public Long getId() {
-        return id;
-    }
-
+    // getter & setter
     public Long getStudentId() {
         return studentId;
     }
