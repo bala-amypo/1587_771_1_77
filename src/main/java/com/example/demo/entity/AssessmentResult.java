@@ -1,11 +1,33 @@
-package com.example.demo.dto;
+package com.example.demo.entity;
 
-public class AssessmentRequest {
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "assessment_results")
+public class AssessmentResult {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private String subject;
+
     private int scoreObtained;
-    private Long studentId;
-    private Long skillId;
+
+    @ManyToOne
+    @JoinColumn(name = "student_id")
+    private StudentProfile studentProfile;
+
+    @ManyToOne
+    @JoinColumn(name = "skill_id")
+    private Skill skill;
+
+    public AssessmentResult() {
+    }
+
+    public Long getId() {
+        return id;
+    }
 
     public String getSubject() {
         return subject;
@@ -23,19 +45,19 @@ public class AssessmentRequest {
         this.scoreObtained = scoreObtained;
     }
 
-    public Long getStudentId() {
-        return studentId;
+    public StudentProfile getStudentProfile() {
+        return studentProfile;
     }
 
-    public void setStudentId(Long studentId) {
-        this.studentId = studentId;
+    public void setStudentProfile(StudentProfile studentProfile) {
+        this.studentProfile = studentProfile;
     }
 
-    public Long getSkillId() {
-        return skillId;
+    public Skill getSkill() {
+        return skill;
     }
 
-    public void setSkillId(Long skillId) {
-        this.skillId = skillId;
+    public void setSkill(Skill skill) {
+        this.skill = skill;
     }
 }
