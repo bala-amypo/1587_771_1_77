@@ -1,3 +1,10 @@
+package com.example.demo.entity;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+
 @Entity
 public class AssessmentResult {
 
@@ -9,7 +16,9 @@ public class AssessmentResult {
     private Long skillId;
     private Integer score;
 
-    // ✅ GETTERS & SETTERS
+    public Long getId() {
+        return id;
+    }
 
     public Long getStudentId() {
         return studentId;
