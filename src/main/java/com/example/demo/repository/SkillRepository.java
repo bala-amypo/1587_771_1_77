@@ -2,10 +2,21 @@ package com.example.demo.repository;
 
 import com.example.demo.entity.Skill;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
 import java.util.List;
+import java.util.Optional;
 
+@Repository
 public interface SkillRepository extends JpaRepository<Skill, Long> {
-
-    // ✅ ADD THIS
-    List<Skill> findByActiveTrue();
+    
+    Optional<Skill> findBySkillName(String skillName);
+    
+    List<Skill> findByCategory(String category);
+    
+    List<Skill> findBySkillNameContainingIgnoreCase(String skillName);
+    
+    boolean existsBySkillName(String skillName);
+    
+    List<Skill> findByDifficultyLevel(Integer difficultyLevel);
 }
