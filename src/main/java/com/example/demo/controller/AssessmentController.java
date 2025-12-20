@@ -2,64 +2,61 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.AssessmentResultDTO;
 import com.example.demo.service.AssessmentResultService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/assessment-results")
+@RequestMapping("/api/assessments")
+@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
-@Tag(name = "Assessment Results", description = "APIs for managing assessment results")
-public class AssessmentResultController {
-    
+public class AssessmentController {
+
     private final AssessmentResultService assessmentService;
-    
+
     @PostMapping
-    @Operation(summary = "Create assessment result")
-    public ResponseEntity<AssessmentResultDTO> createAssessmentResult(@Valid @RequestBody AssessmentResultDTO resultDTO) {
-        return new ResponseEntity<>(assessmentService.createAssessmentResult(resultDTO), HttpStatus.CREATED);
+    public ResponseEntity<AssessmentResultDTO> createAssessment(@Valid @RequestBody AssessmentResultDTO dto) {
+        AssessmentResultDTO created = assessmentService.createAssessment(dto);
+        return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
-    
+
     @GetMapping("/{id}")
-    @Operation(summary = "Get assessment result by ID")
-    public ResponseEntity<AssessmentResultDTO> getAssessmentResultById(@PathVariable Long id) {
-        return ResponseEntity.ok(assessmentService.getAssessmentResultById(id));
+    public ResponseEntity<AssessmentResultDTO> getAssessmentById(@PathVariable Long id) {
+        AssessmentResultDTO assessment = assessmentService.getAssessmentById(id);
+        return ResponseEntity.ok(assessment);
     }
-    
+
     @GetMapping
-    @Operation(summary = "Get all assessment results")
-    public ResponseEntity<List<AssessmentResultDTO>> getAllAssessmentResults() {
-        return ResponseEntity.ok(assessmentService.getAllAssessmentResults());
+    public ResponseEntity<List<AssessmentResultDTO>> getAllAssessments() {
+        List<AssessmentResultDTO> assessments = assessmentService.getAllAssessments();
+        return ResponseEntity.ok(assessments);
     }
-    
-    @GetMapping("/user/{userId}")
-    @Operation(summary = "Get assessment results by user ID")
-    public ResponseEntity<List<AssessmentResultDTO>> getAssessmentResultsByUserId(@PathVariable Long userId) {
-        return ResponseEntity.ok(assessmentService.getAssessmentResultsByUserId(userId));
+
+    @GetMapping("/student/{studentId}")
+    public ResponseEntity<List<AssessmentResultDTO>> getAssessmentsByStudent(@PathVariable Long studentId) {
+        List<AssessmentResultDTO> assessments = assessmentService.getAssessmentsByStudentId(studentId);
+        return ResponseEntity.ok(assessments);
     }
-    
+
     @GetMapping("/skill/{skillId}")
-    @Operation(summary = "Get assessment results by skill ID")
-    public ResponseEntity<List<AssessmentResultDTO>> getAssessmentResultsBySkillId(@PathVariable Long skillId) {
-        return ResponseEntity.ok(assessmentService.getAssessmentResultsBySkillId(skillId));
+    public ResponseEntity<List<AssessmentResultDTO>> getAssessmentsBySkill(@PathVariable Long skillId) {
+        List<AssessmentResultDTO> assessments = assessmentService.getAssessmentsBySkillId(skillId);
+        return ResponseEntity.ok(assessments);
     }
-    
+
     @PutMapping("/{id}")
-    @Operation(summary = "Update assessment result")
-    public ResponseEntity<AssessmentResultDTO> updateAssessmentResult(@PathVariable Long id, @Valid @RequestBody AssessmentResultDTO resultDTO) {
-        return ResponseEntity.ok(assessmentService.updateAssessmentResult(id, resultDTO));
+    public ResponseEntity<AssessmentResultDTO> updateAssessment(@PathVariable Long id, @Valid @RequestBody AssessmentResultDTO dto) {
+        AssessmentResultDTO updated = assessmentService.updateAssessment(id, dto);
+        return ResponseEntity.ok(updated);
     }
-    
+
     @DeleteMapping("/{id}")
-    @Operation(summary = "Delete assessment result")
-    public ResponseEntity<Void> deleteAssessmentResult(@PathVariable Long id) {
-        assessmentService.deleteAssessmentResult(id);
+    public ResponseEntity<Void> deleteAssessment(@PathVariable Long id) {
+        assessmentService.deleteAssessment(id);
         return ResponseEntity.noContent().build();
     }
 }

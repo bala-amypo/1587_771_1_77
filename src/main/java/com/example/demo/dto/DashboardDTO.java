@@ -1,4 +1,4 @@
-package com.skillgap.dto;
+package com.example.demo.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,9 +24,9 @@ public class DashboardDTO {
     
     private Double overallProgress;
     
-    private List<SkillGapDTO> recentSkillGaps;
+    private List<SkillGapRecordDTO> recentSkillGaps;
     
-    private List<RecommendationDTO> topRecommendations;
+    private List<SkillGapRecommendationDTO> topRecommendations;
     
-    private List<AssessmentDTO> recentAssessments;
+    private List<AssessmentResultDTO> recentAssessments;
 }
