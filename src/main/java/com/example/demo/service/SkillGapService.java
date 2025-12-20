@@ -1,12 +1,14 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.SkillGapRecord;
-
+import com.example.demo.dto.SkillGapRecordDTO;
 import java.util.List;
 
 public interface SkillGapService {
-
-    SkillGapRecord saveSkillGap(SkillGapRecord record);
-
-    List<SkillGapRecord> getSkillGapsByStudentId(Long studentId);
+    SkillGapRecordDTO createSkillGapRecord(SkillGapRecordDTO recordDTO);
+    SkillGapRecordDTO getSkillGapRecordById(Long id);
+    List<SkillGapRecordDTO> getAllSkillGapRecords();
+    List<SkillGapRecordDTO> getSkillGapRecordsByUserId(Long userId);
+    List<SkillGapRecordDTO> getSkillGapRecordsBySkillId(Long skillId);
+    SkillGapRecordDTO updateSkillGapRecord(Long id, SkillGapRecordDTO recordDTO);
+    void deleteSkillGapRecord(Long id);
 }
