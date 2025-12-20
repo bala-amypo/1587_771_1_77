@@ -1,53 +1,65 @@
-package com.example.demo.entity;
-import jakarta.persistence.*;
+package com.skillgap.entity;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import javax.persistence.*;
+import java.time.LocalDateTime;
+
 @Entity
+@Table(name = "skill_gap_recommendations")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class SkillGapRecommendation {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
-    private StudentProfile studentProfile;
-    @ManyToOne
-    private Skill skill;
-    private double gapScore;
-    private String recommendedAction;
-    private String priority;
-    public SkillGapRecommendation() {
-    }
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
-    public StudentProfile getStudentProfile() {
-        return studentProfile;
-    }
-    public void setStudentProfile(StudentProfile studentProfile) {
-        this.studentProfile = studentProfile;
-    }
-    public Skill getSkill() {
-        return skill;
-    }
-    public void setSkill(Skill skill) {
-        this.skill = skill;
-    }
-    public double getGapScore() {
-        return gapScore;
-    }
-    public void setGapScore(double gapScore) {
-        this.gapScore = gapScore;
-    }
-    public String getRecommendedAction() {
-        return recommendedAction;
-    }
-    public void setRecommendedAction(String recommendedAction) {
-        this.recommendedAction = recommendedAction;
-    }
-    public String getPriority() {
-        return priority;
-    }
-    public void setPriority(String priority) {
-        this.priority = priority;
-    }
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "student_id", nullable = false)
+    private StudentProfile student;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "skill_gap_id", nullable = false)
+    private SkillGapRecord skillGap;
+    
+    @Column(name = "recommendation_type", length = 50)
+    private String recommendationType;
+    
+    @Column(nullable = false, length = 200)
+    private String title;
+    
+    @Column(columnDefinition = "TEXT")
+    private String description;
+    
+    @Column(name = "resource_url", length = 500)
+    private String resourceUrl;
+    
+    @Column(name = "resource_type", length = 50)
+    private String resourceType;
+    
+    @Column(name = "estimated_duration")
+    private Integer estimatedDuration;
+    
+    @Column(length = 20)
+    private String difficulty;
+    
+    @Column
+    private Integer priority = 1;
+    
+    @Column(length = 20)
+    private String status = "PENDING";
+    
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+    
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 }

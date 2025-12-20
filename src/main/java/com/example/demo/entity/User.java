@@ -1,71 +1,57 @@
-package com.example.demo.entity;
+package com.skillgap.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "users")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
-
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private String username;
-
+    
+    @Column(name = "full_name", nullable = false, length = 100)
+    private String fullName;
+    
+    @Column(nullable = false, unique = true, length = 100)
     private String email;
-
-    // PASSWORD WILL APPEAR IN REGISTER / LOGIN REQUEST
-    // BUT WILL NOT APPEAR IN RESPONSE
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    
+    @Column(nullable = false, length = 255)
     private String password;
-
-    private String role;
-
-    // No-arg constructor
-    public User() {
-    }
-
-    // -------- GETTERS & SETTERS --------
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    // Password getter & setter (IMPORTANT)
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
+    
+    @Column(nullable = false, length = 20)
+    private String role = "STUDENT";
+    
+    @Column(length = 100)
+    private String department;
+    
+    @Column(name = "phone_number", length = 20)
+    private String phoneNumber;
+    
+    @Column(name = "is_active")
+    private Boolean isActive = true;
+    
+    @Column(name = "last_login")
+    private LocalDateTime lastLogin;
+    
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private StudentProfile studentProfile;
+    
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+    
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 }
