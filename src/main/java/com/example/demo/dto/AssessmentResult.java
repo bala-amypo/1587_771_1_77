@@ -1,13 +1,22 @@
 package com.example.demo.dto;
 
-public class AssessmentRequest {
+public class AssessmentResult {
 
+    private Long id;
     private String subject;
     private int scoreObtained;
     private Long studentId;
     private Long skillId;
 
-    public AssessmentRequest() {
+    public AssessmentResult() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getSubject() {
