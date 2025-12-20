@@ -1,30 +1,26 @@
-package com.example.demo.service.impl;
-import com.example.demo.entity.Skill;
-import com.example.demo.repository.SkillRepository;
-import com.example.demo.service.SkillService;
+package com.example.demo.serviceimpl;
+
+import com.example.demo.entity.SkillGapRecord;
+import com.example.demo.repository.SkillGapRecordRepository;
+import com.example.demo.service.SkillGapService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
+
 @Service
-public class SkillServiceImpl implements SkillService {
+public class SkillGapServiceImpl implements SkillGapService {
+
     @Autowired
-    private SkillRepository repository;
+    private SkillGapRecordRepository repository;
+
     @Override
-    public Skill addSkill(Skill skill) {
-        return repository.save(skill);
+    public SkillGapRecord saveSkillGap(SkillGapRecord record) {
+        return repository.save(record);
     }
+
     @Override
-    public Skill getSkillById(Long id) {
-        return repository.findById(id).orElseThrow();
-    }
-    @Override
-    public List<Skill> getAllSkills() {
-        return repository.findAll();
-    }
-    @Override
-    public Skill deactivateSkill(Long id) {
-        Skill skill = repository.findById(id).orElseThrow();
-        skill.setActive(false);
-        return repository.save(skill);
+    public List<SkillGapRecord> getSkillGapsByStudentId(Long studentId) {
+        return repository.findByStudentId(studentId);
     }
 }
