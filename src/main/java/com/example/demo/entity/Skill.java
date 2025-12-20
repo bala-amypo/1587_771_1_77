@@ -1,56 +1,62 @@
-package com.example.demo.entity;
+package com.skillgap.entity;
 
-import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "skills")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Skill {
-
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private String skillName;
-
-    private int minCompetencyScore;
-
-    private boolean active;
-
-    // 🔹 No-arg constructor
-    public Skill() {
-    }
-
-    // 🔹 Getters & Setters
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getSkillName() {
-        return skillName;
-    }
-
-    public void setSkillName(String skillName) {
-        this.skillName = skillName;
-    }
-
-    public int getMinCompetencyScore() {
-        return minCompetencyScore;
-    }
-
-    public void setMinCompetencyScore(int minCompetencyScore) {
-        this.minCompetencyScore = minCompetencyScore;
-    }
-
-    public boolean isActive() {          // ✅ important for Spring Data
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
+    
+    @Column(nullable = false, unique = true, length = 100)
+    private String name;
+    
+    @Column(columnDefinition = "TEXT")
+    private String description;
+    
+    @Column(length = 50)
+    private String category;
+    
+    @Column(length = 50)
+    private String subcategory;
+    
+    @Column(length = 20)
+    private String difficulty;
+    
+    @Column(name = "required_level")
+    private Integer requiredLevel = 5;
+    
+    @Column(name = "is_active")
+    private Boolean isActive = true;
+    
+    @Column(columnDefinition = "TEXT")
+    private String keywords;
+    
+    @OneToMany(mappedBy = "skill", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<AssessmentResult> assessments = new HashSet<>();
+    
+    @OneToMany(mappedBy = "skill", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<SkillGapRecord> skillGaps = new HashSet<>();
+    
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+    
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 }
