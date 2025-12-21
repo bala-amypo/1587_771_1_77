@@ -1,4 +1,3 @@
-// --- AssessmentResult.java ---
 package com.example.demo.entity;
 
 import lombok.AllArgsConstructor;
