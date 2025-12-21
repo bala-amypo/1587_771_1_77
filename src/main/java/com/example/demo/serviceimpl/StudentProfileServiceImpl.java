@@ -27,16 +27,26 @@ public class StudentProfileServiceImpl implements StudentProfileService {
         Long userId = profile.getUser().getId();
 
         User user = userRepo.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with id " + userId));
+                .orElseThrow(() -> new RuntimeException(
+                        "User not found with id " + userId));
 
         profile.setUser(user);
-
         return studentRepo.save(profile);
     }
 
     @Override
     public StudentProfile getProfileById(Long id) {
-        return studentRepo.findById(id).orElseThrow();
+        return studentRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException(
+                        "Student not found with id " + id));
+    }
+
+    // ✅ THIS WAS MISSING — NOW FIXED
+    @Override
+    public StudentProfile getProfileByEnrollmentId(String enrollmentId) {
+        return studentRepo.findByEnrollmentId(enrollmentId)
+                .orElseThrow(() -> new RuntimeException(
+                        "Student not found with enrollmentId " + enrollmentId));
     }
 
     @Override
