@@ -24,36 +24,25 @@ public class StudentProfileServiceImpl implements StudentProfileService {
     @Override
     public StudentProfile createProfile(StudentProfile profile) {
 
-        if (profile.getUser() == null) {
-            throw new RuntimeException("User details are required");
+        if (profile.getUser() == null || profile.getUser().getEmail() == null) {
+            throw new RuntimeException("User email is required");
         }
 
-        User userInput = profile.getUser();
-        User user;
+        User inputUser = profile.getUser();
 
-        // ✅ CASE 1: User ID provided → fetch
-        if (userInput.getId() != null) {
-            user = userRepo.findById(userInput.getId())
-                    .orElseThrow(() ->
-                            new RuntimeException("User not found with id " + userInput.getId()));
-        }
-        // ✅ CASE 2: Email provided → fetch or create
-        else if (userInput.getEmail() != null) {
-            user = userRepo.findByEmail(userInput.getEmail())
-                    .orElseGet(() -> {
-                        User newUser = new User();
-                        newUser.setFullName(userInput.getFullName());
-                        newUser.setEmail(userInput.getEmail());
-                        newUser.setPassword(userInput.getPassword());
-                        newUser.setRole(userInput.getRole());
-                        return userRepo.save(newUser);
-                    });
-        }
-        else {
-            throw new RuntimeException("User ID or Email must be provided");
-        }
+        // ✅ ALWAYS USE EMAIL (IGNORE ID)
+        User user = userRepo.findByEmail(inputUser.getEmail())
+                .orElseGet(() -> {
+                    User newUser = new User();
+                    newUser.setFullName(inputUser.getFullName());
+                    newUser.setEmail(inputUser.getEmail());
+                    newUser.setPassword(inputUser.getPassword());
+                    newUser.setRole(inputUser.getRole());
+                    return userRepo.save(newUser);
+                });
 
         profile.setUser(user);
+
         return studentRepo.save(profile);
     }
 
