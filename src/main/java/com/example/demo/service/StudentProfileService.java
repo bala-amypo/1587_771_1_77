@@ -6,9 +6,11 @@ import java.util.List;
 
 public interface StudentProfileService {
 
-    StudentProfile saveProfile(StudentProfile profile);
+    StudentProfile create(StudentProfile profile);
 
-    List<StudentProfile> getAllProfiles();
+    StudentProfile getById(Long id);
 
-    List<StudentProfile> getProfilesByUserId(Long userId);
+    StudentProfile getByUserId(Long userId);
+
+    List<StudentProfile> getAll();
 }

@@ -8,7 +8,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/students")
-@CrossOrigin
 public class StudentProfileController {
 
     private final StudentProfileService service;
@@ -17,21 +16,27 @@ public class StudentProfileController {
         this.service = service;
     }
 
-    // ✅ POST – save student profile
+    // ✅ POST /api/students
     @PostMapping
-    public StudentProfile createProfile(@RequestBody StudentProfile profile) {
-        return service.saveProfile(profile);
+    public StudentProfile create(@RequestBody StudentProfile profile) {
+        return service.create(profile);
     }
 
-    // ✅ GET – all profiles
+    // ✅ GET /api/students
     @GetMapping
-    public List<StudentProfile> getAllProfiles() {
-        return service.getAllProfiles();
+    public List<StudentProfile> getAll() {
+        return service.getAll();
     }
 
-    // ✅ GET – profiles by userId
+    // ✅ GET /api/students/{id}
+    @GetMapping("/{id}")
+    public StudentProfile getById(@PathVariable Long id) {
+        return service.getById(id);
+    }
+
+    // ✅ GET /api/students/user/{userId}
     @GetMapping("/user/{userId}")
-    public List<StudentProfile> getByUserId(@PathVariable Long userId) {
-        return service.getProfilesByUserId(userId);
+    public StudentProfile getByUser(@PathVariable Long userId) {
+        return service.getByUserId(userId);
     }
 }

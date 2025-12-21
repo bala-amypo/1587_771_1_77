@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "student_profile")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class StudentProfile {
 
     @Id
@@ -21,11 +22,11 @@ public class StudentProfile {
     private Integer year;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnoreProperties({"password"})
     private User user;
 
-    // ===== Getters & Setters =====
+    // ===== GETTERS & SETTERS =====
 
     public Long getId() {
         return id;
