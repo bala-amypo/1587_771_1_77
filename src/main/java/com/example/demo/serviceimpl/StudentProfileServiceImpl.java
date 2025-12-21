@@ -2,7 +2,6 @@ package com.example.demo.serviceimpl;
 
 import com.example.demo.entity.StudentProfile;
 import com.example.demo.entity.User;
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.StudentProfileRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.StudentProfileService;
@@ -13,13 +12,13 @@ import java.util.List;
 @Service
 public class StudentProfileServiceImpl implements StudentProfileService {
 
-    private final StudentProfileRepository profileRepository;
-    private final UserRepository userRepository;
+    private final StudentProfileRepository profileRepo;
+    private final UserRepository userRepo;
 
-    public StudentProfileServiceImpl(StudentProfileRepository profileRepository,
-                                     UserRepository userRepository) {
-        this.profileRepository = profileRepository;
-        this.userRepository = userRepository;
+    public StudentProfileServiceImpl(StudentProfileRepository profileRepo,
+                                     UserRepository userRepo) {
+        this.profileRepo = profileRepo;
+        this.userRepo = userRepo;
     }
 
     @Override
@@ -27,32 +26,30 @@ public class StudentProfileServiceImpl implements StudentProfileService {
 
         Long userId = profile.getUser().getId();
 
-        User user = userRepository.findById(userId)
+        User user = userRepo.findById(userId)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException("User not found"));
+                        new RuntimeException("User not found with id " + userId));
 
         profile.setUser(user);
-        profile.setActive(true);
-
-        return profileRepository.save(profile);
+        return profileRepo.save(profile);
     }
 
     @Override
     public StudentProfile getProfileById(Long id) {
-        return profileRepository.findById(id)
+        return profileRepo.findById(id)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException("StudentProfile not found"));
+                        new RuntimeException("StudentProfile not found with id " + id));
     }
 
     @Override
     public StudentProfile getProfileByEnrollmentId(String enrollmentId) {
-        return profileRepository.findByEnrollmentId(enrollmentId)
+        return profileRepo.findByEnrollmentId(enrollmentId)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException("StudentProfile not found"));
+                        new RuntimeException("StudentProfile not found"));
     }
 
     @Override
     public List<StudentProfile> getAllProfiles() {
-        return profileRepository.findAll();
+        return profileRepo.findAll();
     }
 }

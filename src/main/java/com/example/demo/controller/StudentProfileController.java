@@ -16,27 +16,27 @@ public class StudentProfileController {
         this.service = service;
     }
 
-    // POST /api/students
+    // POST
     @PostMapping
     public StudentProfile createProfile(@RequestBody StudentProfile profile) {
         return service.createProfile(profile);
     }
 
-    // GET /api/students/{id}
+    // GET all
+    @GetMapping
+    public List<StudentProfile> getAllProfiles() {
+        return service.getAllProfiles();
+    }
+
+    // GET by profile id
     @GetMapping("/{id}")
     public StudentProfile getProfileById(@PathVariable Long id) {
         return service.getProfileById(id);
     }
 
-    // GET /api/students/enrollment/{id}
+    // GET by enrollment id
     @GetMapping("/enrollment/{id}")
-    public StudentProfile getProfileByEnrollmentId(@PathVariable String id) {
+    public StudentProfile getByEnrollment(@PathVariable String id) {
         return service.getProfileByEnrollmentId(id);
-    }
-
-    // GET /api/students
-    @GetMapping
-    public List<StudentProfile> getAllProfiles() {
-        return service.getAllProfiles();
     }
 }
