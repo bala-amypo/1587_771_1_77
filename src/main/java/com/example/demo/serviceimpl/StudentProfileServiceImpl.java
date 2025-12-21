@@ -1,4 +1,4 @@
-package com.example.demo.service.impl;
+package com.example.demo.serviceimpl;
 
 import com.example.demo.entity.StudentProfile;
 import com.example.demo.entity.User;
@@ -23,18 +23,21 @@ public class StudentProfileServiceImpl implements StudentProfileService {
 
     @Override
     public StudentProfile create(StudentProfile profile) {
-        User user = profile.getUser();
 
-        // 🔹 AUTO CREATE OR FETCH USER
-        if (user.getId() != null) {
-            user = userRepo.findById(user.getId())
+        User incomingUser = profile.getUser();
+        User savedUser;
+
+        // ✅ FIX: NO lambda using mutable variable
+        if (incomingUser.getId() != null) {
+            savedUser = userRepo.findById(incomingUser.getId())
                     .orElseThrow(() ->
-                            new RuntimeException("User not found with id " + user.getId()));
+                            new RuntimeException(
+                                    "User not found with id " + incomingUser.getId()));
         } else {
-            user = userRepo.save(user);
+            savedUser = userRepo.save(incomingUser);
         }
 
-        profile.setUser(user);
+        profile.setUser(savedUser);
         return studentRepo.save(profile);
     }
 
