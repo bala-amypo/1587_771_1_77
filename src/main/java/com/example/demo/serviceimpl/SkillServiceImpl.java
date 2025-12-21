@@ -1,3 +1,4 @@
+// --- SkillServiceImpl.java ---
 package com.example.demo.serviceimpl;
 
 import com.example.demo.dto.SkillDTO;
@@ -6,7 +7,6 @@ import com.example.demo.repository.SkillRepository;
 import com.example.demo.service.SkillService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,7 +18,6 @@ public class SkillServiceImpl implements SkillService {
 
     @Override
     public SkillDTO createSkill(SkillDTO skillDTO) {
-        // Check if skill with same name already exists
         if (skillRepository.existsByName(skillDTO.getName())) {
             throw new RuntimeException("Skill with name '" + skillDTO.getName() + "' already exists");
         }
@@ -52,7 +51,6 @@ public class SkillServiceImpl implements SkillService {
         Skill skill = skillRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Skill not found with id: " + id));
 
-        // Check if updating name conflicts with existing skill
         if (!skill.getName().equals(skillDTO.getName()) && 
             skillRepository.existsByName(skillDTO.getName())) {
             throw new RuntimeException("Skill with name '" + skillDTO.getName() + "' already exists");

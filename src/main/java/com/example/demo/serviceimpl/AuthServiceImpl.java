@@ -1,3 +1,4 @@
+// --- AuthServiceImpl.java ---
 package com.example.demo.serviceimpl;
 
 import com.example.demo.dto.UserDTO;
@@ -7,7 +8,6 @@ import com.example.demo.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 
 @Service
@@ -21,12 +21,10 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public UserDTO register(UserDTO userDTO) {
-        // Check if username already exists
         if (userRepository.findByUsername(userDTO.getUsername()).isPresent()) {
             throw new RuntimeException("Username already exists: " + userDTO.getUsername());
         }
 
-        // Check if email already exists
         if (userRepository.findByEmail(userDTO.getEmail()).isPresent()) {
             throw new RuntimeException("Email already exists: " + userDTO.getEmail());
         }
@@ -51,8 +49,7 @@ public class AuthServiceImpl implements AuthService {
             throw new RuntimeException("Invalid username or password");
         }
 
-        // Generate JWT token (implement JWT utility)
-        return "jwt-token-" + user.getUserId(); // Placeholder
+        return "jwt-token-" + user.getUserId();
     }
 
     @Override
@@ -64,15 +61,13 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public boolean validateToken(String token) {
-        // Implement JWT token validation
         return token != null && token.startsWith("jwt-token-");
     }
 
     @Override
     public String refreshToken(String token) {
-        // Implement JWT token refresh logic
         if (validateToken(token)) {
-            return token; // Return new token
+            return token;
         }
         throw new RuntimeException("Invalid token");
     }
@@ -84,7 +79,6 @@ public class AuthServiceImpl implements AuthService {
         dto.setEmail(user.getEmail());
         dto.setRole(user.getRole());
         dto.setCreatedAt(user.getCreatedAt() != null ? user.getCreatedAt().toString() : null);
-        // Don't include password in DTO
         return dto;
     }
 }

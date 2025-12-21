@@ -4,11 +4,11 @@ import com.example.demo.dto.SkillGapRecordDTO;
 import java.util.List;
 
 public interface SkillGapService {
-    SkillGapRecordDTO createSkillGapRecord(SkillGapRecordDTO recordDTO);
-    SkillGapRecordDTO getSkillGapRecordById(Long id);
-    List<SkillGapRecordDTO> getAllSkillGapRecords();
-    List<SkillGapRecordDTO> getSkillGapRecordsByUserId(Long userId);
-    List<SkillGapRecordDTO> getSkillGapRecordsBySkillId(Long skillId);
-    SkillGapRecordDTO updateSkillGapRecord(Long id, SkillGapRecordDTO recordDTO);
-    void deleteSkillGapRecord(Long id);
+    SkillGapRecordDTO createSkillGap(SkillGapRecordDTO recordDTO);
+    SkillGapRecordDTO getSkillGapById(Long id);
+    List<SkillGapRecordDTO> getAllSkillGaps();
+    List<SkillGapRecordDTO> getSkillGapsByStudentId(Long userId);
+    SkillGapRecordDTO updateSkillGap(Long id, SkillGapRecordDTO recordDTO);
+    void deleteSkillGap(Long id);
+    List<SkillGapRecordDTO> analyzeSkillGapsForStudent(Long userId);
 }

@@ -1,7 +1,6 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.AssessmentResultDTO;
-
 import java.util.List;
 
 public interface AssessmentResultService {

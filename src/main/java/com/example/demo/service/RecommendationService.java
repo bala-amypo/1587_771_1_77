@@ -7,8 +7,8 @@ public interface RecommendationService {
     SkillGapRecommendationDTO createRecommendation(SkillGapRecommendationDTO recommendationDTO);
     SkillGapRecommendationDTO getRecommendationById(Long id);
     List<SkillGapRecommendationDTO> getAllRecommendations();
-    List<SkillGapRecommendationDTO> getRecommendationsByUserId(Long userId);
-    List<SkillGapRecommendationDTO> getRecommendationsByPriority(String priority);
+    List<SkillGapRecommendationDTO> getRecommendationsByStudentId(Long userId);
     SkillGapRecommendationDTO updateRecommendation(Long id, SkillGapRecommendationDTO recommendationDTO);
     void deleteRecommendation(Long id);
+    List<SkillGapRecommendationDTO> generateRecommendationsForStudent(Long userId);
 }
