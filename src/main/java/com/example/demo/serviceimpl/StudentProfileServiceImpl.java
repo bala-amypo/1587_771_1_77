@@ -1,31 +1,39 @@
-@Service
-public class StudentProfileServiceImpl {
+package com.example.demo.serviceimpl;
 
-    private final StudentProfileRepository repository;
+import com.example.demo.entity.StudentProfile;
+import com.example.demo.entity.User;
+import com.example.demo.repository.StudentProfileRepository;
+import com.example.demo.repository.UserRepository;
+import com.example.demo.service.StudentProfileService;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class StudentProfileServiceImpl implements StudentProfileService {
+
+    private final StudentProfileRepository studentProfileRepository;
     private final UserRepository userRepository;
 
-    public StudentProfileServiceImpl(StudentProfileRepository repository,
+    public StudentProfileServiceImpl(StudentProfileRepository studentProfileRepository,
                                      UserRepository userRepository) {
-        this.repository = repository;
+        this.studentProfileRepository = studentProfileRepository;
         this.userRepository = userRepository;
     }
 
+    @Override
     public StudentProfile create(StudentProfile profile) {
 
         User user = profile.getUser();
 
-        // ✅ IF USER ID IS NULL → CREATE NEW USER
-        if (user.getId() == null) {
-            user = userRepository.save(user);
-        } 
-        // ✅ IF USER ID EXISTS → FETCH FROM DB
-        else {
-            user = userRepository.findById(user.getId())
-                    .orElseThrow(() ->
-                            new RuntimeException("User not found with id " + user.getId()));
+        if (user == null || user.getId() == null) {
+            throw new RuntimeException("User ID is required");
         }
 
-        profile.setUser(user);
-        return repository.save(profile);
+        User existingUser = userRepository.findById(user.getId())
+                .orElseThrow(() ->
+                        new RuntimeException("User not found with id " + user.getId()));
+
+        profile.setUser(existingUser);
+        return studentProfileRepository.save(profile);
     }
 }

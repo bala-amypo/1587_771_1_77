@@ -3,13 +3,5 @@ package com.example.demo.repository;
 import com.example.demo.entity.StudentProfile;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
-import java.util.List;
-
-public interface StudentProfileRepository
-        extends JpaRepository<StudentProfile, Long> {
-
-    Optional<StudentProfile> findByUserId(Long userId);
-
-    List<StudentProfile> findAll();
+public interface StudentProfileRepository extends JpaRepository<StudentProfile, Long> {
 }
