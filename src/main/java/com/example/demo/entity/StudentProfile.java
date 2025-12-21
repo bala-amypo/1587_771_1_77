@@ -1,33 +1,24 @@
 package com.example.demo.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "student_profile")
+@Table(name = "student_profiles")
 public class StudentProfile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "course")
     private String course;
-
-    @Column(name = "name")
     private String name;
+    private int year;
 
-    // ✅ ESCAPE RESERVED KEYWORD
-    @Column(name = "`year`")
-    private Integer year;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    // ===== GETTERS & SETTERS =====
-
+    // getters & setters
     public Long getId() {
         return id;
     }
@@ -52,11 +43,11 @@ public class StudentProfile {
         this.name = name;
     }
 
-    public Integer getYear() {
+    public int getYear() {
         return year;
     }
 
-    public void setYear(Integer year) {
+    public void setYear(int year) {
         this.year = year;
     }
 

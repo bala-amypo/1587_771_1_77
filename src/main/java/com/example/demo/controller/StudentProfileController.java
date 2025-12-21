@@ -16,25 +16,25 @@ public class StudentProfileController {
         this.service = service;
     }
 
-    // POST /api/students
+    // POST
     @PostMapping
     public StudentProfile create(@RequestBody StudentProfile profile) {
         return service.create(profile);
     }
 
-    // GET /api/students
+    // GET ALL
     @GetMapping
     public List<StudentProfile> getAll() {
         return service.getAll();
     }
 
-    // GET /api/students/{id}
+    // GET BY ID
     @GetMapping("/{id}")
     public StudentProfile getById(@PathVariable Long id) {
         return service.getById(id);
     }
 
-    // GET /api/students/user/{userId}
+    // GET BY USER ID
     @GetMapping("/user/{userId}")
     public StudentProfile getByUserId(@PathVariable Long userId) {
         return service.getByUserId(userId);
