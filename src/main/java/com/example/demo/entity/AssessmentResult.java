@@ -1,11 +1,9 @@
+// --- AssessmentResult.java ---
 package com.example.demo.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -15,43 +13,36 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AssessmentResult {
-    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "result_id")
+    private Long resultId;
     
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "student_id", nullable = false)
-    private StudentProfile student;
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
     
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "skill_id", nullable = false)
-    private Skill skill;
+    @Column(name = "skill_id", nullable = false)
+    private Long skillId;
     
     @Column(nullable = false)
     private Integer score;
     
-    @Column(name = "max_score")
-    private Integer maxScore = 100;
-    
-    @Column(name = "assessment_type", length = 50)
-    private String assessmentType;
-    
-    @Column(length = 20)
-    private String status = "COMPLETED";
-    
-    @Column(name = "assessment_date")
-    private LocalDateTime assessmentDate;
-    
     @Column(columnDefinition = "TEXT")
     private String feedback;
     
-    @CreationTimestamp
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
+    @Column(name = "assessed_at")
+    private LocalDateTime assessedAt;
     
-    @UpdateTimestamp
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    private User user;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "skill_id", insertable = false, updatable = false)
+    private Skill skill;
+    
+    @PrePersist
+    protected void onCreate() {
+        assessedAt = LocalDateTime.now();
+    }
 }
-
