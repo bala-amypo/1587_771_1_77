@@ -3,44 +3,25 @@ package com.example.demo.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class SkillGapRecommendationDTO {
-    private Long id;
+    private Long recommendationId;
     
-    @NotNull(message = "Student ID is required")
-    private Long studentId;
+    @NotNull(message = "User ID is required")
+    private Long userId;
     
-    @NotNull(message = "Skill gap ID is required")
-    private Long skillGapId;
+    @NotNull(message = "Skill ID is required")
+    private Long skillId;
     
-    private String skillName;
+    @NotBlank(message = "Recommendation text is required")
+    private String recommendationText;
     
-    private String recommendationType;
-    
-    private String title;
-    
-    private String description;
-    
-    private String resourceUrl;
-    
-    private String resourceType;
-    
-    private Integer estimatedDuration;
-    
-    private String difficulty;
-    
-    private Integer priority;
-    
-    private String status;
-    
-    private LocalDateTime createdAt;
-    
-    private LocalDateTime updatedAt;
+    private String priorityLevel;
+    private String resources;
+    private String createdAt;
 }
-

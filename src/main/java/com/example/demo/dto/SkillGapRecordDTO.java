@@ -3,43 +3,32 @@ package com.example.demo.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class SkillGapRecordDTO {
-    private Long id;
+    private Long gapId;
     
-    @NotNull(message = "Student ID is required")
-    private Long studentId;
+    @NotNull(message = "User ID is required")
+    private Long userId;
     
     @NotNull(message = "Skill ID is required")
     private Long skillId;
     
-    private String skillName;
-    
+    @NotNull(message = "Current level is required")
+    @Min(0)
+    @Max(100)
     private Integer currentLevel;
     
-    private Integer requiredLevel;
+    @NotNull(message = "Target level is required")
+    @Min(0)
+    @Max(100)
+    private Integer targetLevel;
     
-    private Integer gapSize;
-    
-    private String severity;
-    
-    private String status;
-    
-    private String actionPlan;
-    
-    private LocalDateTime identifiedDate;
-    
-    private LocalDateTime targetDate;
-    
-    private Integer progress;
-    
-    private LocalDateTime createdAt;
-    
-    private LocalDateTime updatedAt;
+    private Integer gapLevel;
+    private String identifiedAt;
 }
