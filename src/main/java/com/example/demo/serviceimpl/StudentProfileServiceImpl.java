@@ -21,34 +21,54 @@ public class StudentProfileServiceImpl implements StudentProfileService {
         this.userRepo = userRepo;
     }
 
+    // =========================
+    // CREATE STUDENT PROFILE
+    // =========================
     @Override
     public StudentProfile createProfile(StudentProfile profile) {
 
+        // Validate user input
+        if (profile.getUser() == null || profile.getUser().getId() == null) {
+            throw new RuntimeException("User ID must be provided");
+        }
+
         Long userId = profile.getUser().getId();
 
+        // Fetch existing user from DB
         User user = userRepo.findById(userId)
-                .orElseThrow(() -> new RuntimeException(
-                        "User not found with id " + userId));
+                .orElseThrow(() ->
+                        new RuntimeException("User not found with id " + userId));
 
+        // Attach managed user entity
         profile.setUser(user);
+
         return studentRepo.save(profile);
     }
 
+    // =========================
+    // GET PROFILE BY ID
+    // =========================
     @Override
     public StudentProfile getProfileById(Long id) {
         return studentRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException(
-                        "Student not found with id " + id));
+                .orElseThrow(() ->
+                        new RuntimeException("Student profile not found with id " + id));
     }
 
-    // ✅ THIS WAS MISSING — NOW FIXED
+    // =========================
+    // GET PROFILE BY ENROLLMENT ID
+    // =========================
     @Override
     public StudentProfile getProfileByEnrollmentId(String enrollmentId) {
         return studentRepo.findByEnrollmentId(enrollmentId)
-                .orElseThrow(() -> new RuntimeException(
-                        "Student not found with enrollmentId " + enrollmentId));
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                "Student profile not found with enrollmentId " + enrollmentId));
     }
 
+    // =========================
+    // GET ALL PROFILES
+    // =========================
     @Override
     public List<StudentProfile> getAllProfiles() {
         return studentRepo.findAll();
