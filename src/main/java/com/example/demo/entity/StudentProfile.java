@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 @Entity
@@ -24,11 +25,12 @@ public class StudentProfile {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private User user;
 
-    // =========================
+    // ========================
     // Constructors
-    // =========================
+    // ========================
 
     public StudentProfile() {
     }
@@ -43,9 +45,9 @@ public class StudentProfile {
         this.user = user;
     }
 
-    // =========================
+    // ========================
     // Getters and Setters
-    // =========================
+    // ========================
 
     public Long getId() {
         return id;
