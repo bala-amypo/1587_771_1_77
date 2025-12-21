@@ -1,54 +1,31 @@
-package com.example.demo.service.impl;
-
-import com.example.demo.entity.StudentProfile;
-import com.example.demo.entity.User;
-import com.example.demo.repository.StudentProfileRepository;
-import com.example.demo.repository.UserRepository;
-import com.example.demo.service.StudentProfileService;
-import jakarta.transaction.Transactional;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-
 @Service
-@Transactional
-public class StudentProfileServiceImpl implements StudentProfileService {
+public class StudentProfileServiceImpl {
 
-    private final StudentProfileRepository studentRepo;
-    private final UserRepository userRepo;
+    private final StudentProfileRepository repository;
+    private final UserRepository userRepository;
 
-    public StudentProfileServiceImpl(StudentProfileRepository studentRepo,
-                                     UserRepository userRepo) {
-        this.studentRepo = studentRepo;
-        this.userRepo = userRepo;
+    public StudentProfileServiceImpl(StudentProfileRepository repository,
+                                     UserRepository userRepository) {
+        this.repository = repository;
+        this.userRepository = userRepository;
     }
 
-    @Override
     public StudentProfile create(StudentProfile profile) {
 
-        Long userId = profile.getUser().getId();
+        User user = profile.getUser();
 
-        User user = userRepo.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with id " + userId));
+        // ✅ IF USER ID IS NULL → CREATE NEW USER
+        if (user.getId() == null) {
+            user = userRepository.save(user);
+        } 
+        // ✅ IF USER ID EXISTS → FETCH FROM DB
+        else {
+            user = userRepository.findById(user.getId())
+                    .orElseThrow(() ->
+                            new RuntimeException("User not found with id " + user.getId()));
+        }
 
-        profile.setUser(user); // attach managed entity
-        return studentRepo.save(profile);
-    }
-
-    @Override
-    public StudentProfile getById(Long id) {
-        return studentRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Profile not found"));
-    }
-
-    @Override
-    public StudentProfile getByUserId(Long userId) {
-        return studentRepo.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("Profile not found for user"));
-    }
-
-    @Override
-    public List<StudentProfile> getAll() {
-        return studentRepo.findAll();
+        profile.setUser(user);
+        return repository.save(profile);
     }
 }
