@@ -8,6 +8,8 @@ import com.example.demo.service.StudentProfileService;
 
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class StudentProfileServiceImpl implements StudentProfileService {
 
@@ -23,17 +25,32 @@ public class StudentProfileServiceImpl implements StudentProfileService {
     @Override
     public StudentProfile create(StudentProfile profile) {
 
-        User user = profile.getUser();
-
-        if (user == null || user.getId() == null) {
+        if (profile.getUser() == null || profile.getUser().getId() == null) {
             throw new RuntimeException("User ID is required");
         }
 
-        User existingUser = userRepository.findById(user.getId())
+        User user = userRepository.findById(profile.getUser().getId())
                 .orElseThrow(() ->
-                        new RuntimeException("User not found with id " + user.getId()));
+                        new RuntimeException("User not found with id " + profile.getUser().getId()));
 
-        profile.setUser(existingUser);
+        profile.setUser(user);
         return studentProfileRepository.save(profile);
+    }
+
+    @Override
+    public List<StudentProfile> getAll() {
+        return studentProfileRepository.findAll();
+    }
+
+    @Override
+    public StudentProfile getById(Long id) {
+        return studentProfileRepository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Student profile not found with id " + id));
+    }
+
+    @Override
+    public List<StudentProfile> getByUserId(Long userId) {
+        return studentProfileRepository.findByUserId(userId);
     }
 }

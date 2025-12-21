@@ -8,9 +8,9 @@ public interface StudentProfileService {
 
     StudentProfile create(StudentProfile profile);
 
+    List<StudentProfile> getAll();
+
     StudentProfile getById(Long id);
 
-    StudentProfile getByUserId(Long userId);
-
-    List<StudentProfile> getAll();
+    List<StudentProfile> getByUserId(Long userId);
 }
