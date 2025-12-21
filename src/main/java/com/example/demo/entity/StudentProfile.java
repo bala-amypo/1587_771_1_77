@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "student_profile")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class StudentProfile {
 
     @Id
@@ -18,12 +17,13 @@ public class StudentProfile {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "year")
+    // ✅ ESCAPE RESERVED KEYWORD
+    @Column(name = "`year`")
     private Integer year;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    @JsonIgnoreProperties({"password"})
+    @JoinColumn(name = "user_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private User user;
 
     // ===== GETTERS & SETTERS =====
