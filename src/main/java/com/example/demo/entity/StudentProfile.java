@@ -1,37 +1,39 @@
 package com.example.demo.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
-@Table(name = "student_profiles")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class StudentProfile {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "profile_id")
-    private Long profileId;
-    
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
-    
-    @Column(length = 100)
-    private String department;
-    
-    @Column
-    private Integer semester;
-    
-    @Column(columnDefinition = "TEXT")
-    private String interests;
-    
-    @Column(name = "career_goals", columnDefinition = "TEXT")
-    private String careerGoals;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    private Long id;
+
+    @OneToOne
     private User user;
+
+    @Column(unique = true)
+    private String enrollmentId;
+
+    private String cohort;
+    private Integer yearLevel;
+    private Boolean active = true;
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
+
+    public String getEnrollmentId() { return enrollmentId; }
+    public void setEnrollmentId(String enrollmentId) { this.enrollmentId = enrollmentId; }
+
+    public String getCohort() { return cohort; }
+    public void setCohort(String cohort) { this.cohort = cohort; }
+
+    public Integer getYearLevel() { return yearLevel; }
+    public void setYearLevel(Integer yearLevel) { this.yearLevel = yearLevel; }
+
+    public Boolean getActive() { return active; }
+    public void setActive(Boolean active) { this.active = active; }
 }

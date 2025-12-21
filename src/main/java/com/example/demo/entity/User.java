@@ -1,39 +1,46 @@
 package com.example.demo.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "users")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
-    private Long userId;
-    
-    @Column(nullable = false, unique = true, length = 50)
-    private String username;
-    
-    @Column(nullable = false)
-    private String password;
-    
-    @Column(nullable = false, unique = true, length = 100)
+    private Long id;
+
+    private String fullName;
+
+    @Column(unique = true, nullable = false)
     private String email;
-    
-    @Column(nullable = false, length = 20)
-    private String role;
-    
-    @Column(name = "created_at")
+
+    private String password;
+
+    private String role = "STUDENT";
+
     private LocalDateTime createdAt;
-    
+
     @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
+    public void onCreate() {
+        this.createdAt = LocalDateTime.now();
     }
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getFullName() { return fullName; }
+    public void setFullName(String fullName) { this.fullName = fullName; }
+
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
+
+    public String getRole() { return role; }
+    public void setRole(String role) { this.role = role; }
+
+    public LocalDateTime getCreatedAt() { return createdAt; }
 }
