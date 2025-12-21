@@ -2,11 +2,12 @@ package com.example.demo.repository;
 
 import com.example.demo.entity.AssessmentResult;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+
 import java.util.List;
 
-@Repository
 public interface AssessmentResultRepository extends JpaRepository<AssessmentResult, Long> {
-    List<AssessmentResult> findByUserId(Long userId);
-    List<AssessmentResult> findBySkillId(Long skillId);
+
+    List<AssessmentResult> findByStudentProfile_Id(Long studentId);
+
+    List<AssessmentResult> findByStudentProfile_IdAndSkill_Id(Long studentId, Long skillId);
 }
