@@ -1,7 +1,6 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.StudentProfile;
-
 import java.util.List;
 
 public interface StudentProfileService {
@@ -12,5 +11,5 @@ public interface StudentProfileService {
 
     StudentProfile getById(Long id);
 
-    List<StudentProfile> getByUserId(Long userId);
+    StudentProfile getByUserId(Long userId);
 }
