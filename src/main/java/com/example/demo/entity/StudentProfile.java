@@ -10,26 +10,53 @@ public class StudentProfile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String course;
-    private String name;
-    private int year;
+    private String enrollmentId;
+    private String cohort;
+    private int yearLevel;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
+    @OneToOne
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public StudentProfile() {}
 
-    public String getCourse() { return course; }
-    public void setCourse(String course) { this.course = course; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public int getYear() { return year; }
-    public void setYear(int year) { this.year = year; }
+    public String getEnrollmentId() {
+        return enrollmentId;
+    }
 
-    public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; }
+    public void setEnrollmentId(String enrollmentId) {
+        this.enrollmentId = enrollmentId;
+    }
+
+    public String getCohort() {
+        return cohort;
+    }
+
+    public void setCohort(String cohort) {
+        this.cohort = cohort;
+    }
+
+    public int getYearLevel() {
+        return yearLevel;
+    }
+
+    public void setYearLevel(int yearLevel) {
+        this.yearLevel = yearLevel;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }
