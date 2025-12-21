@@ -4,28 +4,28 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "student_profile") // 👈 EXACT table name
+@Table(name = "student_profile")
 public class StudentProfile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "course") // 👈 DB column
+    @Column(name = "course")
     private String course;
 
-    @Column(name = "name") // 👈 DB column
+    @Column(name = "name")
     private String name;
 
-    @Column(name = "year") // 👈 DB column
+    @Column(name = "year")
     private Integer year;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id") // 👈 DB column
+    @JoinColumn(name = "user_id")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private User user;
 
-    // ========= GETTERS & SETTERS =========
+    // ===== Getters & Setters =====
 
     public Long getId() {
         return id;

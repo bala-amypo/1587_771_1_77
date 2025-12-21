@@ -4,11 +4,10 @@ import com.example.demo.entity.StudentProfile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+import java.util.List;
 
 @Repository
-public interface StudentProfileRepository
-        extends JpaRepository<StudentProfile, Long> {
+public interface StudentProfileRepository extends JpaRepository<StudentProfile, Long> {
 
-    Optional<StudentProfile> findByEnrollmentId(String enrollmentId);
+    List<StudentProfile> findByUser_Id(Long userId);
 }
