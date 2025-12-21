@@ -1,45 +1,62 @@
-package com.skillgap.dto;
+package com.example.demo.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
-
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class RecommendationDTO {
-    private Long id;
-    
-    @NotNull(message = "Student ID is required")
-    private Long studentId;
-    
-    @NotNull(message = "Skill gap ID is required")
-    private Long skillGapId;
-    
+
+    private Long skillId;
     private String skillName;
-    
-    private String recommendationType;
-    
-    private String title;
-    
-    private String description;
-    
-    private String resourceUrl;
-    
-    private String resourceType;
-    
-    private Integer estimatedDuration;
-    
-    private String difficulty;
-    
-    private Integer priority;
-    
-    private String status;
-    
-    private LocalDateTime createdAt;
-    
-    private LocalDateTime updatedAt;
+    private String recommendedAction;
+    private String priority;
+    private Double gapScore;
+    private String generatedBy;
+
+    public RecommendationDTO() {
+    }
+
+    public Long getSkillId() {
+        return skillId;
+    }
+
+    public void setSkillId(Long skillId) {
+        this.skillId = skillId;
+    }
+
+    public String getSkillName() {
+        return skillName;
+    }
+
+    public void setSkillName(String skillName) {
+        this.skillName = skillName;
+    }
+
+    public String getRecommendedAction() {
+        return recommendedAction;
+    }
+
+    public void setRecommendedAction(String recommendedAction) {
+        this.recommendedAction = recommendedAction;
+    }
+
+    public String getPriority() {
+        return priority;
+    }
+
+    public void setPriority(String priority) {
+        this.priority = priority;
+    }
+
+    public Double getGapScore() {
+        return gapScore;
+    }
+
+    public void setGapScore(Double gapScore) {
+        this.gapScore = gapScore;
+    }
+
+    public String getGeneratedBy() {
+        return generatedBy;
+    }
+
+    public void setGeneratedBy(String generatedBy) {
+        this.generatedBy = generatedBy;
+    }
 }
