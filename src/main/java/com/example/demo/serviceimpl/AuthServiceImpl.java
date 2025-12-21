@@ -1,7 +1,6 @@
-package com.example.demo.service.impl;
+package com.example.demo.serviceimpl;
 
 import com.example.demo.dto.LoginRequest;
-import com.example.demo.dto.RegisterRequest;
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.AuthService;
@@ -17,19 +16,8 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String register(RegisterRequest request) {
-        User user = new User();
-        user.setFullName(request.getFullName());
-        user.setEmail(request.getEmail());
-        user.setPassword(request.getPassword()); // plain for PDF
-        user.setRole(request.getRole());
-
-        userRepository.save(user);
-        return "User registered successfully";
-    }
-
-    @Override
     public String login(LoginRequest request) {
+
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("Invalid email"));
 
