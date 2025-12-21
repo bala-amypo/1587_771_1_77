@@ -1,5 +1,3 @@
-
-// --- StudentProfileService.java ---
 package com.example.demo.service;
 
 import com.example.demo.dto.StudentProfileDTO;
