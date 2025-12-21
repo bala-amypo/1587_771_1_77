@@ -2,6 +2,7 @@ package com.example.demo.serviceimpl;
 
 import com.example.demo.entity.StudentProfile;
 import com.example.demo.entity.User;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.StudentProfileRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.StudentProfileService;
@@ -12,44 +13,46 @@ import java.util.List;
 @Service
 public class StudentProfileServiceImpl implements StudentProfileService {
 
-    private final StudentProfileRepository studentRepo;
-    private final UserRepository userRepo;
+    private final StudentProfileRepository profileRepository;
+    private final UserRepository userRepository;
 
-    public StudentProfileServiceImpl(StudentProfileRepository studentRepo,
-                                     UserRepository userRepo) {
-        this.studentRepo = studentRepo;
-        this.userRepo = userRepo;
+    public StudentProfileServiceImpl(StudentProfileRepository profileRepository,
+                                     UserRepository userRepository) {
+        this.profileRepository = profileRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
-    public StudentProfile create(StudentProfile profile) {
+    public StudentProfile createProfile(StudentProfile profile) {
 
-        User incomingUser = profile.getUser();
-        User savedUser;
+        Long userId = profile.getUser().getId();
 
-        // ✅ FIX: NO lambda using mutable variable
-        if (incomingUser.getId() != null) {
-            savedUser = userRepo.findById(incomingUser.getId())
-                    .orElseThrow(() ->
-                            new RuntimeException(
-                                    "User not found with id " + incomingUser.getId()));
-        } else {
-            savedUser = userRepo.save(incomingUser);
-        }
-
-        profile.setUser(savedUser);
-        return studentRepo.save(profile);
-    }
-
-    @Override
-    public List<StudentProfile> getAll() {
-        return studentRepo.findAll();
-    }
-
-    @Override
-    public StudentProfile getById(Long id) {
-        return studentRepo.findById(id)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() ->
-                        new RuntimeException("Student not found with id " + id));
+                        new ResourceNotFoundException("User not found"));
+
+        profile.setUser(user);
+        profile.setActive(true);
+
+        return profileRepository.save(profile);
+    }
+
+    @Override
+    public StudentProfile getProfileById(Long id) {
+        return profileRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("StudentProfile not found"));
+    }
+
+    @Override
+    public StudentProfile getProfileByEnrollmentId(String enrollmentId) {
+        return profileRepository.findByEnrollmentId(enrollmentId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("StudentProfile not found"));
+    }
+
+    @Override
+    public List<StudentProfile> getAllProfiles() {
+        return profileRepository.findAll();
     }
 }
