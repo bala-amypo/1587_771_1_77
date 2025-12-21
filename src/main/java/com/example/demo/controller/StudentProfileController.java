@@ -12,7 +12,8 @@ public class StudentProfileController {
 
     private final StudentProfileService service;
 
-    public StudentController(StudentProfileService service) {
+    // ✅ Constructor name MATCHES class name
+    public StudentProfileController(StudentProfileService service) {
         this.service = service;
     }
 
