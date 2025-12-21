@@ -11,6 +11,4 @@ public interface StudentProfileService {
     List<StudentProfile> getAll();
 
     StudentProfile getById(Long id);
-
-    StudentProfile getByUserId(Long userId);
 }
