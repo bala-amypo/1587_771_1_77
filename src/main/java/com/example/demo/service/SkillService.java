@@ -1,14 +1,17 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.SkillDTO;
+import com.example.demo.entity.Skill;
 import java.util.List;
 
 public interface SkillService {
-    SkillDTO createSkill(SkillDTO skillDTO);
-    SkillDTO getSkillById(Long id);
-    List<SkillDTO> getAllSkills();
-    SkillDTO updateSkill(Long id, SkillDTO skillDTO);
-    void deleteSkill(Long id);
-    List<SkillDTO> getSkillsByCategory(String category);
-    List<String> getAllCategories();
+
+    Skill createSkill(Skill skill);
+
+    Skill updateSkill(Long id, Skill skill);
+
+    Skill getSkillById(Long id);
+
+    List<Skill> getAllSkills();
+
+    void deactivateSkill(Long id);
 }

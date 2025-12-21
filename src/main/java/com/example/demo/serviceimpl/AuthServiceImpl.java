@@ -1,84 +1,42 @@
-// --- AuthServiceImpl.java ---
-package com.example.demo.serviceimpl;
+package com.example.demo.service.impl;
 
-import com.example.demo.dto.UserDTO;
+import com.example.demo.dto.LoginRequest;
+import com.example.demo.dto.RegisterRequest;
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.AuthService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import java.time.LocalDateTime;
 
 @Service
 public class AuthServiceImpl implements AuthService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    public AuthServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
-    public UserDTO register(UserDTO userDTO) {
-        if (userRepository.findByUsername(userDTO.getUsername()).isPresent()) {
-            throw new RuntimeException("Username already exists: " + userDTO.getUsername());
-        }
-
-        if (userRepository.findByEmail(userDTO.getEmail()).isPresent()) {
-            throw new RuntimeException("Email already exists: " + userDTO.getEmail());
-        }
-
+    public String register(RegisterRequest request) {
         User user = new User();
-        user.setUsername(userDTO.getUsername());
-        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        user.setEmail(userDTO.getEmail());
-        user.setRole(userDTO.getRole());
-        user.setCreatedAt(LocalDateTime.now());
+        user.setFullName(request.getFullName());
+        user.setEmail(request.getEmail());
+        user.setPassword(request.getPassword()); // plain for PDF
+        user.setRole(request.getRole());
 
-        User savedUser = userRepository.save(user);
-        return convertToDTO(savedUser);
+        userRepository.save(user);
+        return "User registered successfully";
     }
 
     @Override
-    public String login(String username, String password) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("Invalid username or password"));
+    public String login(LoginRequest request) {
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new RuntimeException("Invalid email"));
 
-        if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new RuntimeException("Invalid username or password");
+        if (!user.getPassword().equals(request.getPassword())) {
+            throw new RuntimeException("Invalid password");
         }
 
-        return "jwt-token-" + user.getUserId();
-    }
-
-    @Override
-    public UserDTO getUserById(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
-        return convertToDTO(user);
-    }
-
-    @Override
-    public boolean validateToken(String token) {
-        return token != null && token.startsWith("jwt-token-");
-    }
-
-    @Override
-    public String refreshToken(String token) {
-        if (validateToken(token)) {
-            return token;
-        }
-        throw new RuntimeException("Invalid token");
-    }
-
-    private UserDTO convertToDTO(User user) {
-        UserDTO dto = new UserDTO();
-        dto.setUserId(user.getUserId());
-        dto.setUsername(user.getUsername());
-        dto.setEmail(user.getEmail());
-        dto.setRole(user.getRole());
-        dto.setCreatedAt(user.getCreatedAt() != null ? user.getCreatedAt().toString() : null);
-        return dto;
+        return "Login successful";
     }
 }
