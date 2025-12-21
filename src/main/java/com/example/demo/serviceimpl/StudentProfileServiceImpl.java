@@ -21,33 +21,42 @@ public class StudentProfileServiceImpl implements StudentProfileService {
         this.userRepo = userRepo;
     }
 
-    // =========================
-    // CREATE STUDENT PROFILE
-    // =========================
     @Override
     public StudentProfile createProfile(StudentProfile profile) {
 
-        // Validate user input
-        if (profile.getUser() == null || profile.getUser().getId() == null) {
-            throw new RuntimeException("User ID must be provided");
+        if (profile.getUser() == null) {
+            throw new RuntimeException("User details are required");
         }
 
-        Long userId = profile.getUser().getId();
+        User userInput = profile.getUser();
+        User user;
 
-        // Fetch existing user from DB
-        User user = userRepo.findById(userId)
-                .orElseThrow(() ->
-                        new RuntimeException("User not found with id " + userId));
+        // ✅ CASE 1: User ID provided → fetch
+        if (userInput.getId() != null) {
+            user = userRepo.findById(userInput.getId())
+                    .orElseThrow(() ->
+                            new RuntimeException("User not found with id " + userInput.getId()));
+        }
+        // ✅ CASE 2: Email provided → fetch or create
+        else if (userInput.getEmail() != null) {
+            user = userRepo.findByEmail(userInput.getEmail())
+                    .orElseGet(() -> {
+                        User newUser = new User();
+                        newUser.setFullName(userInput.getFullName());
+                        newUser.setEmail(userInput.getEmail());
+                        newUser.setPassword(userInput.getPassword());
+                        newUser.setRole(userInput.getRole());
+                        return userRepo.save(newUser);
+                    });
+        }
+        else {
+            throw new RuntimeException("User ID or Email must be provided");
+        }
 
-        // Attach managed user entity
         profile.setUser(user);
-
         return studentRepo.save(profile);
     }
 
-    // =========================
-    // GET PROFILE BY ID
-    // =========================
     @Override
     public StudentProfile getProfileById(Long id) {
         return studentRepo.findById(id)
@@ -55,20 +64,13 @@ public class StudentProfileServiceImpl implements StudentProfileService {
                         new RuntimeException("Student profile not found with id " + id));
     }
 
-    // =========================
-    // GET PROFILE BY ENROLLMENT ID
-    // =========================
     @Override
     public StudentProfile getProfileByEnrollmentId(String enrollmentId) {
         return studentRepo.findByEnrollmentId(enrollmentId)
                 .orElseThrow(() ->
-                        new RuntimeException(
-                                "Student profile not found with enrollmentId " + enrollmentId));
+                        new RuntimeException("Student not found with enrollmentId " + enrollmentId));
     }
 
-    // =========================
-    // GET ALL PROFILES
-    // =========================
     @Override
     public List<StudentProfile> getAllProfiles() {
         return studentRepo.findAll();
