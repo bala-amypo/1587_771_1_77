@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-class RegisterRequestDTO {
+public class RegisterRequestDTO {
     @NotBlank(message = "Username is required")
     @Size(min = 3, max = 50)
     private String username;
@@ -26,4 +26,4 @@ class RegisterRequestDTO {
     
     @NotBlank(message = "Role is required")
     private String role;
-}
+}`

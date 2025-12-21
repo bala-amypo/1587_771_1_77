@@ -4,6 +4,8 @@ import com.example.demo.dto.UserDTO;
 
 public interface AuthService {
     UserDTO register(UserDTO userDTO);
-    UserDTO login(String username, String password);
-    void logout(Long userId);
+    String login(String username, String password);
+    UserDTO getUserById(Long userId);
+    boolean validateToken(String token);
+    String refreshToken(String token);
 }

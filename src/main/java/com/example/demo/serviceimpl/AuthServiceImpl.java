@@ -2,66 +2,89 @@ package com.example.demo.serviceimpl;
 
 import com.example.demo.dto.UserDTO;
 import com.example.demo.entity.User;
-import com.example.demo.exception.DuplicateResourceException;
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.AuthService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 @Service
-@RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
-    
-    private final UserRepository userRepository;
-    
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Override
-    @Transactional
     public UserDTO register(UserDTO userDTO) {
-        if (userRepository.existsByUsername(userDTO.getUsername())) {
-            throw new DuplicateResourceException("Username already exists: " + userDTO.getUsername());
+        // Check if username already exists
+        if (userRepository.findByUsername(userDTO.getUsername()).isPresent()) {
+            throw new RuntimeException("Username already exists: " + userDTO.getUsername());
         }
-        if (userRepository.existsByEmail(userDTO.getEmail())) {
-            throw new DuplicateResourceException("Email already exists: " + userDTO.getEmail());
+
+        // Check if email already exists
+        if (userRepository.findByEmail(userDTO.getEmail()).isPresent()) {
+            throw new RuntimeException("Email already exists: " + userDTO.getEmail());
         }
-        
+
         User user = new User();
         user.setUsername(userDTO.getUsername());
-        user.setPassword(userDTO.getPassword());
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         user.setEmail(userDTO.getEmail());
         user.setRole(userDTO.getRole());
-        
+        user.setCreatedAt(LocalDateTime.now());
+
         User savedUser = userRepository.save(user);
-        return mapToDTO(savedUser);
+        return convertToDTO(savedUser);
     }
-    
+
     @Override
-    public UserDTO login(String username, String password) {
+    public String login(String username, String password) {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException("Invalid username or password"));
-        
-        if (!user.getPassword().equals(password)) {
-            throw new ResourceNotFoundException("Invalid username or password");
+                .orElseThrow(() -> new RuntimeException("Invalid username or password"));
+
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new RuntimeException("Invalid username or password");
         }
-        
-        return mapToDTO(user);
+
+        // Generate JWT token (implement JWT utility)
+        return "jwt-token-" + user.getUserId(); // Placeholder
     }
-    
+
     @Override
-    public void logout(Long userId) {
-        if (!userRepository.existsById(userId)) {
-            throw new ResourceNotFoundException("User not found with id: " + userId);
-        }
+    public UserDTO getUserById(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+        return convertToDTO(user);
     }
-    
-    private UserDTO mapToDTO(User user) {
-        return new UserDTO(
-                user.getId(),
-                user.getUsername(),
-                null,
-                user.getEmail(),
-                user.getRole()
-        );
+
+    @Override
+    public boolean validateToken(String token) {
+        // Implement JWT token validation
+        return token != null && token.startsWith("jwt-token-");
+    }
+
+    @Override
+    public String refreshToken(String token) {
+        // Implement JWT token refresh logic
+        if (validateToken(token)) {
+            return token; // Return new token
+        }
+        throw new RuntimeException("Invalid token");
+    }
+
+    private UserDTO convertToDTO(User user) {
+        UserDTO dto = new UserDTO();
+        dto.setUserId(user.getUserId());
+        dto.setUsername(user.getUsername());
+        dto.setEmail(user.getEmail());
+        dto.setRole(user.getRole());
+        dto.setCreatedAt(user.getCreatedAt() != null ? user.getCreatedAt().toString() : null);
+        // Don't include password in DTO
+        return dto;
     }
 }

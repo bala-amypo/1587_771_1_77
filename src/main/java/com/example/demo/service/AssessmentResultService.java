@@ -1,14 +1,15 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.AssessmentResultDTO;
+
 import java.util.List;
 
 public interface AssessmentResultService {
-    AssessmentResultDTO createAssessmentResult(AssessmentResultDTO resultDTO);
-    AssessmentResultDTO getAssessmentResultById(Long id);
-    List<AssessmentResultDTO> getAllAssessmentResults();
-    List<AssessmentResultDTO> getAssessmentResultsByUserId(Long userId);
-    List<AssessmentResultDTO> getAssessmentResultsBySkillId(Long skillId);
-    AssessmentResultDTO updateAssessmentResult(Long id, AssessmentResultDTO resultDTO);
-    void deleteAssessmentResult(Long id);
+    AssessmentResultDTO createAssessment(AssessmentResultDTO resultDTO);
+    AssessmentResultDTO getAssessmentById(Long id);
+    List<AssessmentResultDTO> getAllAssessments();
+    List<AssessmentResultDTO> getAssessmentsByStudentId(Long userId);
+    List<AssessmentResultDTO> getAssessmentsBySkillId(Long skillId);
+    AssessmentResultDTO updateAssessment(Long id, AssessmentResultDTO resultDTO);
+    void deleteAssessment(Long id);
 }
