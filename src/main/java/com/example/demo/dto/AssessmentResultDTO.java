@@ -1,4 +1,3 @@
-// --- AssessmentResultDTO.java ---
 package com.example.demo.dto;
 
 import lombok.AllArgsConstructor;
