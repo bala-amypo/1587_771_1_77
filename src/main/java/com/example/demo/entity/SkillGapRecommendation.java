@@ -3,8 +3,6 @@ package com.example.demo.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -15,51 +13,39 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SkillGapRecommendation {
-    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "recommendation_id")
+    private Long recommendationId;
     
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "student_id", nullable = false)
-    private StudentProfile student;
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
     
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "skill_gap_id", nullable = false)
-    private SkillGapRecord skillGap;
+    @Column(name = "skill_id", nullable = false)
+    private Long skillId;
     
-    @Column(name = "recommendation_type", length = 50)
-    private String recommendationType;
+    @Column(name = "recommendation_text", nullable = false, columnDefinition = "TEXT")
+    private String recommendationText;
     
-    @Column(nullable = false, length = 200)
-    private String title;
+    @Column(name = "priority_level", length = 20)
+    private String priorityLevel;
     
     @Column(columnDefinition = "TEXT")
-    private String description;
+    private String resources;
     
-    @Column(name = "resource_url", length = 500)
-    private String resourceUrl;
-    
-    @Column(name = "resource_type", length = 50)
-    private String resourceType;
-    
-    @Column(name = "estimated_duration")
-    private Integer estimatedDuration;
-    
-    @Column(length = 20)
-    private String difficulty;
-    
-    @Column
-    private Integer priority = 1;
-    
-    @Column(length = 20)
-    private String status = "PENDING";
-    
-    @CreationTimestamp
-    @Column(name = "created_at", updatable = false)
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
     
-    @UpdateTimestamp
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    private User user;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "skill_id", insertable = false, updatable = false)
+    private Skill skill;
+    
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
 }
