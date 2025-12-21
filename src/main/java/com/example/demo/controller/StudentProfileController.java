@@ -16,27 +16,18 @@ public class StudentProfileController {
         this.service = service;
     }
 
-    // POST
     @PostMapping
     public StudentProfile create(@RequestBody StudentProfile profile) {
         return service.create(profile);
     }
 
-    // GET ALL
     @GetMapping
     public List<StudentProfile> getAll() {
         return service.getAll();
     }
 
-    // GET BY ID
     @GetMapping("/{id}")
     public StudentProfile getById(@PathVariable Long id) {
         return service.getById(id);
-    }
-
-    // GET BY USER ID
-    @GetMapping("/user/{userId}")
-    public StudentProfile getByUserId(@PathVariable Long userId) {
-        return service.getByUserId(userId);
     }
 }

@@ -23,11 +23,16 @@ public class StudentProfileServiceImpl implements StudentProfileService {
 
     @Override
     public StudentProfile create(StudentProfile profile) {
-        Long userId = profile.getUser().getId();
+        User user = profile.getUser();
 
-        User user = userRepo.findById(userId)
-                .orElseThrow(() ->
-                        new RuntimeException("User not found with id " + userId));
+        // 🔹 AUTO CREATE OR FETCH USER
+        if (user.getId() != null) {
+            user = userRepo.findById(user.getId())
+                    .orElseThrow(() ->
+                            new RuntimeException("User not found with id " + user.getId()));
+        } else {
+            user = userRepo.save(user);
+        }
 
         profile.setUser(user);
         return studentRepo.save(profile);
@@ -43,12 +48,5 @@ public class StudentProfileServiceImpl implements StudentProfileService {
         return studentRepo.findById(id)
                 .orElseThrow(() ->
                         new RuntimeException("Student not found with id " + id));
-    }
-
-    @Override
-    public StudentProfile getByUserId(Long userId) {
-        return studentRepo.findByUserId(userId)
-                .orElseThrow(() ->
-                        new RuntimeException("Student not found for userId " + userId));
     }
 }
