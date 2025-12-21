@@ -4,50 +4,28 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "student_profiles")
+@Table(name = "student_profile") // 👈 EXACT table name
 public class StudentProfile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "enrollment_id", unique = true, nullable = false)
-    private String enrollmentId;
+    @Column(name = "course") // 👈 DB column
+    private String course;
 
-    @Column(name = "cohort")
-    private String cohort;
+    @Column(name = "name") // 👈 DB column
+    private String name;
 
-    @Column(name = "year_level")
-    private Integer yearLevel;
-
-    @Column(name = "active")
-    private Boolean active;
+    @Column(name = "year") // 👈 DB column
+    private Integer year;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id") // 👈 DB column
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private User user;
 
-    // ========================
-    // Constructors
-    // ========================
-
-    public StudentProfile() {
-    }
-
-    public StudentProfile(Long id, String enrollmentId, String cohort,
-                          Integer yearLevel, Boolean active, User user) {
-        this.id = id;
-        this.enrollmentId = enrollmentId;
-        this.cohort = cohort;
-        this.yearLevel = yearLevel;
-        this.active = active;
-        this.user = user;
-    }
-
-    // ========================
-    // Getters and Setters
-    // ========================
+    // ========= GETTERS & SETTERS =========
 
     public Long getId() {
         return id;
@@ -57,36 +35,28 @@ public class StudentProfile {
         this.id = id;
     }
 
-    public String getEnrollmentId() {
-        return enrollmentId;
+    public String getCourse() {
+        return course;
     }
 
-    public void setEnrollmentId(String enrollmentId) {
-        this.enrollmentId = enrollmentId;
+    public void setCourse(String course) {
+        this.course = course;
     }
 
-    public String getCohort() {
-        return cohort;
+    public String getName() {
+        return name;
     }
 
-    public void setCohort(String cohort) {
-        this.cohort = cohort;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Integer getYearLevel() {
-        return yearLevel;
+    public Integer getYear() {
+        return year;
     }
 
-    public void setYearLevel(Integer yearLevel) {
-        this.yearLevel = yearLevel;
-    }
-
-    public Boolean getActive() {
-        return active;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
+    public void setYear(Integer year) {
+        this.year = year;
     }
 
     public User getUser() {
