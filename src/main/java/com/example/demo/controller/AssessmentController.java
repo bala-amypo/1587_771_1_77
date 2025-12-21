@@ -1,62 +1,40 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.AssessmentResultDTO;
+import com.example.demo.entity.AssessmentResult;
 import com.example.demo.service.AssessmentResultService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/assessments")
-@CrossOrigin(origins = "*")
-@RequiredArgsConstructor
+@Tag(name = "Assessments")
 public class AssessmentController {
 
     private final AssessmentResultService assessmentService;
 
+    public AssessmentController(AssessmentResultService assessmentService) {
+        this.assessmentService = assessmentService;
+    }
+
+    // POST /api/assessments
     @PostMapping
-    public ResponseEntity<AssessmentResultDTO> createAssessment(@Valid @RequestBody AssessmentResultDTO dto) {
-        AssessmentResultDTO created = assessmentService.createAssessment(dto);
-        return new ResponseEntity<>(created, HttpStatus.CREATED);
+    public AssessmentResult recordResult(@RequestBody AssessmentResult result) {
+        return assessmentService.recordResult(result);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<AssessmentResultDTO> getAssessmentById(@PathVariable Long id) {
-        AssessmentResultDTO assessment = assessmentService.getAssessmentById(id);
-        return ResponseEntity.ok(assessment);
-    }
-
-    @GetMapping
-    public ResponseEntity<List<AssessmentResultDTO>> getAllAssessments() {
-        List<AssessmentResultDTO> assessments = assessmentService.getAllAssessments();
-        return ResponseEntity.ok(assessments);
-    }
-
+    // GET /api/assessments/student/{studentId}
     @GetMapping("/student/{studentId}")
-    public ResponseEntity<List<AssessmentResultDTO>> getAssessmentsByStudent(@PathVariable Long studentId) {
-        List<AssessmentResultDTO> assessments = assessmentService.getAssessmentsByStudentId(studentId);
-        return ResponseEntity.ok(assessments);
+    public List<AssessmentResult> getByStudent(@PathVariable Long studentId) {
+        return assessmentService.getResultsByStudent(studentId);
     }
 
-    @GetMapping("/skill/{skillId}")
-    public ResponseEntity<List<AssessmentResultDTO>> getAssessmentsBySkill(@PathVariable Long skillId) {
-        List<AssessmentResultDTO> assessments = assessmentService.getAssessmentsBySkillId(skillId);
-        return ResponseEntity.ok(assessments);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<AssessmentResultDTO> updateAssessment(@PathVariable Long id, @Valid @RequestBody AssessmentResultDTO dto) {
-        AssessmentResultDTO updated = assessmentService.updateAssessment(id, dto);
-        return ResponseEntity.ok(updated);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAssessment(@PathVariable Long id) {
-        assessmentService.deleteAssessment(id);
-        return ResponseEntity.noContent().build();
+    // GET /api/assessments/student/{studentId}/skill/{skillId}
+    @GetMapping("/student/{studentId}/skill/{skillId}")
+    public List<AssessmentResult> getByStudentAndSkill(
+            @PathVariable Long studentId,
+            @PathVariable Long skillId) {
+        return assessmentService.getResultsByStudentAndSkill(studentId, skillId);
     }
 }

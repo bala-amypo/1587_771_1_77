@@ -1,62 +1,50 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.SkillDTO;
+import com.example.demo.entity.Skill;
 import com.example.demo.service.SkillService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/skills")
-@CrossOrigin(origins = "*")
-@RequiredArgsConstructor
+@Tag(name = "Skills")
 public class SkillController {
 
     private final SkillService skillService;
 
+    public SkillController(SkillService skillService) {
+        this.skillService = skillService;
+    }
+
+    // POST /api/skills
     @PostMapping
-    public ResponseEntity<SkillDTO> createSkill(@Valid @RequestBody SkillDTO dto) {
-        SkillDTO created = skillService.createSkill(dto);
-        return new ResponseEntity<>(created, HttpStatus.CREATED);
+    public Skill createSkill(@RequestBody Skill skill) {
+        return skillService.createSkill(skill);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<SkillDTO> getSkillById(@PathVariable Long id) {
-        SkillDTO skill = skillService.getSkillById(id);
-        return ResponseEntity.ok(skill);
-    }
-
-    @GetMapping
-    public ResponseEntity<List<SkillDTO>> getAllSkills() {
-        List<SkillDTO> skills = skillService.getAllSkills();
-        return ResponseEntity.ok(skills);
-    }
-
-    @GetMapping("/category/{category}")
-    public ResponseEntity<List<SkillDTO>> getSkillsByCategory(@PathVariable String category) {
-        List<SkillDTO> skills = skillService.getSkillsByCategory(category);
-        return ResponseEntity.ok(skills);
-    }
-
+    // PUT /api/skills/{id}
     @PutMapping("/{id}")
-    public ResponseEntity<SkillDTO> updateSkill(@PathVariable Long id, @Valid @RequestBody SkillDTO dto) {
-        SkillDTO updated = skillService.updateSkill(id, dto);
-        return ResponseEntity.ok(updated);
+    public Skill updateSkill(@PathVariable Long id, @RequestBody Skill skill) {
+        return skillService.updateSkill(id, skill);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteSkill(@PathVariable Long id) {
-        skillService.deleteSkill(id);
-        return ResponseEntity.noContent().build();
+    // GET /api/skills/{id}
+    @GetMapping("/{id}")
+    public Skill getSkill(@PathVariable Long id) {
+        return skillService.getSkillById(id);
     }
 
-    @GetMapping("/categories")
-    public ResponseEntity<List<String>> getAllCategories() {
-        List<String> categories = skillService.getAllCategories();
-        return ResponseEntity.ok(categories);
+    // GET /api/skills
+    @GetMapping
+    public List<Skill> getAllSkills() {
+        return skillService.getAllSkills();
+    }
+
+    // PUT /api/skills/{id}/deactivate
+    @PutMapping("/{id}/deactivate")
+    public void deactivateSkill(@PathVariable Long id) {
+        skillService.deactivateSkill(id);
     }
 }

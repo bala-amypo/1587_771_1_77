@@ -1,62 +1,44 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.StudentProfileDTO;
+import com.example.demo.entity.StudentProfile;
 import com.example.demo.service.StudentProfileService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/students")
-@CrossOrigin(origins = "*")
-@RequiredArgsConstructor
+@Tag(name = "Students")
 public class StudentProfileController {
 
     private final StudentProfileService studentProfileService;
 
+    public StudentProfileController(StudentProfileService studentProfileService) {
+        this.studentProfileService = studentProfileService;
+    }
+
+    // POST /api/students
     @PostMapping
-    public ResponseEntity<StudentProfileDTO> createStudentProfile(@Valid @RequestBody StudentProfileDTO dto) {
-        StudentProfileDTO created = studentProfileService.createStudentProfile(dto);
-        return new ResponseEntity<>(created, HttpStatus.CREATED);
+    public StudentProfile createProfile(@RequestBody StudentProfile profile) {
+        return studentProfileService.createProfile(profile);
     }
 
+    // GET /api/students/{id}
     @GetMapping("/{id}")
-    public ResponseEntity<StudentProfileDTO> getStudentProfileById(@PathVariable Long id) {
-        StudentProfileDTO profile = studentProfileService.getStudentProfileById(id);
-        return ResponseEntity.ok(profile);
+    public StudentProfile getById(@PathVariable Long id) {
+        return studentProfileService.getProfileById(id);
     }
 
+    // GET /api/students/enrollment/{id}
+    @GetMapping("/enrollment/{id}")
+    public StudentProfile getByEnrollmentId(@PathVariable String id) {
+        return studentProfileService.getProfileByEnrollmentId(id);
+    }
+
+    // GET /api/students
     @GetMapping
-    public ResponseEntity<List<StudentProfileDTO>> getAllStudentProfiles() {
-        List<StudentProfileDTO> profiles = studentProfileService.getAllStudentProfiles();
-        return ResponseEntity.ok(profiles);
-    }
-
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<StudentProfileDTO> getStudentProfileByUserId(@PathVariable Long userId) {
-        StudentProfileDTO profile = studentProfileService.getStudentProfileByUserId(userId);
-        return ResponseEntity.ok(profile);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<StudentProfileDTO> updateStudentProfile(@PathVariable Long id, @Valid @RequestBody StudentProfileDTO dto) {
-        StudentProfileDTO updated = studentProfileService.updateStudentProfile(id, dto);
-        return ResponseEntity.ok(updated);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteStudentProfile(@PathVariable Long id) {
-        studentProfileService.deleteStudentProfile(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/{id}/dashboard")
-    public ResponseEntity<?> getStudentDashboard(@PathVariable Long id) {
-        Object dashboard = studentProfileService.getStudentDashboard(id);
-        return ResponseEntity.ok(dashboard);
+    public List<StudentProfile> getAll() {
+        return studentProfileService.getAllProfiles();
     }
 }
