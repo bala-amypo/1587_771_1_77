@@ -1,53 +1,55 @@
 package com.example.demo.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "skill_gap_records")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class SkillGapRecord {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "gap_id")
-    private Long gapId;
-    
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
-    
-    @Column(name = "skill_id", nullable = false)
-    private Long skillId;
-    
-    @Column(name = "current_level", nullable = false)
-    private Integer currentLevel;
-    
-    @Column(name = "target_level", nullable = false)
-    private Integer targetLevel;
-    
-    @Column(name = "gap_level")
-    private Integer gapLevel;
-    
-    @Column(name = "identified_at")
-    private LocalDateTime identifiedAt;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", insertable = false, updatable = false)
-    private User user;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "skill_id", insertable = false, updatable = false)
+    private Long id;
+
+    @ManyToOne
+    private StudentProfile studentProfile;
+
+    @ManyToOne
     private Skill skill;
-    
+
+    private Double currentScore;
+    private Double targetScore;
+    private Double gapScore;
+    private LocalDateTime calculatedAt;
+
     @PrePersist
-    protected void onCreate() {
-        identifiedAt = LocalDateTime.now();
-        if (gapLevel == null && currentLevel != null && targetLevel != null) {
-            gapLevel = targetLevel - currentLevel;
-        }
+    public void onCalculate() {
+        this.calculatedAt = LocalDateTime.now();
     }
+
+    public Long getId() { return id; }
+
+    public StudentProfile getStudentProfile() { return studentProfile; }
+    public void setStudentProfile(StudentProfile studentProfile) {
+        this.studentProfile = studentProfile;
+    }
+
+    public Skill getSkill() { return skill; }
+    public void setSkill(Skill skill) { this.skill = skill; }
+
+    public Double getCurrentScore() { return currentScore; }
+    public void setCurrentScore(Double currentScore) {
+        this.currentScore = currentScore;
+    }
+
+    public Double getTargetScore() { return targetScore; }
+    public void setTargetScore(Double targetScore) {
+        this.targetScore = targetScore;
+    }
+
+    public Double getGapScore() { return gapScore; }
+    public void setGapScore(Double gapScore) {
+        this.gapScore = gapScore;
+    }
+
+    public LocalDateTime getCalculatedAt() { return calculatedAt; }
 }
