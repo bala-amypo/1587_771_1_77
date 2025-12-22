@@ -6,4 +6,6 @@ import java.util.List;
 public interface RecommendationService {
 
     List<RecommendationDTO> getRecommendationsByStudent(Long studentId);
+
+    RecommendationDTO createRecommendation(RecommendationDTO recommendationDTO);
 }
