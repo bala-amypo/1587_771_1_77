@@ -14,15 +14,15 @@ public class RecommendationServiceImpl implements RecommendationService {
     @Override
     public List<RecommendationDTO> getRecommendationsByStudent(Long studentId) {
 
-        List<RecommendationDTO> list = new ArrayList<>();
+        List<RecommendationDTO> recommendations = new ArrayList<>();
 
         RecommendationDTO dto = new RecommendationDTO();
         dto.setSkillName("Spring Boot");
         dto.setPriority(Priority.HIGH);
-        dto.setRecommendation("Improve REST APIs, JPA, and Exception Handling");
+        dto.setRecommendation("Practice REST APIs, JPA mappings, and exception handling");
 
-        list.add(dto);
+        recommendations.add(dto);
 
-        return list;
+        return recommendations;
     }
 }
