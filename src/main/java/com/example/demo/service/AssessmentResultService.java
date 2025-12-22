@@ -1,13 +1,14 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.AssessmentResult;
+
 import java.util.List;
 
 public interface AssessmentResultService {
 
-    AssessmentResult recordResult(AssessmentResult result);
+    AssessmentResult createAssessment(AssessmentResult result);
 
-    List<AssessmentResult> getResultsByStudent(Long studentId);
+    List<AssessmentResult> getAssessmentsByStudent(Long studentProfileId);
 
-    List<AssessmentResult> getResultsByStudentAndSkill(Long studentId, Long skillId);
+    AssessmentResult getAssessmentById(Long id);
 }
