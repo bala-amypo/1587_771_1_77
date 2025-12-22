@@ -16,8 +16,6 @@ public class SkillGapRecommendation {
 
     private String recommendation;
 
-    // ===== GETTERS & SETTERS =====
-
     public Long getId() {
         return id;
     }
