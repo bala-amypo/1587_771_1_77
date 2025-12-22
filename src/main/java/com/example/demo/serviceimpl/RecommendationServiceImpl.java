@@ -30,51 +30,59 @@ public class RecommendationServiceImpl implements RecommendationService {
         this.skillRepository = skillRepository;
     }
 
-    @Transactional
     @Override
+    @Transactional
     public List<RecommendationDTO> generateRecommendations(Long studentId) {
 
         StudentProfile student = studentProfileRepository.findById(studentId)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
 
         List<Skill> skills = skillRepository.findAll();
-        List<RecommendationDTO> response = new ArrayList<>();
+        List<RecommendationDTO> result = new ArrayList<>();
 
         for (Skill skill : skills) {
 
             SkillGapRecommendation rec = new SkillGapRecommendation();
             rec.setStudentProfile(student);
             rec.setSkill(skill);
-            rec.setGapScore(Math.random() * 100);
+            rec.setGapScore(50.0);
             rec.setPriority(Priority.MEDIUM);
             rec.setRecommendedAction("Improve skill: " + skill.getName());
             rec.setGeneratedBy("SYSTEM");
 
             SkillGapRecommendation saved = recommendationRepository.save(rec);
-            response.add(mapToDTO(saved));
+
+            RecommendationDTO dto = new RecommendationDTO();
+            dto.setSkillName(saved.getSkill().getName());
+            dto.setGapScore(saved.getGapScore());
+            dto.setPriority(saved.getPriority().name());
+            dto.setRecommendedAction(saved.getRecommendedAction());
+            dto.setGeneratedAt(saved.getGeneratedAt());
+
+            result.add(dto);
         }
 
-        return response;
+        return result;
     }
 
     @Override
     public List<RecommendationDTO> getRecommendationsByStudent(Long studentId) {
 
-        return recommendationRepository.findByStudentProfile_Id(studentId)
-                .stream()
-                .map(this::mapToDTO)
-                .toList();
-    }
+        List<RecommendationDTO> result = new ArrayList<>();
 
-    private RecommendationDTO mapToDTO(SkillGapRecommendation rec) {
+        for (SkillGapRecommendation rec :
+                recommendationRepository.findByStudentProfile_Id(studentId)) {
 
-        RecommendationDTO dto = new RecommendationDTO();
-        dto.setSkillName(rec.getSkill().getName());
-        dto.setGapScore(rec.getGapScore());
-        dto.setPriority(rec.getPriority().name());
-        dto.setRecommendedAction(rec.getRecommendedAction());
-        dto.setGeneratedAt(rec.getGeneratedAt());
+            RecommendationDTO dto = new RecommendationDTO();
+            dto.setSkillName(rec.getSkill().getName());
+            dto.setGapScore(rec.getGapScore());
+            dto.setPriority(rec.getPriority().name());
+            dto.setRecommendedAction(rec.getRecommendedAction());
+            dto.setGeneratedAt(rec.getGeneratedAt());
 
-        return dto;
+            result.add(dto);
+        }
+
+        return result;
     }
 }
