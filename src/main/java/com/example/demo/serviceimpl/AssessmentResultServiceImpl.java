@@ -30,9 +30,8 @@ public class AssessmentResultServiceImpl implements AssessmentResultService {
     }
 
     @Override
-    public AssessmentResult createAssessment(AssessmentResult result) {
+    public AssessmentResult recordResult(AssessmentResult result) {
 
-        // Validate StudentProfile
         Long studentId = result.getStudentProfile().getId();
         StudentProfile studentProfile = studentProfileRepository.findById(studentId)
                 .orElseThrow(() -> new ResponseStatusException(
@@ -40,7 +39,6 @@ public class AssessmentResultServiceImpl implements AssessmentResultService {
                         "StudentProfile not found with id " + studentId
                 ));
 
-        // Validate Skill
         Long skillId = result.getSkill().getId();
         Skill skill = skillRepository.findById(skillId)
                 .orElseThrow(() -> new ResponseStatusException(
@@ -48,7 +46,6 @@ public class AssessmentResultServiceImpl implements AssessmentResultService {
                         "Skill not found with id " + skillId
                 ));
 
-        // Attach managed entities
         result.setStudentProfile(studentProfile);
         result.setSkill(skill);
 
@@ -56,16 +53,13 @@ public class AssessmentResultServiceImpl implements AssessmentResultService {
     }
 
     @Override
-    public List<AssessmentResult> getAssessmentsByStudent(Long studentProfileId) {
+    public List<AssessmentResult> getResultsByStudent(Long studentProfileId) {
         return assessmentRepository.findByStudentProfileId(studentProfileId);
     }
 
     @Override
-    public AssessmentResult getAssessmentById(Long id) {
-        return assessmentRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Assessment not found with id " + id
-                ));
+    public List<AssessmentResult> getResultsByStudentAndSkill(Long studentProfileId, Long skillId) {
+        return assessmentRepository
+                .findByStudentProfileIdAndSkillId(studentProfileId, skillId);
     }
 }
