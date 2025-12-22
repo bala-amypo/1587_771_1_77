@@ -6,6 +6,7 @@ import com.example.demo.service.SkillGapService;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class SkillGapServiceImpl implements SkillGapService {
@@ -23,7 +24,7 @@ public class SkillGapServiceImpl implements SkillGapService {
     }
 
     @Override
-    public List<SkillGapRecord> computeSkillGaps(Long studentId) {
+    public List<SkillGapRecord> computeGaps(Long studentId) {
 
         StudentProfile student = studentRepo.findById(studentId)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
@@ -32,11 +33,10 @@ public class SkillGapServiceImpl implements SkillGapService {
                 assessmentRepo.findByStudentProfileId(studentId);
 
         Map<Skill, List<AssessmentResult>> grouped =
-                results.stream().collect(
-                        java.util.stream.Collectors.groupingBy(AssessmentResult::getSkill)
-                );
+                results.stream()
+                        .collect(Collectors.groupingBy(AssessmentResult::getSkill));
 
-        List<SkillGapRecord> savedRecords = new ArrayList<>();
+        List<SkillGapRecord> records = new ArrayList<>();
 
         for (Skill skill : grouped.keySet()) {
 
@@ -56,9 +56,14 @@ public class SkillGapServiceImpl implements SkillGapService {
             record.setTargetScore(target);
             record.setGapScore(gap);
 
-            savedRecords.add(gapRepo.save(record));
+            records.add(gapRepo.save(record));
         }
 
-        return savedRecords;
+        return records;
+    }
+
+    @Override
+    public List<SkillGapRecord> getGapsByStudent(Long studentId) {
+        return gapRepo.findByStudentProfileId(studentId);
     }
 }
