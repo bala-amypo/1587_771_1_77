@@ -16,9 +16,16 @@ public class RecommendationController {
         this.recommendationService = recommendationService;
     }
 
+    // ✅ GET
     @GetMapping("/{studentId}")
     public List<RecommendationDTO> getRecommendations(@PathVariable Long studentId) {
-        // ✅ FIXED METHOD NAME
         return recommendationService.getRecommendationsByStudent(studentId);
+    }
+
+    // ✅ POST
+    @PostMapping
+    public RecommendationDTO createRecommendation(
+            @RequestBody RecommendationDTO recommendationDTO) {
+        return recommendationService.createRecommendation(recommendationDTO);
     }
 }
