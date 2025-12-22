@@ -1,102 +1,45 @@
 package com.example.demo.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "skill_gap_recommendation")
 public class SkillGapRecommendation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "student_profile_id", nullable = false)
-    @JsonIgnore
-    private StudentProfile studentProfile;
+    @ManyToOne
+    private StudentProfile student;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "skill_id", nullable = false)
+    @ManyToOne
     private Skill skill;
 
-    @Column(nullable = false)
-    private String recommendedAction;
-
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private Priority priority;
 
-    @Column(nullable = false)
-    private Double gapScore;
+    private String recommendedAction;
 
-    @Column(nullable = false)
-    private String generatedBy;
+    private LocalDateTime createdAt = LocalDateTime.now();
 
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime generatedAt;
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    @PrePersist
-    protected void onCreate() {
-        this.generatedAt = LocalDateTime.now();
-    }
+    public StudentProfile getStudent() { return student; }
+    public void setStudent(StudentProfile student) { this.student = student; }
 
-    // getters & setters
-    public Long getId() {
-        return id;
-    }
+    public Skill getSkill() { return skill; }
+    public void setSkill(Skill skill) { this.skill = skill; }
 
-    public StudentProfile getStudentProfile() {
-        return studentProfile;
-    }
+    public Priority getPriority() { return priority; }
+    public void setPriority(Priority priority) { this.priority = priority; }
 
-    public void setStudentProfile(StudentProfile studentProfile) {
-        this.studentProfile = studentProfile;
-    }
-
-    public Skill getSkill() {
-        return skill;
-    }
-
-    public void setSkill(Skill skill) {
-        this.skill = skill;
-    }
-
-    public String getRecommendedAction() {
-        return recommendedAction;
-    }
-
+    public String getRecommendedAction() { return recommendedAction; }
     public void setRecommendedAction(String recommendedAction) {
         this.recommendedAction = recommendedAction;
     }
 
-    public Priority getPriority() {
-        return priority;
-    }
-
-    public void setPriority(Priority priority) {
-        this.priority = priority;
-    }
-
-    public Double getGapScore() {
-        return gapScore;
-    }
-
-    public void setGapScore(Double gapScore) {
-        this.gapScore = gapScore;
-    }
-
-    public String getGeneratedBy() {
-        return generatedBy;
-    }
-
-    public void setGeneratedBy(String generatedBy) {
-        this.generatedBy = generatedBy;
-    }
-
-    public LocalDateTime getGeneratedAt() {
-        return generatedAt;
-    }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 }
