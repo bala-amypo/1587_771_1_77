@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "skill_gap_recommendations")
 public class SkillGapRecommendation {
 
     @Id
@@ -11,44 +12,63 @@ public class SkillGapRecommendation {
     private Long id;
 
     @ManyToOne
-    private StudentProfile studentProfile;
+    @JoinColumn(name = "student_id", nullable = false)
+    private StudentProfile student;
 
     @ManyToOne
+    @JoinColumn(name = "skill_id", nullable = false)
     private Skill skill;
-
-    private String recommendedAction;
 
     @Enumerated(EnumType.STRING)
     private Priority priority;
 
-    private LocalDateTime generatedAt;
+    private String recommendedAction;
 
-    @PrePersist
-    public void onCreate() {
-        this.generatedAt = LocalDateTime.now();
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    public SkillGapRecommendation() {}
+
+    public Long getId() {
+        return id;
     }
 
-    public Long getId() { return id; }
-
-    public StudentProfile getStudentProfile() { return studentProfile; }
-    public void setStudentProfile(StudentProfile studentProfile) {
-        this.studentProfile = studentProfile;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public Skill getSkill() { return skill; }
+    public StudentProfile getStudent() {
+        return student;
+    }
+
+    public void setStudent(StudentProfile student) {
+        this.student = student;
+    }
+
+    public Skill getSkill() {
+        return skill;
+    }
+
     public void setSkill(Skill skill) {
         this.skill = skill;
     }
 
-    public String getRecommendedAction() { return recommendedAction; }
-    public void setRecommendedAction(String recommendedAction) {
-        this.recommendedAction = recommendedAction;
+    public Priority getPriority() {
+        return priority;
     }
 
-    public Priority getPriority() { return priority; }
     public void setPriority(Priority priority) {
         this.priority = priority;
     }
 
-    public LocalDateTime getGeneratedAt() { return generatedAt; }
+    public String getRecommendedAction() {
+        return recommendedAction;
+    }
+
+    public void setRecommendedAction(String recommendedAction) {
+        this.recommendedAction = recommendedAction;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
 }
