@@ -6,8 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface AssessmentResultRepository extends JpaRepository<AssessmentResult, Long> {
-
-    List<AssessmentResult> findByStudentProfile_Id(Long studentId);
-
-    List<AssessmentResult> findByStudentProfile_IdAndSkill_Id(Long studentId, Long skillId);
+    List<AssessmentResult> findByStudentProfileId(Long studentProfileId);
 }

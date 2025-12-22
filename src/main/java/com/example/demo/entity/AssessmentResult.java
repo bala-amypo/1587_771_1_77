@@ -4,20 +4,24 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "assessment_result")
 public class AssessmentResult {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "student_profile_id")
     private StudentProfile studentProfile;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "skill_id")
     private Skill skill;
 
     private Double scoreObtained;
     private Double maxScore;
+
     private LocalDateTime assessedAt;
 
     @PrePersist
