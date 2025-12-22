@@ -4,7 +4,6 @@ import com.example.demo.dto.RecommendationDTO;
 import com.example.demo.entity.*;
 import com.example.demo.repository.*;
 import com.example.demo.service.RecommendationService;
-
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -41,7 +40,7 @@ public class RecommendationServiceImpl implements RecommendationService {
                 student.getCompetencyScore() < skill.getMinCompetencyScore()) {
 
                 SkillGapRecommendation rec = new SkillGapRecommendation();
-                rec.setStudent(student);
+                rec.setStudentProfile(student); // ✅ FIXED
                 rec.setSkill(skill);
                 rec.setPriority(Priority.HIGH);
                 rec.setRecommendedAction(
@@ -60,5 +59,10 @@ public class RecommendationServiceImpl implements RecommendationService {
             }
         }
         return response;
+    }
+
+    @Override
+    public List<RecommendationDTO> getRecommendationsByStudent(Long studentId) {
+        return new ArrayList<>();
     }
 }
