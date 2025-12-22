@@ -14,6 +14,9 @@ public class StudentProfile {
     private String cohort;
     private int yearLevel;
 
+    // ✅ REQUIRED for recommendation logic
+    private Double competencyScore;
+
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -50,6 +53,15 @@ public class StudentProfile {
 
     public void setYearLevel(int yearLevel) {
         this.yearLevel = yearLevel;
+    }
+
+    // ✅ FIX: method required by RecommendationServiceImpl
+    public Double getCompetencyScore() {
+        return competencyScore;
+    }
+
+    public void setCompetencyScore(Double competencyScore) {
+        this.competencyScore = competencyScore;
     }
 
     public User getUser() {
