@@ -11,35 +11,52 @@ public class SkillGapRecommendation {
     private Long id;
 
     @ManyToOne
-    private StudentProfile student;
+    private StudentProfile studentProfile;
 
     @ManyToOne
     private Skill skill;
 
+    private String recommendedAction;
+
     @Enumerated(EnumType.STRING)
     private Priority priority;
 
-    private String recommendedAction;
+    private Double gapScore;
+    private String generatedBy;
+    private LocalDateTime generatedAt;
 
-    private LocalDateTime createdAt = LocalDateTime.now();
+    @PrePersist
+    public void onGenerate() {
+        this.generatedAt = LocalDateTime.now();
+    }
 
     public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
 
-    public StudentProfile getStudent() { return student; }
-    public void setStudent(StudentProfile student) { this.student = student; }
+    public StudentProfile getStudentProfile() { return studentProfile; }
+    public void setStudentProfile(StudentProfile studentProfile) {
+        this.studentProfile = studentProfile;
+    }
 
     public Skill getSkill() { return skill; }
     public void setSkill(Skill skill) { this.skill = skill; }
-
-    public Priority getPriority() { return priority; }
-    public void setPriority(Priority priority) { this.priority = priority; }
 
     public String getRecommendedAction() { return recommendedAction; }
     public void setRecommendedAction(String recommendedAction) {
         this.recommendedAction = recommendedAction;
     }
 
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public Priority getPriority() { return priority; }
+    public void setPriority(Priority priority) {
+        this.priority = priority;
+    }
+
+    public Double getGapScore() { return gapScore; }
+    public void setGapScore(Double gapScore) { this.gapScore = gapScore; }
+
+    public String getGeneratedBy() { return generatedBy; }
+    public void setGeneratedBy(String generatedBy) {
+        this.generatedBy = generatedBy;
+    }
+
+    public LocalDateTime getGeneratedAt() { return generatedAt; }
 }
