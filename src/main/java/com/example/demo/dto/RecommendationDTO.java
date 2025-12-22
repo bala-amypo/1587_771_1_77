@@ -1,24 +1,14 @@
 package com.example.demo.dto;
 
+import java.time.LocalDateTime;
+
 public class RecommendationDTO {
 
-    private Long skillId;
     private String skillName;
-    private String recommendedAction;
-    private String priority;
     private Double gapScore;
-    private String generatedBy;
-
-    public RecommendationDTO() {
-    }
-
-    public Long getSkillId() {
-        return skillId;
-    }
-
-    public void setSkillId(Long skillId) {
-        this.skillId = skillId;
-    }
+    private String priority;
+    private String recommendedAction;
+    private LocalDateTime generatedAt;
 
     public String getSkillName() {
         return skillName;
@@ -26,22 +16,6 @@ public class RecommendationDTO {
 
     public void setSkillName(String skillName) {
         this.skillName = skillName;
-    }
-
-    public String getRecommendedAction() {
-        return recommendedAction;
-    }
-
-    public void setRecommendedAction(String recommendedAction) {
-        this.recommendedAction = recommendedAction;
-    }
-
-    public String getPriority() {
-        return priority;
-    }
-
-    public void setPriority(String priority) {
-        this.priority = priority;
     }
 
     public Double getGapScore() {
@@ -52,11 +26,27 @@ public class RecommendationDTO {
         this.gapScore = gapScore;
     }
 
-    public String getGeneratedBy() {
-        return generatedBy;
+    public String getPriority() {
+        return priority;
     }
 
-    public void setGeneratedBy(String generatedBy) {
-        this.generatedBy = generatedBy;
+    public void setPriority(String priority) {
+        this.priority = priority;
+    }
+
+    public String getRecommendedAction() {
+        return recommendedAction;
+    }
+
+    public void setRecommendedAction(String recommendedAction) {
+        this.recommendedAction = recommendedAction;
+    }
+
+    public LocalDateTime getGeneratedAt() {
+        return generatedAt;
+    }
+
+    public void setGeneratedAt(LocalDateTime generatedAt) {
+        this.generatedAt = generatedAt;
     }
 }

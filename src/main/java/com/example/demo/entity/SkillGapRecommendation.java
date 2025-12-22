@@ -13,20 +13,16 @@ public class SkillGapRecommendation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // ---------- Relations ----------
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_profile_id", nullable = false)
     @JsonIgnore
     private StudentProfile studentProfile;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "skill_id", nullable = false)
     private Skill skill;
 
-    // ---------- Recommendation Data ----------
-
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String recommendedAction;
 
     @Enumerated(EnumType.STRING)
@@ -42,20 +38,12 @@ public class SkillGapRecommendation {
     @Column(nullable = false, updatable = false)
     private LocalDateTime generatedAt;
 
-    // ---------- Lifecycle ----------
-
     @PrePersist
     protected void onCreate() {
         this.generatedAt = LocalDateTime.now();
     }
 
-    // ---------- Constructors ----------
-
-    public SkillGapRecommendation() {
-    }
-
-    // ---------- Getters & Setters ----------
-
+    // getters & setters
     public Long getId() {
         return id;
     }
