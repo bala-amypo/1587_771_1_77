@@ -13,7 +13,7 @@ public class SkillGapRecommendation {
 
     @ManyToOne
     @JoinColumn(name = "student_id", nullable = false)
-    private StudentProfile student;
+    private StudentProfile studentProfile;
 
     @ManyToOne
     @JoinColumn(name = "skill_id", nullable = false)
@@ -26,7 +26,7 @@ public class SkillGapRecommendation {
 
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    public SkillGapRecommendation() {}
+    // ===== GETTERS & SETTERS =====
 
     public Long getId() {
         return id;
@@ -36,12 +36,12 @@ public class SkillGapRecommendation {
         this.id = id;
     }
 
-    public StudentProfile getStudent() {
-        return student;
+    public StudentProfile getStudentProfile() {
+        return studentProfile;
     }
 
-    public void setStudent(StudentProfile student) {
-        this.student = student;
+    public void setStudentProfile(StudentProfile studentProfile) {
+        this.studentProfile = studentProfile;
     }
 
     public Skill getSkill() {
