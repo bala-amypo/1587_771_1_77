@@ -1,3 +1,18 @@
+package com.example.demo.service.impl;
+
+import com.example.demo.dto.RecommendationDTO;
+import com.example.demo.entity.*;
+import com.example.demo.repository.SkillGapRecommendationRepository;
+import com.example.demo.repository.SkillRepository;
+import com.example.demo.repository.StudentProfileRepository;
+import com.example.demo.service.RecommendationService;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class RecommendationServiceImpl implements RecommendationService {
 
@@ -15,6 +30,7 @@ public class RecommendationServiceImpl implements RecommendationService {
         this.skillRepository = skillRepository;
     }
 
+    @Transactional
     @Override
     public List<RecommendationDTO> generateRecommendations(Long studentId) {
 
@@ -22,25 +38,19 @@ public class RecommendationServiceImpl implements RecommendationService {
                 .orElseThrow(() -> new RuntimeException("Student not found"));
 
         List<Skill> skills = skillRepository.findAll();
-
         List<RecommendationDTO> response = new ArrayList<>();
 
         for (Skill skill : skills) {
 
-            // Example gap score logic (replace with real assessment logic)
-            double gapScore = Math.random() * 100;
-
             SkillGapRecommendation rec = new SkillGapRecommendation();
             rec.setStudentProfile(student);
             rec.setSkill(skill);
-            rec.setGapScore(gapScore);
-            rec.setPriority(gapScore > 70 ? "HIGH" : "MEDIUM");
+            rec.setGapScore(Math.random() * 100);
+            rec.setPriority(Priority.MEDIUM);
             rec.setRecommendedAction("Improve skill: " + skill.getName());
             rec.setGeneratedBy("SYSTEM");
 
-            // 🔥 THIS WAS MISSING
             SkillGapRecommendation saved = recommendationRepository.save(rec);
-
             response.add(mapToDTO(saved));
         }
 
@@ -61,7 +71,7 @@ public class RecommendationServiceImpl implements RecommendationService {
         RecommendationDTO dto = new RecommendationDTO();
         dto.setSkillName(rec.getSkill().getName());
         dto.setGapScore(rec.getGapScore());
-        dto.setPriority(rec.getPriority());
+        dto.setPriority(rec.getPriority().name());
         dto.setRecommendedAction(rec.getRecommendedAction());
         dto.setGeneratedAt(rec.getGeneratedAt());
 
