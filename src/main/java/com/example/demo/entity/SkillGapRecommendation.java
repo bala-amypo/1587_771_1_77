@@ -21,12 +21,10 @@ public class SkillGapRecommendation {
     @Enumerated(EnumType.STRING)
     private Priority priority;
 
-    private Double gapScore;
-    private String generatedBy;
     private LocalDateTime generatedAt;
 
     @PrePersist
-    public void onGenerate() {
+    public void onCreate() {
         this.generatedAt = LocalDateTime.now();
     }
 
@@ -38,7 +36,9 @@ public class SkillGapRecommendation {
     }
 
     public Skill getSkill() { return skill; }
-    public void setSkill(Skill skill) { this.skill = skill; }
+    public void setSkill(Skill skill) {
+        this.skill = skill;
+    }
 
     public String getRecommendedAction() { return recommendedAction; }
     public void setRecommendedAction(String recommendedAction) {
@@ -48,14 +48,6 @@ public class SkillGapRecommendation {
     public Priority getPriority() { return priority; }
     public void setPriority(Priority priority) {
         this.priority = priority;
-    }
-
-    public Double getGapScore() { return gapScore; }
-    public void setGapScore(Double gapScore) { this.gapScore = gapScore; }
-
-    public String getGeneratedBy() { return generatedBy; }
-    public void setGeneratedBy(String generatedBy) {
-        this.generatedBy = generatedBy;
     }
 
     public LocalDateTime getGeneratedAt() { return generatedAt; }
