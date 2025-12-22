@@ -1,31 +1,34 @@
 package com.example.demo.dto;
 
-import java.time.LocalDateTime;
+import com.example.demo.entity.Priority;
 
 public class RecommendationDTO {
 
     private String skillName;
-    private String priority;
+    private Priority priority;
     private String recommendation;
-    private LocalDateTime generatedAt;
 
-    public String getSkillName() { return skillName; }
+    public String getSkillName() {
+        return skillName;
+    }
+
     public void setSkillName(String skillName) {
         this.skillName = skillName;
     }
 
-    public String getPriority() { return priority; }
-    public void setPriority(String priority) {
+    public Priority getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Priority priority) {
         this.priority = priority;
     }
 
-    public String getRecommendation() { return recommendation; }
-    public void setRecommendation(String recommendation) {
-        this.recommendation = recommendation;
+    public String getRecommendation() {
+        return recommendation;
     }
 
-    public LocalDateTime getGeneratedAt() { return generatedAt; }
-    public void setGeneratedAt(LocalDateTime generatedAt) {
-        this.generatedAt = generatedAt;
+    public void setRecommendation(String recommendation) {
+        this.recommendation = recommendation;
     }
 }
