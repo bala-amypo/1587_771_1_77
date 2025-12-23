@@ -26,7 +26,7 @@ public class AuthServiceImpl implements AuthService {
         User user = new User();
         user.setFullName(request.getFullName());
         user.setEmail(request.getEmail());
-        user.setPassword(request.getPassword()); // (plain for now)
+        user.setPassword(request.getPassword()); 
         user.setRole(request.getRole());
 
         userRepository.save(user);
