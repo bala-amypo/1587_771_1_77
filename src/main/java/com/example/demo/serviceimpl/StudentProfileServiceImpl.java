@@ -29,17 +29,14 @@ public class StudentProfileServiceImpl implements StudentProfileService {
 
         Long userId = profile.getUser().getId();
 
-        // Fetch existing user from DB
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
                         "User not found with id " + userId
                 ));
 
-        // Attach managed user entity
         profile.setUser(user);
 
-        // Save student profile
         return studentProfileRepository.save(profile);
     }
 
