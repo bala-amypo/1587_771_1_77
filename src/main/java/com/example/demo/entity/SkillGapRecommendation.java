@@ -20,7 +20,6 @@ public class SkillGapRecommendation {
     @Column(length = 1000)
     private String recommendation;
 
-    // ===== GETTERS & SETTERS =====
 
     public Long getId() {
         return id;
