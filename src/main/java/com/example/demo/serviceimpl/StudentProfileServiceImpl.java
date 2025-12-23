@@ -27,7 +27,6 @@ public class StudentProfileServiceImpl implements StudentProfileService {
     @Override
     public StudentProfile createProfile(StudentProfile profile) {
 
-        // Get user id from request
         Long userId = profile.getUser().getId();
 
         // Fetch existing user from DB

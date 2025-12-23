@@ -16,7 +16,6 @@ public class AuthServiceImpl implements AuthService {
         this.userRepository = userRepository;
     }
 
-    // ===== REGISTER =====
     @Override
     public String register(RegisterRequest request) {
 
@@ -35,7 +34,7 @@ public class AuthServiceImpl implements AuthService {
         return "User registered successfully";
     }
 
-    // ===== LOGIN =====
+ 
     @Override
     public String login(LoginRequest request) {
 

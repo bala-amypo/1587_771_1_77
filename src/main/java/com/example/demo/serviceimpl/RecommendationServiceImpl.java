@@ -18,7 +18,6 @@ public class RecommendationServiceImpl implements RecommendationService {
         this.repository = repository;
     }
 
-    // ✅ GET
     @Override
     public List<RecommendationDTO> getRecommendationsByStudent(Long studentId) {
         return repository.findAll()
@@ -27,7 +26,6 @@ public class RecommendationServiceImpl implements RecommendationService {
                 .collect(Collectors.toList());
     }
 
-    // ✅ POST
     @Override
     public RecommendationDTO createRecommendation(RecommendationDTO dto) {
         SkillGapRecommendation entity = new SkillGapRecommendation();
