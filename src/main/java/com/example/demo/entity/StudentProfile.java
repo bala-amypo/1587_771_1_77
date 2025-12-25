@@ -30,19 +30,4 @@ public class StudentProfile {
 
     public String getEnrollmentId() { return enrollmentId; }
     public void setEnrollmentId(String enrollmentId) { this.enrollmentId = enrollmentId; }
-
-    public List<AssessmentResult> getAssessmentResults() { return assessmentResults; }
-    public void setAssessmentResults(List<AssessmentResult> assessmentResults) {
-        this.assessmentResults = assessmentResults;
-    }
-
-    public List<SkillGapRecord> getSkillGapRecords() { return skillGapRecords; }
-    public void setSkillGapRecords(List<SkillGapRecord> skillGapRecords) {
-        this.skillGapRecords = skillGapRecords;
-    }
-
-    public List<SkillGapRecommendation> getRecommendations() { return recommendations; }
-    public void setRecommendations(List<SkillGapRecommendation> recommendations) {
-        this.recommendations = recommendations;
-    }
 }

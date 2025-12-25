@@ -22,6 +22,12 @@ public class SkillServiceImpl implements SkillService {
     }
 
     @Override
+    public Skill getById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Skill not found"));
+    }
+
+    @Override
     public List<Skill> getActiveSkills() {
         return repository.findByActiveTrue();
     }
