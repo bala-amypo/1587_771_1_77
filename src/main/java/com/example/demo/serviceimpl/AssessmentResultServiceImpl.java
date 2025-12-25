@@ -23,6 +23,6 @@ public class AssessmentResultServiceImpl implements AssessmentResultService {
 
     @Override
     public List<AssessmentResult> getResultsByStudent(Long studentId) {
-        return repository.findByStudentId(studentId);
+        return repository.findByStudent_Id(studentId);
     }
 }

@@ -17,22 +17,7 @@ public class RecommendationServiceImpl implements RecommendationService {
     }
 
     @Override
-    public SkillGapRecommendation computeRecommendationForStudentSkill(Long studentId, Long skillId) {
-        SkillGapRecommendation rec = new SkillGapRecommendation();
-        rec.setStudentId(studentId);
-        rec.setSkillId(skillId);
-        rec.setPriority("MEDIUM");
-        rec.setRecommendation("Practice this skill to improve competency");
-        return repository.save(rec);
-    }
-
-    @Override
-    public List<SkillGapRecommendation> computeRecommendationsForStudent(Long studentId) {
-        return repository.findByStudentId(studentId);
-    }
-
-    @Override
     public List<SkillGapRecommendation> getRecommendationsForStudent(Long studentId) {
-        return repository.findByStudentId(studentId);
+        return repository.findByStudent_Id(studentId);
     }
 }

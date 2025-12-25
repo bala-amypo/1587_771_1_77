@@ -12,7 +12,6 @@ public class SkillGapServiceImpl implements SkillGapService {
 
     private final SkillGapRecordRepository repository;
 
-    // ✅ Constructor Injection (as per PDF)
     public SkillGapServiceImpl(SkillGapRecordRepository repository) {
         this.repository = repository;
     }
@@ -24,6 +23,6 @@ public class SkillGapServiceImpl implements SkillGapService {
 
     @Override
     public List<SkillGapRecord> getSkillGapsByStudent(Long studentId) {
-        return repository.findByStudentId(studentId);
+        return repository.findByStudent_Id(studentId);
     }
 }
