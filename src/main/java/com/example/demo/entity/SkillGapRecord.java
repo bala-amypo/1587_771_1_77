@@ -72,22 +72,4 @@ public class SkillGapRecord {
     public Instant getCalculatedAt() { return calculatedAt; }
     public void setCalculatedAt(Instant calculatedAt) { this.calculatedAt = calculatedAt; }
 
-    // ---------- Builder ----------
-
-    public static Builder builder() { return new Builder(); }
-
-    public static class Builder {
-
-        private final SkillGapRecord r = new SkillGapRecord();
-
-        public Builder id(Long id) { r.setId(id); return this; }
-        public Builder studentProfile(StudentProfile sp) { r.setStudentProfile(sp); return this; }
-        public Builder skill(Skill sk) { r.setSkill(sk); return this; }
-        public Builder currentScore(Double c) { r.setCurrentScore(c); return this; }
-        public Builder targetScore(Double t) { r.setTargetScore(t); return this; }
-        public Builder gapScore(Double g) { r.setGapScore(g); return this; }
-        public Builder calculatedAt(Instant t) { r.setCalculatedAt(t); return this; }
-
-        public SkillGapRecord build() { return r; }
-    }
-}
+    

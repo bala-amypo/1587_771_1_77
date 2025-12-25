@@ -1,7 +1,7 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import java.time.Instant;
+import java.util.List;
 
 @Entity
 public class StudentProfile {
@@ -10,50 +10,39 @@ public class StudentProfile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long userId;
     private String enrollmentId;
 
-    private String grade;
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+    private List<AssessmentResult> assessmentResults;
 
-    private Instant lastUpdatedAt;
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+    private List<SkillGapRecord> skillGapRecords;
 
-    @PrePersist
-    public void prePersist() {
-        if (lastUpdatedAt == null) {
-            lastUpdatedAt = Instant.now();
-        }
-    }
-
-    @PreUpdate
-    public void preUpdate() {
-        lastUpdatedAt = Instant.now();
-    }
-
-    // ---------- Getters & Setters ----------
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+    private List<SkillGapRecommendation> recommendations;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
+    public Long getUserId() { return userId; }
+    public void setUserId(Long userId) { this.userId = userId; }
+
     public String getEnrollmentId() { return enrollmentId; }
     public void setEnrollmentId(String enrollmentId) { this.enrollmentId = enrollmentId; }
 
-    public String getGrade() { return grade; }
-    public void setGrade(String grade) { this.grade = grade; }
+    public List<AssessmentResult> getAssessmentResults() { return assessmentResults; }
+    public void setAssessmentResults(List<AssessmentResult> assessmentResults) {
+        this.assessmentResults = assessmentResults;
+    }
 
-    public Instant getLastUpdatedAt() { return lastUpdatedAt; }
-    public void setLastUpdatedAt(Instant lastUpdatedAt) { this.lastUpdatedAt = lastUpdatedAt; }
+    public List<SkillGapRecord> getSkillGapRecords() { return skillGapRecords; }
+    public void setSkillGapRecords(List<SkillGapRecord> skillGapRecords) {
+        this.skillGapRecords = skillGapRecords;
+    }
 
-    // ---------- Builder ----------
-
-    public static Builder builder() { return new Builder(); }
-
-    public static class Builder {
-        private final StudentProfile p = new StudentProfile();
-
-        public Builder id(Long id) { p.setId(id); return this; }
-        public Builder enrollmentId(String e) { p.setEnrollmentId(e); return this; }
-        public Builder grade(String g) { p.setGrade(g); return this; }
-        public Builder lastUpdatedAt(Instant t) { p.setLastUpdatedAt(t); return this; }
-
-        public StudentProfile build() { return p; }
+    public List<SkillGapRecommendation> getRecommendations() { return recommendations; }
+    public void setRecommendations(List<SkillGapRecommendation> recommendations) {
+        this.recommendations = recommendations;
     }
 }

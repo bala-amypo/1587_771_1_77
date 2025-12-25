@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import java.util.List;
 
 @Entity
 public class Skill {
@@ -9,39 +10,53 @@ public class Skill {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
-    private String code;
+    private String skillName;
+    private String category;
+    private String description;
+    private Integer minCompetencyScore;
+    private Boolean active;
 
-    private String name;
+    @OneToMany(mappedBy = "skill")
+    private List<AssessmentResult> assessmentResults;
 
-    private boolean active = true;
+    @OneToMany(mappedBy = "skill")
+    private List<SkillGapRecord> skillGapRecords;
 
-    // ---------- Getters & Setters ----------
+    @OneToMany(mappedBy = "skill")
+    private List<SkillGapRecommendation> recommendations;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public String getCode() { return code; }
-    public void setCode(String code) { this.code = code; }
+    public String getSkillName() { return skillName; }
+    public void setSkillName(String skillName) { this.skillName = skillName; }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public String getCategory() { return category; }
+    public void setCategory(String category) { this.category = category; }
 
-    public boolean isActive() { return active; }
-    public void setActive(boolean active) { this.active = active; }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 
-    // ---------- Builder ----------
+    public Integer getMinCompetencyScore() { return minCompetencyScore; }
+    public void setMinCompetencyScore(Integer minCompetencyScore) {
+        this.minCompetencyScore = minCompetencyScore;
+    }
 
-    public static Builder builder() { return new Builder(); }
+    public Boolean getActive() { return active; }
+    public void setActive(Boolean active) { this.active = active; }
 
-    public static class Builder {
-        private final Skill s = new Skill();
+    public List<AssessmentResult> getAssessmentResults() { return assessmentResults; }
+    public void setAssessmentResults(List<AssessmentResult> assessmentResults) {
+        this.assessmentResults = assessmentResults;
+    }
 
-        public Builder id(Long id) { s.setId(id); return this; }
-        public Builder code(String c) { s.setCode(c); return this; }
-        public Builder name(String n) { s.setName(n); return this; }
-        public Builder active(boolean a) { s.setActive(a); return this; }
+    public List<SkillGapRecord> getSkillGapRecords() { return skillGapRecords; }
+    public void setSkillGapRecords(List<SkillGapRecord> skillGapRecords) {
+        this.skillGapRecords = skillGapRecords;
+    }
 
-        public Skill build() { return s; }
+    public List<SkillGapRecommendation> getRecommendations() { return recommendations; }
+    public void setRecommendations(List<SkillGapRecommendation> recommendations) {
+        this.recommendations = recommendations;
     }
 }
