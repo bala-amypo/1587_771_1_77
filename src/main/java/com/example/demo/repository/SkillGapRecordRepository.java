@@ -5,9 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface SkillGapRecordRepository extends JpaRepository<SkillGapRecord, Long> {
+public interface SkillGapRecordRepository
+        extends JpaRepository<SkillGapRecord, Long> {
 
-    List<SkillGapRecord> findByStudentProfileId(Long studentId);
-
-    List<SkillGapRecord> findByStudentProfileIdAndSkillId(Long studentId, Long skillId);
+    List<SkillGapRecord> findByStudentId(Long studentId);
 }
