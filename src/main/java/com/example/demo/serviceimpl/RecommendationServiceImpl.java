@@ -22,14 +22,12 @@ public class RecommendationServiceImpl implements RecommendationService {
         rec.setStudentId(studentId);
         rec.setSkillId(skillId);
         rec.setPriority("MEDIUM");
-        rec.setRecommendation("Improve this skill through practice");
-
+        rec.setRecommendation("Practice this skill to improve competency");
         return repository.save(rec);
     }
 
     @Override
     public List<SkillGapRecommendation> computeRecommendationsForStudent(Long studentId) {
-        // For now return stored recommendations
         return repository.findByStudentId(studentId);
     }
 

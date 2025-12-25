@@ -29,6 +29,7 @@ public class SkillServiceImpl implements SkillService {
         existing.setCategory(skill.getCategory());
         existing.setDescription(skill.getDescription());
         existing.setMinCompetencyScore(skill.getMinCompetencyScore());
+        existing.setActive(skill.getActive());
         return repository.save(existing);
     }
 
