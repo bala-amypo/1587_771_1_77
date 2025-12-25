@@ -1,11 +1,15 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.LoginRequest;
-import com.example.demo.dto.RegisterRequest;
+import com.example.demo.entity.Auth;
+import java.util.List;
 
 public interface AuthService {
 
-    String register(RegisterRequest request);
+    Auth register(Auth auth);
 
-    String login(LoginRequest request);
+    Auth getById(Long id);
+
+    Auth findByEmail(String email);
+
+    List<Auth> listInstructors();
 }

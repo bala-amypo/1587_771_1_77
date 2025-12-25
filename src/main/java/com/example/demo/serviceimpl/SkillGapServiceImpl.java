@@ -1,69 +1,68 @@
-package com.example.demo.service.impl;
+package com.example.demo.serviceImpl;
 
 import com.example.demo.entity.*;
 import com.example.demo.repository.*;
 import com.example.demo.service.SkillGapService;
-import org.springframework.stereotype.Service;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
 
-@Service
 public class SkillGapServiceImpl implements SkillGapService {
 
-    private final StudentProfileRepository studentRepo;
-    private final AssessmentResultRepository assessmentRepo;
     private final SkillGapRecordRepository gapRepo;
+    private final AssessmentResultRepository assessmentRepo;
+    private final StudentProfileRepository profileRepo;
+    private final SkillRepository skillRepo;
 
-    public SkillGapServiceImpl(StudentProfileRepository studentRepo,
-                               AssessmentResultRepository assessmentRepo,
-                               SkillGapRecordRepository gapRepo) {
-        this.studentRepo = studentRepo;
-        this.assessmentRepo = assessmentRepo;
+    public SkillGapServiceImpl(
+            SkillGapRecordRepository gapRepo,
+            AssessmentResultRepository assessmentRepo,
+            StudentProfileRepository profileRepo,
+            SkillRepository skillRepo
+    ) {
         this.gapRepo = gapRepo;
+        this.assessmentRepo = assessmentRepo;
+        this.profileRepo = profileRepo;
+        this.skillRepo = skillRepo;
     }
 
     @Override
-    public List<SkillGapRecord> computeGaps(Long studentId) {
+    public SkillGapRecord computeGap(Long studentId, Long skillId) {
 
-        StudentProfile student = studentRepo.findById(studentId)
-                .orElseThrow(() -> new RuntimeException("Student not found"));
+        StudentProfile student = profileRepo.findById(studentId).orElseThrow();
+        Skill skill = skillRepo.findById(skillId).orElseThrow();
 
-        List<AssessmentResult> results =
-                assessmentRepo.findByStudentProfileId(studentId);
+        var results =
+                assessmentRepo.findByStudentProfileIdAndSkillId(studentId, skillId);
 
-        Map<Skill, List<AssessmentResult>> grouped =
-                results.stream()
-                        .collect(Collectors.groupingBy(AssessmentResult::getSkill));
+        double score = results.isEmpty() ? 0 : results.get(0).getScore();
 
-        List<SkillGapRecord> records = new ArrayList<>();
+        SkillGapRecord rec = SkillGapRecord.builder()
+                .studentProfile(student)
+                .skill(skill)
+                .currentScore(score)
+                .targetScore(100.0)
+                .build();
 
-        for (Skill skill : grouped.keySet()) {
+        return gapRepo.save(rec);
+    }
 
-            double avgScore = grouped.get(skill)
-                    .stream()
-                    .mapToDouble(AssessmentResult::getScoreObtained)
-                    .average()
-                    .orElse(0);
+    @Override
+    public List<SkillGapRecord> computeAllGaps(Long studentId) {
 
-            double target = skill.getMinCompetencyScore();
-            double gap = target - avgScore;
+        List<Skill> skills = skillRepo.findByActiveTrue();
 
-            SkillGapRecord record = new SkillGapRecord();
-            record.setStudentProfile(student);
-            record.setSkill(skill);
-            record.setCurrentScore(avgScore);
-            record.setTargetScore(target);
-            record.setGapScore(gap);
+        List<SkillGapRecord> list = new ArrayList<>();
 
-            records.add(gapRepo.save(record));
+        for (Skill s : skills) {
+            list.add(computeGap(studentId, s.getId()));
         }
 
-        return records;
+        return list;
     }
 
     @Override
-    public List<SkillGapRecord> getGapsByStudent(Long studentId) {
+    public List<SkillGapRecord> getGapHistory(Long studentId) {
         return gapRepo.findByStudentProfileId(studentId);
     }
 }

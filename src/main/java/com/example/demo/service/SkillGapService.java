@@ -1,11 +1,14 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.SkillGapRecord;
+
 import java.util.List;
 
 public interface SkillGapService {
 
-    List<SkillGapRecord> computeGaps(Long studentId);
+    SkillGapRecord computeGap(Long studentId, Long skillId);
 
-    List<SkillGapRecord> getGapsByStudent(Long studentId);
+    List<SkillGapRecord> computeAllGaps(Long studentId);
+
+    List<SkillGapRecord> getGapHistory(Long studentId);
 }
