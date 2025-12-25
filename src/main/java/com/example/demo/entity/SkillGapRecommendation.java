@@ -30,10 +30,4 @@ public class SkillGapRecommendation {
     public void setRecommendation(String recommendation) {
         this.recommendation = recommendation;
     }
-
-    public StudentProfile getStudent() { return student; }
-    public void setStudent(StudentProfile student) { this.student = student; }
-
-    public Skill getSkill() { return skill; }
-    public void setSkill(Skill skill) { this.skill = skill; }
 }

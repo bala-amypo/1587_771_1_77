@@ -1,7 +1,6 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import java.util.List;
 
 @Entity
 public class Skill {
@@ -15,15 +14,6 @@ public class Skill {
     private String description;
     private Integer minCompetencyScore;
     private Boolean active;
-
-    @OneToMany(mappedBy = "skill")
-    private List<AssessmentResult> assessmentResults;
-
-    @OneToMany(mappedBy = "skill")
-    private List<SkillGapRecord> skillGapRecords;
-
-    @OneToMany(mappedBy = "skill")
-    private List<SkillGapRecommendation> recommendations;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -44,19 +34,4 @@ public class Skill {
 
     public Boolean getActive() { return active; }
     public void setActive(Boolean active) { this.active = active; }
-
-    public List<AssessmentResult> getAssessmentResults() { return assessmentResults; }
-    public void setAssessmentResults(List<AssessmentResult> assessmentResults) {
-        this.assessmentResults = assessmentResults;
-    }
-
-    public List<SkillGapRecord> getSkillGapRecords() { return skillGapRecords; }
-    public void setSkillGapRecords(List<SkillGapRecord> skillGapRecords) {
-        this.skillGapRecords = skillGapRecords;
-    }
-
-    public List<SkillGapRecommendation> getRecommendations() { return recommendations; }
-    public void setRecommendations(List<SkillGapRecommendation> recommendations) {
-        this.recommendations = recommendations;
-    }
 }
