@@ -1,55 +1,68 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import java.time.Instant;
 
 @Entity
-@Table(name = "skill_gap_recommendation")
 public class SkillGapRecommendation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "skill_name", nullable = false)
-    private String skillName;
+    @ManyToOne
+    private StudentProfile student;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Priority priority;
+    @ManyToOne
+    private Skill skill;
 
-    @Column(length = 1000)
-    private String recommendation;
+    private Double gapScore;
 
+    private String generatedBy;
 
-    public Long getId() {
-        return id;
+    private Instant generatedAt;
+
+    @PrePersist
+    public void prePersist() {
+        if (generatedAt == null) {
+            generatedAt = Instant.now();
+        }
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    // ---------- Getters & Setters ----------
 
-    public String getSkillName() {
-        return skillName;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setSkillName(String skillName) {
-        this.skillName = skillName;
-    }
+    public StudentProfile getStudent() { return student; }
+    public void setStudent(StudentProfile student) { this.student = student; }
 
-    public Priority getPriority() {
-        return priority;
-    }
+    public Skill getSkill() { return skill; }
+    public void setSkill(Skill skill) { this.skill = skill; }
 
-    public void setPriority(Priority priority) {
-        this.priority = priority;
-    }
+    public Double getGapScore() { return gapScore; }
+    public void setGapScore(Double gapScore) { this.gapScore = gapScore; }
 
-    public String getRecommendation() {
-        return recommendation;
-    }
+    public String getGeneratedBy() { return generatedBy; }
+    public void setGeneratedBy(String generatedBy) { this.generatedBy = generatedBy; }
 
-    public void setRecommendation(String recommendation) {
-        this.recommendation = recommendation;
+    public Instant getGeneratedAt() { return generatedAt; }
+    public void setGeneratedAt(Instant generatedAt) { this.generatedAt = generatedAt; }
+
+    // ---------- Builder ----------
+
+    public static Builder builder() { return new Builder(); }
+
+    public static class Builder {
+        private final SkillGapRecommendation r = new SkillGapRecommendation();
+
+        public Builder id(Long id) { r.setId(id); return this; }
+        public Builder student(StudentProfile s) { r.setStudent(s); return this; }
+        public Builder skill(Skill sk) { r.setSkill(sk); return this; }
+        public Builder gapScore(Double g) { r.setGapScore(g); return this; }
+        public Builder generatedBy(String gb) { r.setGeneratedBy(gb); return this; }
+        public Builder generatedAt(Instant t) { r.setGeneratedAt(t); return this; }
+
+        public SkillGapRecommendation build() { return r; }
     }
 }

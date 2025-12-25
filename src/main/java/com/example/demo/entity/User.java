@@ -1,59 +1,72 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import java.time.Instant;
 
 @Entity
-@Table(name = "users")
 public class User {
+
+    public enum Role { ADMIN, INSTRUCTOR, STUDENT }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String fullName;
+
+    @Column(unique = true)
     private String email;
+
     private String password;
-    private String role;
 
-    public User() {}
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
-    public Long getId() {
-        return id;
+    private Instant createdAt;
+
+    @PrePersist
+    public void prePersist() {
+        if (role == null) {
+            role = Role.STUDENT;
+        }
+        if (createdAt == null) {
+            createdAt = Instant.now();
+        }
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    // ---------- Getters & Setters ----------
 
-    public String getFullName() {
-        return fullName;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
+    public String getFullName() { return fullName; }
+    public void setFullName(String fullName) { this.fullName = fullName; }
 
-    public String getEmail() {
-        return email;
-    }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 
-    public String getPassword() {
-        return password;
-    }
+    public Role getRole() { return role; }
+    public void setRole(Role role) { this.role = role; }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    public Instant getCreatedAt() { return createdAt; }
+    public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }
 
-    public String getRole() {
-        return role;
-    }
+    // ---------- Builder ----------
 
-    public void setRole(String role) {
-        this.role = role;
+    public static Builder builder() { return new Builder(); }
+
+    public static class Builder {
+        private final User u = new User();
+
+        public Builder id(Long id) { u.setId(id); return this; }
+        public Builder fullName(String n) { u.setFullName(n); return this; }
+        public Builder email(String e) { u.setEmail(e); return this; }
+        public Builder password(String p) { u.setPassword(p); return this; }
+        public Builder role(Role r) { u.setRole(r); return this; }
+
+        public User build() { return u; }
     }
 }

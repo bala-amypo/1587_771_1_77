@@ -10,28 +10,38 @@ public class Skill {
     private Long id;
 
     @Column(unique = true)
-    private String skillName;
+    private String code;
 
-    private String category;
-    private String description;
-    private Double minCompetencyScore;
-    private Boolean active = true;
+    private String name;
+
+    private boolean active = true;
+
+    // ---------- Getters & Setters ----------
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public String getSkillName() { return skillName; }
-    public void setSkillName(String skillName) { this.skillName = skillName; }
+    public String getCode() { return code; }
+    public void setCode(String code) { this.code = code; }
 
-    public String getCategory() { return category; }
-    public void setCategory(String category) { this.category = category; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public boolean isActive() { return active; }
+    public void setActive(boolean active) { this.active = active; }
 
-    public Double getMinCompetencyScore() { return minCompetencyScore; }
-    public void setMinCompetencyScore(Double minCompetencyScore) { this.minCompetencyScore = minCompetencyScore; }
+    // ---------- Builder ----------
 
-    public Boolean getActive() { return active; }
-    public void setActive(Boolean active) { this.active = active; }
+    public static Builder builder() { return new Builder(); }
+
+    public static class Builder {
+        private final Skill s = new Skill();
+
+        public Builder id(Long id) { s.setId(id); return this; }
+        public Builder code(String c) { s.setCode(c); return this; }
+        public Builder name(String n) { s.setName(n); return this; }
+        public Builder active(boolean a) { s.setActive(a); return this; }
+
+        public Skill build() { return s; }
+    }
 }

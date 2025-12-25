@@ -1,9 +1,9 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import java.time.Instant;
 
 @Entity
-@Table(name = "student_profiles")
 public class StudentProfile {
 
     @Id
@@ -11,64 +11,49 @@ public class StudentProfile {
     private Long id;
 
     private String enrollmentId;
-    private String cohort;
-    private int yearLevel;
 
-    // ✅ REQUIRED for recommendation logic
-    private Double competencyScore;
+    private String grade;
 
-    @OneToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private Instant lastUpdatedAt;
 
-    public StudentProfile() {}
-
-    public Long getId() {
-        return id;
+    @PrePersist
+    public void prePersist() {
+        if (lastUpdatedAt == null) {
+            lastUpdatedAt = Instant.now();
+        }
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    @PreUpdate
+    public void preUpdate() {
+        lastUpdatedAt = Instant.now();
     }
 
-    public String getEnrollmentId() {
-        return enrollmentId;
-    }
+    // ---------- Getters & Setters ----------
 
-    public void setEnrollmentId(String enrollmentId) {
-        this.enrollmentId = enrollmentId;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public String getCohort() {
-        return cohort;
-    }
+    public String getEnrollmentId() { return enrollmentId; }
+    public void setEnrollmentId(String enrollmentId) { this.enrollmentId = enrollmentId; }
 
-    public void setCohort(String cohort) {
-        this.cohort = cohort;
-    }
+    public String getGrade() { return grade; }
+    public void setGrade(String grade) { this.grade = grade; }
 
-    public int getYearLevel() {
-        return yearLevel;
-    }
+    public Instant getLastUpdatedAt() { return lastUpdatedAt; }
+    public void setLastUpdatedAt(Instant lastUpdatedAt) { this.lastUpdatedAt = lastUpdatedAt; }
 
-    public void setYearLevel(int yearLevel) {
-        this.yearLevel = yearLevel;
-    }
+    // ---------- Builder ----------
 
-    // ✅ FIX: method required by RecommendationServiceImpl
-    public Double getCompetencyScore() {
-        return competencyScore;
-    }
+    public static Builder builder() { return new Builder(); }
 
-    public void setCompetencyScore(Double competencyScore) {
-        this.competencyScore = competencyScore;
-    }
+    public static class Builder {
+        private final StudentProfile p = new StudentProfile();
 
-    public User getUser() {
-        return user;
-    }
+        public Builder id(Long id) { p.setId(id); return this; }
+        public Builder enrollmentId(String e) { p.setEnrollmentId(e); return this; }
+        public Builder grade(String g) { p.setGrade(g); return this; }
+        public Builder lastUpdatedAt(Instant t) { p.setLastUpdatedAt(t); return this; }
 
-    public void setUser(User user) {
-        this.user = user;
+        public StudentProfile build() { return p; }
     }
 }

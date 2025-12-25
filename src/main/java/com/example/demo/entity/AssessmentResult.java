@@ -1,53 +1,63 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Entity
-@Table(name = "assessment_result")
 public class AssessmentResult {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "student_profile_id")
-    private StudentProfile studentProfile;
+    private String assessmentId;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "skill_id")
-    private Skill skill;
+    private Double score;
 
-    private Double scoreObtained;
     private Double maxScore;
 
-    private LocalDateTime assessedAt;
+    private Instant attemptedAt;
 
     @PrePersist
-    public void onAssess() {
-        this.assessedAt = LocalDateTime.now();
+    public void prePersist() {
+        if (maxScore == null) {
+            maxScore = 100.0;
+        }
+        if (attemptedAt == null) {
+            attemptedAt = Instant.now();
+        }
     }
+
+    // ---------- Getters & Setters ----------
 
     public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public StudentProfile getStudentProfile() { return studentProfile; }
-    public void setStudentProfile(StudentProfile studentProfile) {
-        this.studentProfile = studentProfile;
-    }
+    public String getAssessmentId() { return assessmentId; }
+    public void setAssessmentId(String assessmentId) { this.assessmentId = assessmentId; }
 
-    public Skill getSkill() { return skill; }
-    public void setSkill(Skill skill) { this.skill = skill; }
-
-    public Double getScoreObtained() { return scoreObtained; }
-    public void setScoreObtained(Double scoreObtained) {
-        this.scoreObtained = scoreObtained;
-    }
+    public Double getScore() { return score; }
+    public void setScore(Double score) { this.score = score; }
 
     public Double getMaxScore() { return maxScore; }
-    public void setMaxScore(Double maxScore) {
-        this.maxScore = maxScore;
-    }
+    public void setMaxScore(Double maxScore) { this.maxScore = maxScore; }
 
-    public LocalDateTime getAssessedAt() { return assessedAt; }
+    public Instant getAttemptedAt() { return attemptedAt; }
+    public void setAttemptedAt(Instant attemptedAt) { this.attemptedAt = attemptedAt; }
+
+    // ---------- Builder ----------
+
+    public static Builder builder() { return new Builder(); }
+
+    public static class Builder {
+        private final AssessmentResult r = new AssessmentResult();
+
+        public Builder id(Long id) { r.setId(id); return this; }
+        public Builder assessmentId(String idVal) { r.setAssessmentId(idVal); return this; }
+        public Builder score(Double s) { r.setScore(s); return this; }
+        public Builder maxScore(Double m) { r.setMaxScore(m); return this; }
+        public Builder attemptedAt(Instant a) { r.setAttemptedAt(a); return this; }
+
+        public AssessmentResult build() { return r; }
+    }
 }
