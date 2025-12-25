@@ -22,6 +22,6 @@ public class StudentProfileServiceImpl implements StudentProfileService {
     @Override
     public StudentProfile getByUserId(Long userId) {
         return repository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("Profile not found"));
+                .orElseThrow(() -> new RuntimeException("Student profile not found"));
     }
 }
