@@ -1,33 +1,40 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.*;
-import java.util.List;
+import lombok.*;
+import javax.persistence.*;
+import java.time.Instant;
 
 @Entity
+@Table(name = "student_profiles")
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class StudentProfile {
-
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private Long userId;
+    
+    @Column(nullable = false, unique = true)
     private String enrollmentId;
-
-    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
-    private List<AssessmentResult> assessmentResults;
-
-    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
-    private List<SkillGapRecord> skillGapRecords;
-
-    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
-    private List<SkillGapRecommendation> recommendations;
-
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public Long getUserId() { return userId; }
-    public void setUserId(Long userId) { this.userId = userId; }
-
-    public String getEnrollmentId() { return enrollmentId; }
-    public void setEnrollmentId(String enrollmentId) { this.enrollmentId = enrollmentId; }
+    
+    @Column(nullable = false)
+    private String grade;
+    
+    @Column(name = "user_id")
+    private Long userId;
+    
+    @Column(nullable = false, updatable = false)
+    @Builder.Default
+    private Instant createdAt = Instant.now();
+    
+    @Column(nullable = false)
+    @Builder.Default
+    private Instant lastUpdatedAt = Instant.now();
+    
+    @PreUpdate
+    public void preUpdate() {
+        this.lastUpdatedAt = Instant.now();
+    }
 }
