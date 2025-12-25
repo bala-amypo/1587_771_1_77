@@ -1,4 +1,4 @@
-package com.example.demo.service.impl;
+package com.example.demo.serviceimpl;
 
 import com.example.demo.entity.Skill;
 import com.example.demo.repository.SkillRepository;
@@ -23,7 +23,8 @@ public class SkillServiceImpl implements SkillService {
 
     @Override
     public Skill updateSkill(Long id, Skill skill) {
-        Skill existing = repository.findById(id).orElseThrow();
+        Skill existing = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Skill not found"));
         existing.setSkillName(skill.getSkillName());
         existing.setCategory(skill.getCategory());
         existing.setDescription(skill.getDescription());
@@ -32,19 +33,13 @@ public class SkillServiceImpl implements SkillService {
     }
 
     @Override
-    public Skill getSkillById(Long id) {
-        return repository.findById(id).orElseThrow();
+    public Skill getById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Skill not found"));
     }
 
     @Override
-    public List<Skill> getAllSkills() {
-        return repository.findAll();
-    }
-
-    @Override
-    public void deactivateSkill(Long id) {
-        Skill skill = getSkillById(id);
-        skill.setActive(false);
-        repository.save(skill);
+    public List<Skill> getActiveSkills() {
+        return repository.findByActiveTrue();
     }
 }
