@@ -1,33 +1,36 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.*;
+import lombok.*;
+import javax.persistence.*;
+import java.time.Instant;
 
 @Entity
+@Table(name = "skill_gap_recommendations")
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class SkillGapRecommendation {
-
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private String priority;
-    private String recommendation;
-
-    @ManyToOne
-    @JoinColumn(name = "student_id")
-    private StudentProfile student;
-
-    @ManyToOne
-    @JoinColumn(name = "skill_id")
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "student_profile_id", nullable = false)
+    private StudentProfile studentProfile;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "skill_id", nullable = false)
     private Skill skill;
-
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public String getPriority() { return priority; }
-    public void setPriority(String priority) { this.priority = priority; }
-
-    public String getRecommendation() { return recommendation; }
-    public void setRecommendation(String recommendation) {
-        this.recommendation = recommendation;
-    }
+    
+    @Column(nullable = false)
+    private Double gapScore;
+    
+    @Column(nullable = false)
+    private String generatedBy;
+    
+    @Column(nullable = false, updatable = false)
+    @Builder.Default
+    private Instant generatedAt = Instant.now();
 }

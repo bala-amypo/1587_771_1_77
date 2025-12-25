@@ -1,33 +1,43 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.*;
+import lombok.*;
+import javax.persistence.*;
+import java.time.Instant;
 
 @Entity
+@Table(name = "assessment_results")
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class AssessmentResult {
-
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private Integer score;
-
-    @ManyToOne
-    @JoinColumn(name = "student_id")
-    private StudentProfile student;
-
-    @ManyToOne
+    
+    @Column(nullable = false)
+    private String assessmentId;
+    
+    @Column(nullable = false)
+    private Double score;
+    
+    @Column(nullable = false)
+    @Builder.Default
+    private Double maxScore = 100.0;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "student_profile_id")
+    private StudentProfile studentProfile;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "skill_id")
     private Skill skill;
-
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public Integer getScore() { return score; }
-    public void setScore(Integer score) { this.score = score; }
-
-    public StudentProfile getStudent() { return student; }
-    public void setStudent(StudentProfile student) { this.student = student; }
-
-    public Skill getSkill() { return skill; }
-    public void setSkill(Skill skill) { this.skill = skill; }
+    
+    @Column(name = "cohort_id")
+    private String cohortId;
+    
+    @Column(nullable = false, updatable = false)
+    @Builder.Default
+    private Instant attemptedAt = Instant.now();
 }
