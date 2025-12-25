@@ -1,32 +1,28 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.SkillGapRecord;
-import com.example.demo.service.SkillGapService;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import com.example.demo.entity.SkillGapRecommendation;
+import com.example.demo.service.RecommendationService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/gaps")
-@Tag(name = "Skill Gaps")
 public class SkillGapController {
 
-    private final SkillGapService skillGapService;
+    private final RecommendationService service;
 
-    public SkillGapController(SkillGapService skillGapService) {
-        this.skillGapService = skillGapService;
+    public SkillGapController(RecommendationService service) {
+        this.service = service;
     }
 
-    // POST /api/gaps/compute/{studentId}
     @PostMapping("/compute/{studentId}")
-    public List<SkillGapRecord> computeGaps(@PathVariable Long studentId) {
-        return skillGapService.computeGaps(studentId);
+    public List<SkillGapRecommendation> compute(@PathVariable Long studentId) {
+        return service.computeRecommendationsForStudent(studentId);
     }
 
-    // GET /api/gaps/student/{studentId}
     @GetMapping("/student/{studentId}")
-    public List<SkillGapRecord> getGaps(@PathVariable Long studentId) {
-        return skillGapService.getGapsByStudent(studentId);
+    public List<SkillGapRecommendation> get(@PathVariable Long studentId) {
+        return service.getRecommendationsForStudent(studentId);
     }
 }
