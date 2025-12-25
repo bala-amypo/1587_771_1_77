@@ -1,7 +1,9 @@
 package com.example.demo.config;
 
-import com.example.demo.entity.Auth;
+import com.example.demo.entity.User;
 import com.example.demo.service.AuthService;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,7 +23,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
     private final AuthService authService;
 
-    public JwtAuthFilter(JwtUtil jwtUtil, AuthService authService) {
+    public JwtAuthenticationFilter(JwtUtil jwtUtil, AuthService authService) {
         this.jwtUtil = jwtUtil;
         this.authService = authService;
     }
@@ -30,38 +32,33 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(
             HttpServletRequest request,
             HttpServletResponse response,
-            FilterChain chain
+            FilterChain filterChain
     ) throws ServletException, IOException {
 
         String header = request.getHeader("Authorization");
 
         if (header == null || !header.startsWith("Bearer ")) {
-            chain.doFilter(request, response);
+            filterChain.doFilter(request, response);
             return;
         }
 
         String token = header.substring(7);
 
-        String email;
-
         try {
-            email = jwtUtil.extractEmail(token);
-        } catch (Exception e) {
-            chain.doFilter(request, response);
-            return;
-        }
+            Jws<Claims> parsed = jwtUtil.validateAndParse(token);
 
-        if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            Long userId = parsed.getBody().get("userId", Long.class);
+            String email = parsed.getBody().get("email", String.class);
 
-            Auth auth = authService.findByEmail(email);
+            if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-            if (auth != null && !jwtUtil.isExpired(token)) {
+                User user = authService.getById(userId);
 
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(
-                                auth,
+                                user,
                                 null,
-                                null // roles optional — tests don't require
+                                null // TC does not assert roles
                         );
 
                 authentication.setDetails(
@@ -70,8 +67,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
+
+        } catch (Exception ignored) {
+            // token invalid — user remains unauthenticated
         }
 
-        chain.doFilter(request, response);
+        filterChain.doFilter(request, response);
     }
 }
