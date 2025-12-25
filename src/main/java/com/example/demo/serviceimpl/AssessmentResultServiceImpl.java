@@ -1,65 +1,40 @@
-package com.example.demo.service.impl;
+package com.example.demo.serviceImpl;
 
 import com.example.demo.entity.AssessmentResult;
-import com.example.demo.entity.Skill;
-import com.example.demo.entity.StudentProfile;
 import com.example.demo.repository.AssessmentResultRepository;
-import com.example.demo.repository.SkillRepository;
-import com.example.demo.repository.StudentProfileRepository;
 import com.example.demo.service.AssessmentResultService;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
-@Service
 public class AssessmentResultServiceImpl implements AssessmentResultService {
 
-    private final AssessmentResultRepository assessmentRepository;
-    private final StudentProfileRepository studentProfileRepository;
-    private final SkillRepository skillRepository;
+    private final AssessmentResultRepository repo;
 
-    public AssessmentResultServiceImpl(AssessmentResultRepository assessmentRepository,
-                                       StudentProfileRepository studentProfileRepository,
-                                       SkillRepository skillRepository) {
-        this.assessmentRepository = assessmentRepository;
-        this.studentProfileRepository = studentProfileRepository;
-        this.skillRepository = skillRepository;
+    public AssessmentResultServiceImpl(AssessmentResultRepository repo) {
+        this.repo = repo;
     }
 
     @Override
     public AssessmentResult recordResult(AssessmentResult result) {
 
-        Long studentId = result.getStudentProfile().getId();
-        StudentProfile studentProfile = studentProfileRepository.findById(studentId)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "StudentProfile not found with id " + studentId
-                ));
+        if (result.getScore() == null || result.getMaxScore() == null) {
+            throw new IllegalArgumentException("Score or maxScore cannot be null");
+        }
 
-        Long skillId = result.getSkill().getId();
-        Skill skill = skillRepository.findById(skillId)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Skill not found with id " + skillId
-                ));
+        if (result.getScore() > result.getMaxScore()) {
+            throw new IllegalArgumentException("Score cannot exceed maxScore");
+        }
 
-        result.setStudentProfile(studentProfile);
-        result.setSkill(skill);
-
-        return assessmentRepository.save(result);
+        return repo.save(result);
     }
 
     @Override
     public List<AssessmentResult> getResultsByStudent(Long studentProfileId) {
-        return assessmentRepository.findByStudentProfileId(studentProfileId);
+        return repo.findRecentByStudent(studentProfileId);
     }
 
     @Override
     public List<AssessmentResult> getResultsByStudentAndSkill(Long studentProfileId, Long skillId) {
-        return assessmentRepository
-                .findByStudentProfileIdAndSkillId(studentProfileId, skillId);
+        return repo.findByStudentProfileIdAndSkillId(studentProfileId, skillId);
     }
 }
