@@ -1,8 +1,10 @@
 package com.example.demo.config;
 
 import io.jsonwebtoken.Claims;
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -32,12 +34,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (header != null && header.startsWith("Bearer ")) {
             String token = header.substring(7);
+
             try {
-                Claims claims = jwtUtil.validateAndParse(token);
+                Claims claims = jwtUtil.validateAndParse(token).getBody();
 
                 UsernamePasswordAuthenticationToken auth =
                         new UsernamePasswordAuthenticationToken(
-                                claims.get("email"),
+                                claims.getSubject(),
                                 null,
                                 Collections.emptyList()
                         );
@@ -47,8 +50,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 );
 
                 SecurityContextHolder.getContext().setAuthentication(auth);
-            } catch (Exception e) {
-                SecurityContextHolder.clearContext();
+
+            } catch (Exception ex) {
+                // invalid token → request proceeds unauthenticated
             }
         }
 
