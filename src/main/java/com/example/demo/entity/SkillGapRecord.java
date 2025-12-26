@@ -1,33 +1,45 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
+import java.time.Instant;
 
 @Entity
+@Table(name = "skill_gap_records")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class SkillGapRecord {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Integer gapScore;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "student_profile_id", nullable = false)
+    private StudentProfile studentProfile;
 
-    @ManyToOne
-    @JoinColumn(name = "student_id")
-    private StudentProfile student;
-
-    @ManyToOne
-    @JoinColumn(name = "skill_id")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "skill_id", nullable = false)
     private Skill skill;
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    @Column(nullable = false)
+    private Double currentScore;
 
-    public Integer getGapScore() { return gapScore; }
-    public void setGapScore(Integer gapScore) { this.gapScore = gapScore; }
+    @Column(nullable = false)
+    private Double targetScore;
 
-    public StudentProfile getStudent() { return student; }
-    public void setStudent(StudentProfile student) { this.student = student; }
+    @Column(nullable = false)
+    private Double gapScore;
 
-    public Skill getSkill() { return skill; }
-    public void setSkill(Skill skill) { this.skill = skill; }
+    @Column(nullable = false)
+    private Instant calculatedAt;
+
+    @PrePersist
+    public void computeGap() {
+        this.gapScore = targetScore - currentScore;
+        this.calculatedAt = Instant.now();
+    }
 }
