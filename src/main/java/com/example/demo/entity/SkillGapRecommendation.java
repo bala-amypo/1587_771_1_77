@@ -5,41 +5,31 @@ import lombok.*;
 import java.time.Instant;
 
 @Entity
-@Data
+@Table(name = "skill_gap_recommendations")
+@Getter
+@Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class SkillGapRecommendation {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "student_profile_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "student_profile_id")
     private StudentProfile studentProfile;
 
-    @ManyToOne
-    @JoinColumn(name = "skill_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "skill_id")
     private Skill skill;
 
-    @Column(nullable = false)
-    private String recommendedAction;
-
-    private String priority; // HIGH, MEDIUM, LOW
-
-    @Column(nullable = false)
     private Double gapScore;
 
-    private String generatedBy;
+    @Builder.Default
+    private String generatedBy = "SYSTEM";
 
-    private Instant generatedAt;
-
-    @PrePersist
-    protected void onCreate() {
-        generatedAt = Instant.now();
-        // Logic often handled in service, but can be set here if score is present
-        if (gapScore != null && priority == null) {
-            this.priority = gapScore >= 20 ? "HIGH" : (gapScore >= 10 ? "MEDIUM" : "LOW");
-        }
-    }
+    @Builder.Default
+    private Instant generatedAt = Instant.now();
 }

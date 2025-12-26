@@ -1,34 +1,39 @@
-// package com.example.demo.entity;
+package com.example.demo.entity;
 
-// import jakarta.persistence.*;
-// import lombok.*;
-// import java.time.Instant;
+import jakarta.persistence.*;
+import lombok.*;
+import java.time.Instant;
 
-// @Entity
-// @Data
-// @Builder
-// @NoArgsConstructor
-// @AllArgsConstructor
-// public class StudentProfile {
-//     @Id
-//     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//     private Long id;
-    
-//     private String enrollmentId;
-//     private String grade;  // Required for test t009
-//     private String cohort; // Required for tests t030, t058
+@Entity
+@Table(name = "student_profiles", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "enrollmentId")
+})
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class StudentProfile {
 
-//     @OneToOne
-//     @JoinColumn(name = "user_id")
-//     private User user;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-//     private Instant lastUpdatedAt;
+    private String enrollmentId;
 
-//     @PrePersist
-//     @PreUpdate
-//     public void preUpdate() {
-//         // Required for tests t015 and t044
-//         this.lastUpdatedAt = Instant.now();
-//     }
-// 
-// \
+    private String grade;
+
+    @Column(nullable = true)
+    private Long userId;
+
+    @Builder.Default
+    private Instant createdAt = Instant.now();
+
+    @Builder.Default
+    private Instant lastUpdatedAt = Instant.now();
+
+    @PreUpdate
+    public void preUpdate() {
+        this.lastUpdatedAt = Instant.now();
+    }
+}

@@ -1,18 +1,37 @@
 package com.example.demo.entity;
 
-import lombok.*;
 import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
-@Data @Builder @NoArgsConstructor @AllArgsConstructor
-@Table(name = "users")
+@Table(name = "users", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "email")
+})
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    public enum Role {
+        STUDENT,
+        INSTRUCTOR,
+        ADMIN
+    }
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String fullName;
+
+    @Column(nullable = false)
     private String email;
+
+    @Column(nullable = false)
     private String password;
+
     @Enumerated(EnumType.STRING)
     private Role role;
-    public enum Role { STUDENT, INSTRUCTOR, ADMIN }
 }

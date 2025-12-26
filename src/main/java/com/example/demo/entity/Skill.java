@@ -1,15 +1,28 @@
 package com.example.demo.entity;
 
-import lombok.*;
 import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
-@Data @Builder @NoArgsConstructor @AllArgsConstructor
+@Table(name = "skills", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "code")
+})
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Skill {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
+
+    @Column(nullable = false)
     private String code;
-    private Double minCompetencyScore;
-    private boolean active;
+
+    private String name;
+
+    @Builder.Default
+    private boolean active = true;
 }
