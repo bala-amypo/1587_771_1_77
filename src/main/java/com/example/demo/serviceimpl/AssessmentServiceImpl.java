@@ -2,40 +2,34 @@ package com.example.demo.serviceimpl;
 
 import com.example.demo.entity.AssessmentResult;
 import com.example.demo.repository.AssessmentResultRepository;
-import com.example.demo.service.AssessmentResultService; // Ensure this is imported
+import com.example.demo.service.AssessmentService;
 import org.springframework.stereotype.Service;
-import java.util.List;
 
 @Service
-public class AssessmentServiceImpl implements AssessmentResultService {
+public class AssessmentServiceImpl implements AssessmentService {
 
-    private final AssessmentResultRepository assessmentResultRepository;
+    private final AssessmentResultRepository repository;
 
-    public AssessmentServiceImpl(AssessmentResultRepository assessmentResultRepository) {
-        this.assessmentResultRepository = assessmentResultRepository;
+    public AssessmentServiceImpl(AssessmentResultRepository repository) {
+        this.repository = repository;
     }
 
     @Override
     public AssessmentResult recordAssessment(AssessmentResult result) {
-        // Add basic validation as required by your test t008
-        if (result.getScore() > result.getMaxScore()) {
-            throw new IllegalArgumentException("Score cannot exceed Max Score");
-        }
+
+        // validation required by tests
         if (result.getScore() == null) {
-            throw new IllegalArgumentException("Score is required");
+            throw new IllegalArgumentException("Score cannot be null");
         }
-        return assessmentResultRepository.save(result);
-    }
 
-    @Override
-    public List<AssessmentResult> getResultsByStudent(Long studentId) {
-        return assessmentResultRepository.findByStudentProfileId(studentId);
-    }
+        if (result.getMaxScore() == null) {
+            result.setMaxScore(100.0);
+        }
 
-    // This is the specific method causing the "is not abstract" error
-    @Override
-    public List<AssessmentResult> getResultsByStudentAndSkill(Long studentId, Long skillId) {
-        // Ensure your Repository has findByStudentProfileIdAndSkillId defined
-        return assessmentResultRepository.findByStudentProfileIdAndSkillId(studentId, skillId);
+        if (result.getScore() < 0 || result.getScore() > result.getMaxScore()) {
+            throw new IllegalArgumentException("Score must be between 0 and maxScore");
+        }
+
+        return repository.save(result);
     }
 }
