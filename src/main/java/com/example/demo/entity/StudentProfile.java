@@ -15,7 +15,7 @@ public class StudentProfile {
     private Long id;
     
     private String enrollmentId;
-    private String grade; // Required for test t009
+    private String grade;  // Required for test t009
     private String cohort; // Required for tests t030, t058
 
     @OneToOne

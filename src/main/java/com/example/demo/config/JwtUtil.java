@@ -30,7 +30,7 @@ public class JwtUtil {
                 .compact();
     }
 
-    // This return type allows tests to call .getBody()
+    // Required: Returns Jws<Claims> so the test can call .getBody()
     public Jws<Claims> validateAndParse(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
