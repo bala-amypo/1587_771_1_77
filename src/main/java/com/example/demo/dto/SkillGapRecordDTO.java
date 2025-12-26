@@ -7,12 +7,12 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AssessmentResultDTO {
+public class SkillGapRecordDTO {
     private Long id;
     private Long studentProfileId;
     private Long skillId;
-    private String assessmentId;
-    private Double score;
-    private Double maxScore;
-    private Instant attemptedAt;
+    private Double currentScore;
+    private Double targetScore;
+    private Double gapScore;
+    private Instant calculatedAt;
 }
