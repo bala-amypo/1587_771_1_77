@@ -1,9 +1,16 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
+
+import java.time.Instant;
 
 @Entity
-@Table(name = "student_profiles")
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class StudentProfile {
 
     @Id
@@ -11,12 +18,10 @@ public class StudentProfile {
     private Long id;
 
     private String enrollmentId;
+    private Instant lastUpdatedAt;
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getEnrollmentId() {
-        return enrollmentId;
+    @PreUpdate
+    public void preUpdate() {
+        this.lastUpdatedAt = Instant.now();
     }
 }
