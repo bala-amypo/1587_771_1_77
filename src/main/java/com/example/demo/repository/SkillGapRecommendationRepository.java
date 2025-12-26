@@ -9,8 +9,10 @@ import java.util.List;
 
 @Repository
 public interface SkillGapRecommendationRepository extends JpaRepository<SkillGapRecommendation, Long> {
+    
+    List<SkillGapRecommendation> findByStudentProfileIdOrderByGeneratedAtDesc(Long studentProfileId);
 
-    // Fix: Use HQL to join with student profile and order by gap score
+    // Custom HQL to satisfy the "findByStudentOrdered" test case requirement
     @Query("SELECT r FROM SkillGapRecommendation r WHERE r.studentProfile.id = :studentId ORDER BY r.gapScore DESC")
     List<SkillGapRecommendation> findByStudentOrdered(@Param("studentId") Long studentId);
 }
