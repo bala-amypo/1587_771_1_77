@@ -1,7 +1,7 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.*;
 import lombok.*;
+import javax.persistence.*;
 import java.time.Instant;
 
 @Entity
@@ -11,30 +11,26 @@ import java.time.Instant;
 @AllArgsConstructor
 @Builder
 public class StudentProfile {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(name = "user_id", unique = true)
+    private Long userId;
 
-    @Column(unique = true, nullable = false)
+    @Column(name = "enrollment_id", unique = true)
     private String enrollmentId;
 
-    @Column(nullable = false)
+    // Added to fix "cannot find symbol: method grade(java.lang.String)"
+    private String grade;
+
     private String cohort;
-
-    @Column(nullable = false)
-    private Integer yearLevel;
-
-    @Builder.Default
-    private boolean active = true;
 
     private Instant lastUpdatedAt;
 
-    @PrePersist
     @PreUpdate
+    @PrePersist
     public void preUpdate() {
         this.lastUpdatedAt = Instant.now();
     }

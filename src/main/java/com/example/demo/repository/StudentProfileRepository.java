@@ -7,7 +7,10 @@ import java.util.Optional;
 
 @Repository
 public interface StudentProfileRepository extends JpaRepository<StudentProfile, Long> {
-    Optional<StudentProfile> findByEnrollmentId(String enrollmentId);
+    
+    // Required for profileService.getByUserId() in tests
     Optional<StudentProfile> findByUserId(Long userId);
+
+    // Required for t021 and t037 in LargeIntegrationTestNGTest
     boolean existsByEnrollmentId(String enrollmentId);
 }
