@@ -2,7 +2,7 @@ package com.example.demo.serviceimpl;
 
 import com.example.demo.entity.AssessmentResult;
 import com.example.demo.repository.AssessmentResultRepository;
-import com.example.demo.service.AssessmentService;
+import com.example.demo.service.AssessmentResultService;
 import org.springframework.stereotype.Service;
 
 @Service
