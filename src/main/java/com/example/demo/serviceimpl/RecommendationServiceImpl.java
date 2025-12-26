@@ -27,20 +27,21 @@ public class RecommendationServiceImpl implements RecommendationService {
     @Override
     public SkillGapRecommendation computeRecommendationForStudentSkill(Long studentId, Long skillId) {
         Skill skill = skillRepo.findById(skillId).orElseThrow(() -> new ResourceNotFoundException("Skill not found"));
-        List<AssessmentResult> results = assessmentRepo.findByStudentProfileIdAndSkillId(studentId, skillId);
+        StudentProfile profile = profileRepo.findById(studentId).orElseThrow(() -> new ResourceNotFoundException("Profile not found"));
         
+        List<AssessmentResult> results = assessmentRepo.findByStudentProfileIdAndSkillId(studentId, skillId);
         double currentScore = results.isEmpty() ? 0.0 : results.get(results.size() - 1).getScore();
         double gap = skill.getMinCompetencyScore() - currentScore;
 
-        // Required logic for t038
+        // Gap Priority Logic for t038
         String priority = (gap >= 20) ? "HIGH" : (gap >= 10) ? "MEDIUM" : "LOW";
 
         SkillGapRecommendation rec = SkillGapRecommendation.builder()
-                .studentProfile(profileRepo.findById(studentId).get())
+                .studentProfile(profile)
                 .skill(skill)
                 .gapScore(gap)
                 .priority(priority)
-                .recommendedAction("Focus on " + skill.getName())
+                .recommendedAction("Improve " + skill.getName())
                 .generatedAt(Instant.now())
                 .generatedBy("SYSTEM")
                 .build();

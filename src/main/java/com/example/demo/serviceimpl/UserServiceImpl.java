@@ -11,12 +11,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
-
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
-    // The order of parameters MUST match the mocks in your test file
+    // Order matches the Mock order in LargeIntegrationTestNGTest
     public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -25,30 +24,25 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User register(RegisterRequest req) {
-        // Required for t013 to pass
         if (userRepository.existsByEmail(req.getEmail())) {
-            throw new IllegalArgumentException("Email already exists");
+            throw new IllegalArgumentException("Email already exists"); // Required for t013
         }
-
         User user = User.builder()
                 .fullName(req.getFullName())
                 .email(req.getEmail())
-                .password(passwordEncoder.encode(req.getPassword())) // Required for t051
+                .password(passwordEncoder.encode(req.getPassword()))
                 .role(req.getRole() != null ? req.getRole() : User.Role.STUDENT)
                 .build();
-
         return userRepository.save(user);
     }
 
     @Override
     public User getById(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("user not found"));
+        return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("user not found"));
     }
 
     @Override
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("user not found"));
+        return userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("user not found"));
     }
 }
