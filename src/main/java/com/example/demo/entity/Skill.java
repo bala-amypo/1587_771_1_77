@@ -11,6 +11,5 @@ public class Skill {
     private String name;
     private String code;
     private Double minCompetencyScore;
-    @Builder.Default
-    private boolean active = true; // Required for t016 [cite: 1, 47]
+    private boolean active;
 }
