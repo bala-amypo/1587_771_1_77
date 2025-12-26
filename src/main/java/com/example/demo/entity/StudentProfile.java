@@ -1,7 +1,7 @@
 package com.example.demo.entity;
 
 import lombok.*;
-import jakarta.persistence.*; // Use jakarta for Spring Boot 3+
+import jakarta.persistence.*; // Fixes "package javax.persistence does not exist"
 import java.time.Instant;
 
 @Entity
