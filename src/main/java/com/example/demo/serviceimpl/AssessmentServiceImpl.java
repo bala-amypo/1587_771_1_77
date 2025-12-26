@@ -6,7 +6,7 @@ import com.example.demo.service.AssessmentService;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AssessmentServiceImpl implements AssessmentService {
+public class AssessmentServiceImpl implements AssessmentResultService {
 
     private final AssessmentResultRepository repository;
 
