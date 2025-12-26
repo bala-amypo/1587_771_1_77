@@ -26,35 +26,42 @@ public class RecommendationServiceImpl implements RecommendationService {
 
     @Override
     public SkillGapRecommendation computeRecommendationForStudentSkill(Long studentId, Long skillId) {
-        // Required for t024: Check existence of profile and skill
-        StudentProfile profile = profileRepo.findById(studentId).orElseThrow(() -> new ResourceNotFoundException("profile not found")); [cite: 1, 58]
-        Skill skill = skillRepo.findById(skillId).orElseThrow(() -> new ResourceNotFoundException("skill not found")); [cite: 1, 58]
+        StudentProfile profile = profileRepo.findById(studentId)
+            .orElseThrow(() -> new ResourceNotFoundException("profile not found"));
+        Skill skill = skillRepo.findById(skillId)
+            .orElseThrow(() -> new ResourceNotFoundException("skill not found"));
         
         List<AssessmentResult> results = assessmentRepo.findByStudentProfileIdAndSkillId(studentId, skillId);
         double currentScore = results.isEmpty() ? 0.0 : results.get(results.size() - 1).getScore();
-        double gap = (skill.getMinCompetencyScore() != null ? skill.getMinCompetencyScore() : 80.0) - currentScore;
+        
+        // Logic for t038/t040: Priority based on Gap
+        double minReq = skill.getMinCompetencyScore() != null ? skill.getMinCompetencyScore() : 80.0;
+        double gap = minReq - currentScore;
+        String priority = (gap >= 20) ? "HIGH" : (gap >= 10) ? "MEDIUM" : "LOW";
 
         SkillGapRecommendation rec = SkillGapRecommendation.builder()
                 .studentProfile(profile)
                 .skill(skill)
                 .gapScore(gap)
+                .priority(priority)
+                .recommendedAction("Focus on " + skill.getName())
                 .generatedAt(Instant.now())
                 .generatedBy("SYSTEM")
                 .build();
-        return recommendationRepo.save(rec); [cite: 1, 58, 59]
+        return recommendationRepo.save(rec);
     }
 
     @Override
     public List<SkillGapRecommendation> computeRecommendationsForStudent(Long studentId) {
-        // Required for t025: Fetch all active skills and compute recommendations
-        return skillRepo.findByActiveTrue().stream()
+        List<Skill> activeSkills = skillRepo.findByActiveTrue();
+        return activeSkills.stream()
                 .map(s -> computeRecommendationForStudentSkill(studentId, s.getId()))
-                .collect(Collectors.toList()); [cite: 1, 60, 64]
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<SkillGapRecommendation> getRecommendationsForStudent(Long studentId) {
-        // Required for t038
-        return recommendationRepo.findByStudentOrdered(studentId); [cite: 1, 86]
+        // Required for t038: Custom repository call
+        return recommendationRepo.findByStudentOrdered(studentId);
     }
 }
