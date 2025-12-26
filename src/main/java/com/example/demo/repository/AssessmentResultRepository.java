@@ -2,15 +2,28 @@ package com.example.demo.repository;
 
 import com.example.demo.entity.AssessmentResult;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.time.Instant;
 import java.util.List;
 
-@Repository
 public interface AssessmentResultRepository extends JpaRepository<AssessmentResult, Long> {
-    
-    // Add this to fix the "cannot find symbol" error
-    List<AssessmentResult> findByStudentIdAndSkillId(Long studentId, Long skillId);
 
-    // Add this if you need to support the "getResultsByStudent" method
-    List<AssessmentResult> findByStudentId(Long studentId);
+    // REQUIRED by tests
+    List<AssessmentResult> findByStudentProfileIdAndSkillId(
+            Long studentProfileId,
+            Long skillId
+    );
+
+    // Used in tests
+    Double avgScoreByCohortAndSkill(String cohort, Long skillId);
+
+    List<AssessmentResult> findRecentByStudent(Long studentProfileId);
+
+    List<AssessmentResult> findResultsForStudentBetween(
+            Long studentProfileId,
+            Instant from,
+            Instant to
+    );
 }
