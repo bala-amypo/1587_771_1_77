@@ -24,7 +24,7 @@ public class AuthController {
         user.setEmail(req.getEmail());
         user.setPassword(req.getPassword());
 
-        // ✅ FIX: String → Enum
+        // ✅ STRING → ENUM
         user.setRole(User.Role.valueOf(req.getRole().toUpperCase()));
 
         return ResponseEntity.ok(userRepository.save(user));

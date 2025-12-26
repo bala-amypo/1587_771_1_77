@@ -17,10 +17,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public User saveUser(User user) {
 
-        // ❌ REMOVED: user.getRole().isBlank()
-        // ✅ CORRECT ENUM CHECK
+        // enum-safe check
         if (user.getRole() == null) {
-            user.setRole(User.Role.STUDENT); // default role
+            user.setRole(User.Role.STUDENT);
         }
 
         return userRepository.save(user);
