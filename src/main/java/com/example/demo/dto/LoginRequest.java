@@ -1,8 +1,10 @@
+
 package com.example.demo.dto;
 
 import lombok.*;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
