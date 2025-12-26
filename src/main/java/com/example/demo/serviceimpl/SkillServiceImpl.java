@@ -15,29 +15,28 @@ public class SkillServiceImpl implements SkillService {
 
     @Override
     public Skill createSkill(Skill skill) {
-        if (skillRepository.findByCode(skill.getCode()).isPresent()) {
-            throw new IllegalArgumentException("Skill code must be unique");
-        }
         return skillRepository.save(skill);
     }
 
     @Override
     public Skill updateSkill(Long id, Skill skillDetails) {
-        Skill skill = skillRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Skill not found with id: " + id));
-        
-        // Correct field mapping for CRUD operations [cite: 63]
+        Skill skill = getById(id);
         skill.setName(skillDetails.getName());
-        skill.setCode(skillDetails.getCode());
-        skill.setCategory(skillDetails.getCategory()); 
-        skill.setActive(skillDetails.isActive());
-        
+        skill.setCategory(skillDetails.getCategory());
         return skillRepository.save(skill);
+    }
+
+    // Fixed: Added missing interface method
+    @Override
+    public void deactivateSkill(Long id) {
+        Skill skill = getById(id);
+        skill.setActive(false);
+        skillRepository.save(skill);
     }
 
     @Override
     public List<Skill> getActiveSkills() {
-        return skillRepository.findByActiveTrue(); [cite: 64, 65]
+        return skillRepository.findByActiveTrue();
     }
 
     @Override

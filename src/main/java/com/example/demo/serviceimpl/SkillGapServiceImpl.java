@@ -1,36 +1,37 @@
 package com.example.demo.serviceimpl;
 
-import com.example.demo.entity.AssessmentResult;
 import com.example.demo.entity.Skill;
-import com.example.demo.repository.AssessmentResultRepository;
 import com.example.demo.service.SkillGapService;
+import com.example.demo.service.SkillService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class SkillGapServiceImpl implements SkillGapService {
 
-    private final AssessmentResultRepository assessmentResultRepository;
+    private final SkillService skillService;
+    private final AssessmentServiceImpl assessmentService;
+
+    // Fixed: Implemented the missing contract method
+    @Override
+    public Map<String, Double> getGapsByStudent(Long studentId) {
+        Map<String, Double> gaps = new HashMap<>();
+        skillService.getActiveSkills().forEach(skill -> {
+            gaps.put(skill.getName(), calculateGap(studentId, skill));
+        });
+        return gaps;
+    }
 
     @Override
     public Double calculateGap(Long studentId, Skill skill) {
-        // Fetch results for simulation of Many-to-Many associations [cite: 46]
-        List<AssessmentResult> results = assessmentResultRepository
-                .findByStudentProfileIdAndSkillId(studentId, skill.getId());
+        var results = assessmentService.getResultsByStudentAndSkill(studentId, skill.getId());
+        if (results.isEmpty()) return skill.getMinCompetencyScore();
 
-        if (results.isEmpty()) {
-            return skill.getMinCompetencyScore();
-        }
-
-        double averageScore = results.stream()
-                .mapToDouble(AssessmentResult::getScore)
-                .average()
-                .orElse(0.0);
-
-        // Gap calculation logic [cite: 47]
-        double gap = skill.getMinCompetencyScore() - averageScore;
-        return gap > 0 ? gap : 0.0;
+        double avg = results.stream().mapToDouble(r -> r.getScore()).average().orElse(0.0);
+        double gap = skill.getMinCompetencyScore() - avg;
+        return Math.max(0, gap);
     }
 }
