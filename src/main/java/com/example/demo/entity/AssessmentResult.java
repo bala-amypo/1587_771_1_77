@@ -11,21 +11,22 @@ import java.time.Instant;
 @AllArgsConstructor
 @Builder
 public class AssessmentResult {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String assessmentId;
-
     @ManyToOne
-    @JoinColumn(name = "student_profile_id")
+    @JoinColumn(name = "student_profile_id", nullable = false)
     private StudentProfile studentProfile;
 
     @ManyToOne
-    @JoinColumn(name = "skill_id")
+    @JoinColumn(name = "skill_id", nullable = false)
     private Skill skill;
 
+    @Column(nullable = false)
+    private String assessmentId;
+
+    @Column(nullable = false)
     private Double score;
 
     @Builder.Default

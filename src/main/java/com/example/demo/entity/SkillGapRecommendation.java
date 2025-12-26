@@ -11,22 +11,23 @@ import java.time.Instant;
 @AllArgsConstructor
 @Builder
 public class SkillGapRecommendation {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "student_profile_id")
+    @JoinColumn(name = "student_profile_id", nullable = false)
     private StudentProfile studentProfile;
 
     @ManyToOne
-    @JoinColumn(name = "skill_id")
+    @JoinColumn(name = "skill_id", nullable = false)
     private Skill skill;
 
-    private Double gapScore;
+    private String recommendedAction;
     
-    private String recommendationText;
+    private String priority; // HIGH, MEDIUM, LOW
+
+    private Double gapScore;
 
     private String generatedBy;
 

@@ -5,6 +5,7 @@ import lombok.*;
 import java.time.Instant;
 
 @Entity
+@Table(name = "skill_gap_records")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,10 +27,6 @@ public class SkillGapRecord {
     private Double targetScore;
     private Double gapScore;
 
-    private Instant calculatedAt;
-
-    @PrePersist
-    protected void onCreate() {
-        calculatedAt = Instant.now();
-    }
+    @Builder.Default
+    private Instant calculatedAt = Instant.now();
 }

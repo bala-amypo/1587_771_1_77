@@ -10,15 +10,19 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class Skill {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true, nullable = false)
-    private String code;
+    private String code; // Often referred to as skillName in spec
 
-    private String name;
+    @Column(nullable = false)
+    private String category;
+
+    private String description;
+
+    private Double minCompetencyScore;
 
     @Builder.Default
     private boolean active = true;
