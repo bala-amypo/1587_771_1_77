@@ -26,4 +26,9 @@ public class AssessmentServiceImpl implements AssessmentResultService {
     public List<AssessmentResult> getResultsByStudent(Long studentId) {
         return repository.findByStudentProfileId(studentId);
     }
+
+    @Override
+    public List<AssessmentResult> getResultsByStudentAndSkill(Long studentId, Long skillId) {
+        return repository.findByStudentProfileIdAndSkillId(studentId, skillId);
+    }
 }
