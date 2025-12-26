@@ -16,10 +16,11 @@ public class SkillServiceImpl implements SkillService {
         this.repo = repo;
     }
 
+    // ✅ REQUIRED by SkillService
     @Override
     public Skill createSkill(Skill skill) {
 
-        // ✅ FIX: Skill has NO getName(), use getCode()
+        // ✅ Repository supports findByCode
         repo.findByCode(skill.getCode()).ifPresent(s -> {
             throw new IllegalArgumentException("Skill code must be unique");
         });
@@ -27,22 +28,40 @@ public class SkillServiceImpl implements SkillService {
         return repo.save(skill);
     }
 
+    // ✅ REQUIRED by SkillService
+    @Override
+    public Skill updateSkill(Long id, Skill updatedSkill) {
+
+        Skill existing = repo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Skill not found"));
+
+        existing.setCode(updatedSkill.getCode());
+        existing.setName(updatedSkill.getName());
+        existing.setActive(updatedSkill.isActive());
+
+        return repo.save(existing);
+    }
+
+    // ✅ REQUIRED by SkillService
     @Override
     public List<Skill> getActiveSkills() {
         return repo.findByActiveTrue();
     }
 
+    // ✅ REQUIRED by SkillService
     @Override
     public List<Skill> getAllSkills() {
-        return repo.findAll();   // ✅ FIX: implement missing method
+        return repo.findAll();
     }
 
+    // ✅ REQUIRED by SkillService
     @Override
     public Skill getById(Long id) {
         return repo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Skill not found"));
     }
 
+    // ✅ REQUIRED by SkillService
     @Override
     public void deactivateSkill(Long id) {
         Skill skill = getById(id);
