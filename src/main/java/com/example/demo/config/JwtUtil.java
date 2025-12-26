@@ -4,52 +4,42 @@ import com.example.demo.entity.User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 
-import java.security.Key;
+import javax.crypto.SecretKey;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class JwtUtil {
 
-    private final Key signingKey;
-    private final long expiryMillis;
+    private final SecretKey signingKey;
+    private final long validityInMs;
 
-    /**
-     * Constructor expected by TestNG setup:
-     * new JwtUtil("32+charsecret...", 3600000)
-     */
-    public JwtUtil(String secretKey, long expiryMillis) {
-        this.signingKey = Keys.hmacShaKeyFor(secretKey.getBytes());
-        this.expiryMillis = expiryMillis;
+    public JwtUtil(String secret, long validityInMs) {
+            this.signingKey = Keys.hmacShaKeyFor(secret.getBytes());
+            this.validityInMs = validityInMs;
     }
 
-    /**
-     * Generates token with claims required by tests:
-     * userId, email, role
-     */
     public String generateToken(User user) {
 
-        long now = System.currentTimeMillis();
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("userId", user.getId());
+        claims.put("email", user.getEmail());
+        claims.put("role", user.getRole().name());
+
+        Date now = new Date();
+        Date expiry = new Date(now.getTime() + validityInMs);
 
         return Jwts.builder()
-                .setSubject(user.getEmail())
-                .claim("userId", user.getId())
-                .claim("email", user.getEmail())
-                .claim("role", user.getRole() != null ? user.getRole().name() : null)
-                .setIssuedAt(new Date(now))
-                .setExpiration(new Date(now + expiryMillis))
+                .setClaims(claims)
+                .setSubject(String.valueOf(user.getId()))
+                .setIssuedAt(now)
+                .setExpiration(expiry)
                 .signWith(signingKey, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    /**
-     * Used in tests:
-     * var parsed = jwtUtil.validateAndParse(token)
-     *
-     * Must throw exception when:
-     * - token is malformed
-     * - signature is tampered
-     * - token expired
-     */
-    public Jws<Claims> validateAndParse(String token) throws JwtException {
+    /** Tests directly call this method */
+    public Jws<Claims> validateAndParse(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(signingKey)
                 .build()
