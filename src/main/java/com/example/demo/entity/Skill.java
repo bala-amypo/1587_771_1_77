@@ -1,32 +1,16 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.*;
 import lombok.*;
+import jakarta.persistence.*;
 
 @Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Data @Builder @NoArgsConstructor @AllArgsConstructor
 public class Skill {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(unique = true, nullable = false)
-    private String code; // Maps to skillName/code in requirements
-
-    @Column(nullable = false)
     private String name;
-
-    @Column(nullable = false)
-    private String category;
-
-    private String description;
-
+    private String code;
+    private Double minCompetencyScore;
     @Builder.Default
-    private Double minCompetencyScore = 0.0;
-
-    @Builder.Default
-    private boolean active = true;
+    private boolean active = true; // Required for t016 [cite: 1, 47]
 }

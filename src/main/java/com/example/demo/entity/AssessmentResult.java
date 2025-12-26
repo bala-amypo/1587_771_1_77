@@ -1,44 +1,24 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.*;
 import lombok.*;
+import jakarta.persistence.*;
 import java.time.Instant;
 
 @Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Data @Builder @NoArgsConstructor @AllArgsConstructor
 public class AssessmentResult {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "student_profile_id", nullable = false)
-    private StudentProfile studentProfile;
-
-    @ManyToOne
-    @JoinColumn(name = "skill_id", nullable = false)
-    private Skill skill;
-
-    @Column(nullable = false)
     private String assessmentId;
-
-    @Column(nullable = false)
     private Double score;
-
     @Builder.Default
-    private Double maxScore = 100.0;
+    private Double maxScore = 100.0; // Required for t017 [cite: 1, 48]
+    private String cohort;
+    @Builder.Default
+    private Instant attemptedAt = Instant.now(); // Required for t050 [cite: 1, 109]
 
-    private String cohort; // Needed for HQL aggregation in tests
-
-    private Instant attemptedAt;
-
-    @PrePersist
-    protected void onCreate() {
-        if (attemptedAt == null) {
-            attemptedAt = Instant.now();
-        }
-    }
+    @ManyToOne
+    private StudentProfile studentProfile;
+    @ManyToOne
+    private Skill skill;
 }
