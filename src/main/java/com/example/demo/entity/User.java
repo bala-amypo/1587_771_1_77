@@ -2,6 +2,7 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.time.Instant;
 
 @Entity
 @Table(name = "users")
@@ -10,7 +11,6 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,11 +21,15 @@ public class User {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = false) // Stored as BCrypt hash
     private String password;
 
     @Enumerated(EnumType.STRING)
-    private Role role;
+    @Builder.Default
+    private Role role = Role.STUDENT;
+
+    @Builder.Default
+    private Instant createdAt = Instant.now();
 
     public enum Role {
         STUDENT, INSTRUCTOR, ADMIN

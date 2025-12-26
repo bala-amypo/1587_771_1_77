@@ -11,19 +11,25 @@ import java.time.Instant;
 @AllArgsConstructor
 @Builder
 public class StudentProfile {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long userId;
+    @OneToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String enrollmentId;
 
-    private String grade;
-
+    @Column(nullable = false)
     private String cohort;
+
+    @Column(nullable = false)
+    private Integer yearLevel;
+
+    @Builder.Default
+    private boolean active = true;
 
     private Instant lastUpdatedAt;
 

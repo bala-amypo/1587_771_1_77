@@ -6,29 +6,29 @@ import java.time.Instant;
 
 @Entity
 @Table(name = "skill_gap_recommendations")
-@Getter
-@Setter
-@Builder
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class SkillGapRecommendation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "student_profile_id")
     private StudentProfile studentProfile;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "skill_id")
     private Skill skill;
 
     private Double gapScore;
+    
+    private String recommendationText;
 
-    @Builder.Default
-    private String generatedBy = "SYSTEM";
+    private String generatedBy;
 
     @Builder.Default
     private Instant generatedAt = Instant.now();
