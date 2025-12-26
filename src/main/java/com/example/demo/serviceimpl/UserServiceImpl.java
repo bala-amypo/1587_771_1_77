@@ -1,6 +1,8 @@
 package com.example.demo.serviceimpl;
 
+import com.example.demo.dto.RegisterRequest;
 import com.example.demo.entity.User;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,27 +19,40 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User register(RegisterRequest req) {
+        if (userRepository.existsByEmail(req.getEmail())) {
+            throw new IllegalArgumentException("Email already exists");
+        }
+        User user = User.builder()
+                .fullName(req.getFullName())
+                .email(req.getEmail())
+                .password(passwordEncoder.encode(req.getPassword()))
+                .role(req.getRole() != null ? req.getRole() : User.Role.STUDENT)
+                .build();
+        return userRepository.save(user);
+    }
+
+    @Override
     public User register(User user) {
         if (userRepository.existsByEmail(user.getEmail())) {
-            throw new IllegalArgumentException("Email already exists"); // Pass t004
+            throw new IllegalArgumentException("Email already exists");
         }
-        user.setPassword(passwordEncoder.encode(user.getPassword())); // Pass t003
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
     @Override
     public User getById(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("user not found")); // Pass t055
+        return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("user not found"));
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
     @Override
     public List<User> listInstructors() {
-        return userRepository.findByRole(User.Role.INSTRUCTOR); // Pass t042, t056
-    }
-    
-    @Override
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email).orElse(null);
+        return userRepository.findByRole(User.Role.INSTRUCTOR);
     }
 }
