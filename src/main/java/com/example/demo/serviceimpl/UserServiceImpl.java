@@ -17,7 +17,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User saveUser(User user) {
 
-        // enum-safe check
+        // ✅ Enum-safe default role
         if (user.getRole() == null) {
             user.setRole(User.Role.STUDENT);
         }

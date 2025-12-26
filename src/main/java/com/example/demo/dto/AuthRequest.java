@@ -7,8 +7,7 @@ public class AuthRequest {
     private String password;
     private String role;
 
-    public AuthRequest() {
-    }
+    public AuthRequest() {}
 
     public String getFullName() {
         return fullName;
