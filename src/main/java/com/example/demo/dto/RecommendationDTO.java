@@ -1,21 +1,23 @@
 package com.example.demo.dto;
 
+import lombok.*;
+import java.time.Instant;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class RecommendationDTO {
 
+    private Long studentProfileId;
     private Long skillId;
+
+    private String skillName;
+
     private Double gapScore;
     private String priority;
-    private String generatedBy;
 
-    public Long getSkillId() { return skillId; }
-    public void setSkillId(Long skillId) { this.skillId = skillId; }
+    private String recommendedAction;
 
-    public Double getGapScore() { return gapScore; }
-    public void setGapScore(Double gapScore) { this.gapScore = gapScore; }
-
-    public String getPriority() { return priority; }
-    public void setPriority(String priority) { this.priority = priority; }
-
-    public String getGeneratedBy() { return generatedBy; }
-    public void setGeneratedBy(String generatedBy) { this.generatedBy = generatedBy; }
+    private Instant generatedAt;
 }
