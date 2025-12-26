@@ -1,4 +1,3 @@
-// src/main/java/com/example/demo/repository/AssessmentResultRepository.java
 package com.example.demo.repository;
 
 import com.example.demo.entity.AssessmentResult;
@@ -9,14 +8,17 @@ import java.util.List;
 
 public interface AssessmentResultRepository extends JpaRepository<AssessmentResult, Long> {
     
-    List<AssessmentResult> findByStudentProfileIdAndSkillId(Long studentId, Long skillId);
+    // Fixes error in AssessmentServiceImpl
+    List<AssessmentResult> findByStudentProfileId(Long studentId);
+
+    [cite_start]List<AssessmentResult> findByStudentProfileIdAndSkillId(Long studentId, Long skillId); [cite: 198, 214]
 
     @Query("SELECT AVG(a.score) FROM AssessmentResult a WHERE a.studentProfile.cohort = ?1 AND a.skill.id = ?2")
-    Double avgScoreByCohortAndSkill(String cohort, Long skillId);
+    [cite_start]Double avgScoreByCohortAndSkill(String cohort, Long skillId); [cite: 199, 229]
 
     @Query("SELECT a FROM AssessmentResult a WHERE a.studentProfile.id = ?1 ORDER BY a.attemptedAt DESC")
-    List<AssessmentResult> findRecentByStudent(Long studentId);
+    [cite_start]List<AssessmentResult> findRecentByStudent(Long studentId); [cite: 200, 201]
 
     @Query("SELECT a FROM AssessmentResult a WHERE a.studentProfile.id = ?1 AND a.attemptedAt BETWEEN ?2 AND ?3")
-    List<AssessmentResult> findResultsForStudentBetween(Long id, Instant start, Instant end);
+    [cite_start]List<AssessmentResult> findResultsForStudentBetween(Long id, Instant start, Instant end); [cite: 239]
 }
