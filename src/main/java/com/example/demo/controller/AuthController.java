@@ -1,11 +1,8 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.RegisterRequest;
-import com.example.demo.service.AuthService;
-import com.example.demo.config.JwtUtil;
 import com.example.demo.entity.User;
-
+import com.example.demo.service.AuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,24 +11,21 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final AuthService authService;
-    private final JwtUtil jwtUtil;
 
-    public AuthController(AuthService authService, JwtUtil jwtUtil) {
+    public AuthController(AuthService authService) {
         this.authService = authService;
-        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest req) {
-        User user = authService.register(req);
-        String token = jwtUtil.generateToken(user);
-        return ResponseEntity.ok(token);
-    }
+    public ResponseEntity<User> register(@RequestBody RegisterRequest req) {
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest req) {
-        User user = authService.login(req.getEmail(), req.getPassword());
-        String token = jwtUtil.generateToken(user);
-        return ResponseEntity.ok(token);
+        User user = User.builder()
+                .fullName(req.getFullName())
+                .email(req.getEmail())
+                .password(req.getPassword())
+                .role(req.getRole())
+                .build();
+
+        return ResponseEntity.ok(authService.register(user));
     }
 }
