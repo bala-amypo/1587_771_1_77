@@ -5,11 +5,13 @@ import lombok.*;
 import java.time.Instant;
 
 @Entity
-@Data
-@Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class SkillGapRecord {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,16 +22,9 @@ public class SkillGapRecord {
     @ManyToOne
     private Skill skill;
 
-    private Double requiredScore;
-    private Double actualScore;
-    private Double gap;
-    private Instant calculatedAt;
+    private Double currentScore;
+    private Double targetScore;
+    private Double gapScore;
 
-    // Custom constructor needed for the stream logic in ServiceImpl
-    public SkillGapRecord(Skill skill, Double gap) {
-        this.skill = skill;
-        this.gap = gap;
-        this.requiredScore = skill.getMinCompetencyScore();
-        this.calculatedAt = Instant.now();
-    }
+    private Instant calculatedAt = Instant.now();
 }
