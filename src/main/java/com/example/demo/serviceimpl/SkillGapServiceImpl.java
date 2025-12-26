@@ -6,7 +6,6 @@ import com.example.demo.repository.AssessmentResultRepository;
 import com.example.demo.service.SkillGapService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -17,24 +16,21 @@ public class SkillGapServiceImpl implements SkillGapService {
 
     @Override
     public Double calculateGap(Long studentId, Skill skill) {
-        // Fetch assessments for the specific student and skill
+        // Fetch results for simulation of Many-to-Many associations [cite: 46]
         List<AssessmentResult> results = assessmentResultRepository
-                .findByStudentProfileIdAndSkillId(studentId, skill.getId()); [cite: 88, 89]
+                .findByStudentProfileIdAndSkillId(studentId, skill.getId());
 
         if (results.isEmpty()) {
-            return skill.getMinCompetencyScore(); // The gap is the full required score if no tests taken
+            return skill.getMinCompetencyScore();
         }
 
-        // Calculate average score
         double averageScore = results.stream()
                 .mapToDouble(AssessmentResult::getScore)
                 .average()
                 .orElse(0.0);
 
-        // Gap = Required Min Competency - Actual Average Score
-        // Resolves "cannot find symbol" by accessing the new entity field
+        // Gap calculation logic [cite: 47]
         double gap = skill.getMinCompetencyScore() - averageScore;
-        
-        return gap > 0 ? gap : 0.0; // Return 0 if the student exceeds competency
+        return gap > 0 ? gap : 0.0;
     }
 }
