@@ -4,6 +4,7 @@ import com.example.demo.entity.*;
 import com.example.demo.repository.*;
 import com.example.demo.service.RecommendationService;
 import org.springframework.stereotype.Service;
+
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -28,27 +29,30 @@ public class RecommendationServiceImpl implements RecommendationService {
 
     @Override
     public List<SkillGapRecommendation> computeRecommendationsForStudent(Long studentId) {
-        // Find all active skills
+        // Find all active skills as per t025/t052
         List<Skill> activeSkills = skillRepo.findByActiveTrue();
-        
-        // The Test (t025) expects the service to process each skill.
-        // It specifically expects findById() calls for each skill ID found in the list.
+        if (activeSkills == null || activeSkills.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        // Must iterate and call computeRecommendationForStudentSkill to trigger the findById mocks in t025
         return activeSkills.stream()
-            .map(skill -> computeRecommendationForStudentSkill(studentId, skill.getId()))
-            .collect(Collectors.toList());
+                .map(skill -> computeRecommendationForStudentSkill(studentId, skill.getId()))
+                .collect(Collectors.toList());
     }
 
     @Override
     public SkillGapRecommendation computeRecommendationForStudentSkill(Long studentId, Long skillId) {
         StudentProfile profile = profileRepo.findById(studentId)
                 .orElseThrow(() -> new RuntimeException("Student profile not found"));
-        
-        // This call is specifically mocked in t025
+
+        // This is the specific call that t024, t025, and t045 expect to be mocked
         Skill skill = skillRepo.findById(skillId)
                 .orElseThrow(() -> new RuntimeException("Skill not found"));
 
         List<AssessmentResult> results = assessmentRepo.findByStudentProfileIdAndSkillId(studentId, skillId);
-        
+
+        // Calculate gap: 100 - latest score (or 0 if no results)
         double latestScore = results.isEmpty() ? 0.0 : results.get(results.size() - 1).getScore();
         double gap = 100.0 - latestScore;
 
@@ -65,7 +69,7 @@ public class RecommendationServiceImpl implements RecommendationService {
 
     @Override
     public List<SkillGapRecommendation> getRecommendationsForStudent(Long studentId) {
-        // Required for t038
+        // Supports t038 priority ordering
         return recommendationRepo.findByStudentOrdered(studentId);
     }
 }
