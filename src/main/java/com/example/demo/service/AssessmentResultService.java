@@ -5,6 +5,8 @@ import java.util.List;
 
 public interface AssessmentResultService {
     AssessmentResult recordAssessment(AssessmentResult result);
+    
+    // Required for t031
     List<AssessmentResult> getResultsByStudent(Long studentId);
     
     // Required for many-to-many simulation tests t024, t025, and t045
