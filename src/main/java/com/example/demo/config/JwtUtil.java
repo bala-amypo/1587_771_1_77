@@ -15,36 +15,39 @@ public class JwtUtil {
     private final Key key;
     private final long expirationMs;
 
-    // Spring constructor (used at runtime)
+    // 🔥 REQUIRED BY TEST CASE
+    public JwtUtil(String secret, long expirationMs) {
+        this.key = Keys.hmacShaKeyFor(secret.getBytes());
+        this.expirationMs = expirationMs;
+    }
+
+    // 🔥 REQUIRED BY SPRING BOOT
     public JwtUtil(
             @Value("${jwt.secret}") String secret,
-            @Value("${jwt.expiration}") long expirationMs
+            @Value("${jwt.expiration}") long expirationMs,
+            @Value("${spring.application.name:demo}") String dummy // avoids duplicate ctor
     ) {
-        this.key = Keys.hmacShaKeyFor(secret.getBytes()); // ✅ FIX
+        this.key = Keys.hmacShaKeyFor(secret.getBytes());
         this.expirationMs = expirationMs;
     }
 
-    // TestNG constructor (used in your test file)
-    public JwtUtil(String secret, long expirationMs) {
-        this.key = Keys.hmacShaKeyFor(secret.getBytes()); // ✅ FIX
-        this.expirationMs = expirationMs;
-    }
-
+    // 🔥 TC EXPECTS USER OBJECT
     public String generateToken(User user) {
         return Jwts.builder()
                 .claim("userId", user.getId())
                 .claim("email", user.getEmail())
-                .claim("role", user.getRole().name())
+                .claim("role", user.getRole())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationMs))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    public Jws<Claims> validateAndParse(String token) {
+    public Claims extractClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
-                .parseClaimsJws(token);
+                .parseClaimsJws(token)
+                .getBody();
     }
 }
