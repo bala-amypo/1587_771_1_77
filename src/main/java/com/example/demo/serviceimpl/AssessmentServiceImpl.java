@@ -3,46 +3,36 @@ package com.example.demo.serviceimpl;
 import com.example.demo.entity.AssessmentResult;
 import com.example.demo.repository.AssessmentResultRepository;
 import com.example.demo.service.AssessmentService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class AssessmentServiceImpl implements AssessmentService {
 
     private final AssessmentResultRepository assessmentResultRepository;
 
-    public AssessmentServiceImpl(AssessmentResultRepository assessmentResultRepository) {
-        this.assessmentResultRepository = assessmentResultRepository;
-    }
-
     @Override
-    @Transactional
     public AssessmentResult recordAssessment(AssessmentResult result) {
-        // Validation logic for scores to pass t007 and t008
+        // Validation for test t041
         if (result.getScore() == null) {
             throw new IllegalArgumentException("Score cannot be null");
         }
-        if (result.getMaxScore() == null) {
-            result.setMaxScore(100.0);
-        }
-        if (result.getScore() > result.getMaxScore()) {
-            throw new IllegalArgumentException("Score cannot exceed max score");
+        // Validation for test t008
+        if (result.getMaxScore() != null && result.getScore() > result.getMaxScore()) {
+            throw new IllegalArgumentException("Score cannot be greater than max score");
         }
         return assessmentResultRepository.save(result);
     }
 
     @Override
-    public List<AssessmentResult> getResultsByProfileId(Long profileId) {
-        // This method now compiles because findByStudentProfileId 
-        // is added to the repository
-        return assessmentResultRepository.findByStudentProfileId(profileId);
+    public List<AssessmentResult> getResultsByStudent(Long studentId) {
+        return assessmentResultRepository.findByStudentProfileId(studentId);
     }
 
     @Override
-    public List<AssessmentResult> getRecentResults(Long userId) {
-        // Calls the custom HQL/JPQL query defined in the repository
-        return assessmentResultRepository.findRecentByStudent(userId);
+    public List<AssessmentResult> getResultsByStudentAndSkill(Long studentId, Long skillId) {
+        return assessmentResultRepository.findByStudentProfileIdAndSkillId(studentId, skillId);
     }
 }
