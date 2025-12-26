@@ -5,7 +5,6 @@ import com.example.demo.repository.AssessmentResultRepository;
 import com.example.demo.service.AssessmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -16,17 +15,14 @@ public class AssessmentServiceImpl implements AssessmentService {
 
     @Override
     public AssessmentResult recordAssessment(AssessmentResult result) {
-        // Requirement for t041: recordAssessmentNullScore
+        // Validation for test t041
         if (result.getScore() == null) {
             throw new IllegalArgumentException("Score cannot be null");
         }
-
-        // Requirement for t008: recordAssessmentInvalidScore
-        // Test expects an IllegalArgumentException containing the word "Score"
+        // Validation for test t008
         if (result.getMaxScore() != null && result.getScore() > result.getMaxScore()) {
-            throw new IllegalArgumentException("Score exceeds the maximum possible value");
+            throw new IllegalArgumentException("Score cannot be greater than max score");
         }
-
         return assessmentResultRepository.save(result);
     }
 
@@ -37,7 +33,6 @@ public class AssessmentServiceImpl implements AssessmentService {
 
     @Override
     public List<AssessmentResult> getResultsByStudentAndSkill(Long studentId, Long skillId) {
-        // Supports the many-to-many relationship simulation in t024 and t025
         return assessmentResultRepository.findByStudentProfileIdAndSkillId(studentId, skillId);
     }
 }
