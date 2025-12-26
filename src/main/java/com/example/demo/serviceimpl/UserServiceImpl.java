@@ -2,7 +2,7 @@ package com.example.demo.serviceimpl;
 
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
-import com.example.demo.service.UserService;
+import com.example.demo.service.AuthService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -11,37 +11,44 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements AuthService {
 
-    private final UserRepository repo;
+    private final UserRepository userRepository;
     private final BCryptPasswordEncoder encoder;
 
-    public UserServiceImpl(UserRepository repo, BCryptPasswordEncoder encoder) {
-        this.repo = repo;
-        this.encoder = encoder;
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+        this.encoder = new BCryptPasswordEncoder();
     }
 
     @Override
-    public User createUser(User user) {
+    public User register(User user) {
+
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new IllegalArgumentException("Email already exists");
+        }
 
         user.setPassword(encoder.encode(user.getPassword()));
 
-        // ✅ FIX — role is STRING
-        user.setRole(
-                user.getRole() == null || user.getRole().isBlank()
-                        ? "STUDENT"
-                        : user.getRole()
-        );
+        if (user.getRole() == null) {
+            user.setRole(User.Role.STUDENT);
+        }
 
-        return repo.save(user);
+        return userRepository.save(user);
     }
 
     @Override
     public User getById(Long id) {
-        return repo.findById(id)
+        return userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
     @Override
-    public List<User> getAll() {
-        return repo.findAll();
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    @Override
+    public List<User> listInstructors() {
+        return userRepository.findByRole(User.Role.INSTRUCTOR);
     }
 }
