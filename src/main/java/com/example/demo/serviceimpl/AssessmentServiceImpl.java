@@ -2,12 +2,12 @@ package com.example.demo.serviceimpl;
 
 import com.example.demo.entity.AssessmentResult;
 import com.example.demo.repository.AssessmentResultRepository;
-import com.example.demo.service.AssessmentResultService;
+import com.example.demo.service.AssessmentService;
 import org.springframework.stereotype.Service;
-import java.util.List;
 
 @Service
-public class AssessmentServiceImpl implements AssessmentResultService {
+public class AssessmentServiceImpl implements AssessmentService {
+
     private final AssessmentResultRepository repository;
 
     public AssessmentServiceImpl(AssessmentResultRepository repository) {
@@ -16,21 +16,20 @@ public class AssessmentServiceImpl implements AssessmentResultService {
 
     @Override
     public AssessmentResult recordAssessment(AssessmentResult result) {
-        if (result.getScore() == null || result.getScore() < 0 || result.getScore() > 100) {
-            throw new IllegalArgumentException("Invalid Score: Must be between 0 and 100");
+
+        // validation required by tests
+        if (result.getScore() == null) {
+            throw new IllegalArgumentException("Score cannot be null");
         }
+
+        if (result.getMaxScore() == null) {
+            result.setMaxScore(100.0);
+        }
+
+        if (result.getScore() < 0 || result.getScore() > result.getMaxScore()) {
+            throw new IllegalArgumentException("Score must be between 0 and maxScore");
+        }
+
         return repository.save(result);
-    }
-
-    // FIX 1: Add this to satisfy the specific interface requirement shown in your error log
-    @Override
-    public List<AssessmentResult> getResultsByStudent(Long studentId) {
-        return repository.findByStudentId(studentId);
-    }
-
-    // FIX 2: Ensure this matches the repository method we just added
-    @Override
-    public List<AssessmentResult> getResultsByStudentAndSkill(Long studentId, Long skillId) {
-        return repository.findByStudentIdAndSkillId(studentId, skillId);
     }
 }
