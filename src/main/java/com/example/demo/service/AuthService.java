@@ -1,15 +1,16 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.Auth;
+import com.example.demo.entity.User;
+
 import java.util.List;
 
 public interface AuthService {
 
-    Auth register(Auth auth);
+    User register(User user);
 
-    Auth getById(Long id);
+    User getById(Long id);
 
-    Auth findByEmail(String email);
+    User findByEmail(String email);
 
-    List<Auth> listInstructors();
+    List<User> listInstructors();
 }
