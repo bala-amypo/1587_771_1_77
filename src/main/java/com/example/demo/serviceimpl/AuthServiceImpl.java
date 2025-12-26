@@ -11,12 +11,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AuthServiceImpl implements AuthService {
-
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
-    // Constructor Injection - parameter order matches what the test suite expects
+    // Constructor Injection order must match for @InjectMocks to work in TCs
     public AuthServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -25,31 +24,25 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public User register(RegisterRequest req) {
-        // Validation for t013: must throw IllegalArgumentException with this exact message
         if (userRepository.existsByEmail(req.getEmail())) {
             throw new IllegalArgumentException("Email already exists");
         }
-
         User user = User.builder()
                 .fullName(req.getFullName())
                 .email(req.getEmail())
-                // Password hashing for t051
                 .password(passwordEncoder.encode(req.getPassword()))
                 .role(req.getRole() != null ? req.getRole() : User.Role.STUDENT)
                 .build();
-
         return userRepository.save(user);
     }
 
     @Override
     public User getById(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("user not found"));
+        return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("user not found"));
     }
 
     @Override
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("user not found"));
+        return userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("user not found"));
     }
 }
