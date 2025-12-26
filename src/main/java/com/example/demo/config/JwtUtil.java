@@ -2,6 +2,7 @@ package com.example.demo.config;
 
 import com.example.demo.entity.User;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -15,36 +16,30 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    private final String secret;
-    private final long validityInMs;
     private final SecretKey key;
+    private final long expirationMs;
 
-    // Constructor injection using values from application.properties
     public JwtUtil(@Value("${jwt.secret}") String secret, 
-                   @Value("${jwt.expiration-ms}") long validityInMs) {
-        this.secret = secret;
-        this.validityInMs = validityInMs;
+                   @Value("${jwt.expiration-ms}") long expirationMs) {
+        // Must be at least 32 characters for HS256 [cite: 165]
         this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+        this.expirationMs = expirationMs;
     }
 
     public String generateToken(User user) {
-        Claims claims = Jwts.claims().setSubject(user.getEmail());
-        claims.put("userId", user.getId());
-        claims.put("email", user.getEmail());
-        claims.put("role", user.getRole().name());
-
-        Date now = new Date();
-        Date validity = new Date(now.getTime() + validityInMs);
-
         return Jwts.builder()
-                .setClaims(claims)
-                .setIssuedAt(now)
-                .setExpiration(validity)
+                .setSubject(user.getEmail())
+                .claim("userId", user.getId())
+                .claim("email", user.getEmail())
+                .claim("role", user.getRole().name())
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + expirationMs))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    public io.jsonwebtoken.Jws<Claims> validateAndParse(String token) {
+    // THIS IS THE MISSING METHOD CAUSING THE COMPILATION ERROR [cite: 210]
+    public Jws<Claims> validateAndParse(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
