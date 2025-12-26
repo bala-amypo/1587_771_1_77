@@ -19,8 +19,8 @@ public class SkillServiceImpl implements SkillService {
     @Override
     public Skill createSkill(Skill skill) {
 
-        // ✅ Skill has FIELD `code` (not getter)
-        repo.findByCode(skill.code).ifPresent(s -> {
+        // ✅ use getter
+        repo.findByCode(skill.getCode()).ifPresent(s -> {
             throw new IllegalArgumentException("Skill code must be unique");
         });
 
@@ -33,10 +33,10 @@ public class SkillServiceImpl implements SkillService {
         Skill existing = repo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Skill not found"));
 
-        // ✅ FIELD access (NO getters/setters)
-        existing.code = updatedSkill.code;
-        existing.name = updatedSkill.name;
-        existing.active = updatedSkill.active;
+        // ✅ use setters/getters
+        existing.setCode(updatedSkill.getCode());
+        existing.setName(updatedSkill.getName());
+        existing.setActive(updatedSkill.isActive());
 
         return repo.save(existing);
     }
@@ -60,7 +60,7 @@ public class SkillServiceImpl implements SkillService {
     @Override
     public void deactivateSkill(Long id) {
         Skill skill = getById(id);
-        skill.active = false;
+        skill.setActive(false);
         repo.save(skill);
     }
 }
