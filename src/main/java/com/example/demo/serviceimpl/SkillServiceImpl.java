@@ -26,7 +26,6 @@ public class SkillServiceImpl implements SkillService {
         return skillRepository.save(skill);
     }
 
-    // Fixed: Added missing interface method
     @Override
     public void deactivateSkill(Long id) {
         Skill skill = getById(id);
@@ -37,6 +36,12 @@ public class SkillServiceImpl implements SkillService {
     @Override
     public List<Skill> getActiveSkills() {
         return skillRepository.findByActiveTrue();
+    }
+
+    // Fix: Added missing method required by interface
+    @Override
+    public List<Skill> getAllSkills() {
+        return skillRepository.findAll();
     }
 
     @Override

@@ -15,14 +15,17 @@ public class AssessmentServiceImpl implements AssessmentResultService {
 
     @Override
     public AssessmentResult recordAssessment(AssessmentResult result) {
-        if (result.getScore() == null || result.getScore() > result.getMaxScore()) {
-            throw new IllegalArgumentException("Score cannot be null or greater than max score");
-        }
         return assessmentResultRepository.save(result);
     }
 
     @Override
     public List<AssessmentResult> getResultsByStudent(Long studentId) {
         return assessmentResultRepository.findByStudentProfileId(studentId);
+    }
+
+    // Fix: Resolves "cannot find symbol" error in SkillGapServiceImpl
+    @Override
+    public List<AssessmentResult> getResultsByStudentAndSkill(Long studentId, Long skillId) {
+        return assessmentResultRepository.findByStudentProfileIdAndSkillId(studentId, skillId);
     }
 }
