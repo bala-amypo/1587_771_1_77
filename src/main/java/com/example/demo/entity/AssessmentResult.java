@@ -2,30 +2,30 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.Instant;
 
 @Entity
-@Getter
-@Setter
-@Builder
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class AssessmentResult {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 👇 TC EXPECTS THIS NAME
-    private Double scoreObtained;
+    // This MUST be named 'score' to match the Repository query
+    private Double score; 
 
-    private Double maxScore;
-    private Instant attemptedAt;
+    private String cohort;
 
     @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne
+    @JoinColumn(name = "skill_id")
     private Skill skill;
+
+    private Instant attemptedAt;
 }
