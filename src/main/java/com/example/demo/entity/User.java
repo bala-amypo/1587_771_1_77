@@ -4,29 +4,21 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "users", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "email")
-})
-@Getter
-@Setter
-@Builder
+@Table(name = "users")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class User {
-
-    public enum Role {
-        STUDENT,
-        INSTRUCTOR,
-        ADMIN
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String fullName;
 
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String email;
 
     @Column(nullable = false)
@@ -34,4 +26,8 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    public enum Role {
+        STUDENT, INSTRUCTOR, ADMIN
+    }
 }
