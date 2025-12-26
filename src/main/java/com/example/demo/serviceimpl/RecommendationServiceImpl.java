@@ -1,44 +1,40 @@
+// src/main/java/com/example/demo/serviceimpl/RecommendationServiceImpl.java
 package com.example.demo.serviceimpl;
 
 import com.example.demo.entity.*;
 import com.example.demo.repository.*;
 import com.example.demo.service.RecommendationService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class RecommendationServiceImpl implements RecommendationService {
+
     private final AssessmentResultRepository assessmentResultRepository;
     private final SkillGapRecommendationRepository recommendationRepository;
     private final StudentProfileRepository studentProfileRepository;
     private final SkillRepository skillRepository;
 
-    public RecommendationServiceImpl(AssessmentResultRepository ar, SkillGapRecommendationRepository rr, 
-                                     StudentProfileRepository spr, SkillRepository sr) {
-        this.assessmentResultRepository = ar;
-        this.recommendationRepository = rr;
-        this.studentProfileRepository = spr;
-        this.skillRepository = sr;
-    }
-
     @Override
     public SkillGapRecommendation computeRecommendationForStudentSkill(Long studentId, Long skillId) {
-        StudentProfile profile = studentProfileRepository.findById(studentId).orElseThrow();
-        Skill skill = skillRepository.findById(id).orElseThrow();
+        StudentProfile profile = studentProfileRepository.findById(studentId)
+                .orElseThrow(() -> new RuntimeException("Profile not found"));
         
-        List<AssessmentResult> results = assessmentResultRepository.findByStudentProfileIdAndSkillId(studentId, skillId);
-        double avgScore = results.stream().mapToDouble(AssessmentResult::getScore).average().orElse(0.0);
-        double gap = (skill.getMinCompetencyScore() != null ? skill.getMinCompetencyScore() : 80.0) - avgScore;
+        // FIX: Ensure 'skillId' is used correctly here
+        Skill skill = skillRepository.findById(skillId)
+                .orElseThrow(() -> new RuntimeException("Skill not found"));
 
-        String priority = gap >= 20 ? "HIGH" : (gap > 0 ? "MEDIUM" : "LOW");
+        List<AssessmentResult> results = assessmentResultRepository.findByStudentProfileIdAndSkillId(studentId, skillId);
+        
+        double avgScore = results.stream().mapToDouble(AssessmentResult::getScore).average().orElse(0.0);
         
         SkillGapRecommendation rec = SkillGapRecommendation.builder()
                 .studentProfile(profile)
                 .skill(skill)
-                .gapScore(gap)
-                .priority(priority)
-                .recommendedAction(priority.equals("HIGH") ? "Intensive Training" : "Standard Review")
+                .gapScore(100.0 - avgScore)
                 .generatedBy("SYSTEM")
                 .build();
                 
@@ -47,16 +43,14 @@ public class RecommendationServiceImpl implements RecommendationService {
 
     @Override
     public List<SkillGapRecommendation> computeRecommendationsForStudent(Long studentId) {
-        List<Skill> skills = skillRepository.findByActiveTrue();
-        List<SkillGapRecommendation> list = new ArrayList<>();
-        for (Skill s : skills) {
-            list.add(computeRecommendationForStudentSkill(studentId, s.getId()));
-        }
-        return list;
+        List<Skill> activeSkills = skillRepository.findByActiveTrue();
+        return activeSkills.stream()
+                .map(s -> computeRecommendationForStudentSkill(studentId, s.getId()))
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<SkillGapRecommendation> getRecommendationsForStudent(Long studentId) {
-        return recommendationRepository.findByStudentOrdered(studentId); // 
+        return recommendationRepository.findByStudentOrdered(studentId);
     }
 }

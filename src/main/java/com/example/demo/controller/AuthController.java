@@ -1,7 +1,8 @@
+// src/main/java/com/example/demo/controller/AuthController.java
 package com.example.demo.controller;
 
-import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.RegisterRequest;
+import com.example.demo.entity.User;
 import com.example.demo.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,14 +18,15 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest req) {
-        return ResponseEntity.ok(userService.register(req));
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest req) {
-        // The test cases expect this endpoint to exist
-        // You would typically return a JWT token here
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+        // FIX: Manually convert DTO to Entity to resolve "incompatible types"
+        User user = User.builder()
+                .email(request.getEmail())
+                .password(request.getPassword())
+                .fullName(request.getFullName())
+                .role(request.getRole())
+                .build();
+        
+        return ResponseEntity.ok(userService.register(user));
     }
 }
