@@ -16,7 +16,6 @@ public class AssessmentServiceImpl implements AssessmentResultService {
 
     @Override
     public AssessmentResult recordAssessment(AssessmentResult result) {
-        // Validation required for t008 and t041
         if (result.getScore() == null || result.getScore() < 0 || result.getScore() > 100) {
             throw new IllegalArgumentException("Score must be between 0 and 100");
         }
@@ -26,11 +25,5 @@ public class AssessmentServiceImpl implements AssessmentResultService {
     @Override
     public List<AssessmentResult> getResultsByStudent(Long studentId) {
         return repository.findByStudentProfileId(studentId);
-    }
-
-    @Override
-    public List<AssessmentResult> getResultsByStudentAndSkill(Long studentId, Long skillId) {
-        // Fix for compilation error and required for t024/t040
-        return repository.findByStudentProfileIdAndSkillId(studentId, skillId);
     }
 }
