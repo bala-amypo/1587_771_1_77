@@ -1,0 +1,42 @@
+package com.example.demo.serviceimpl;
+
+import com.example.demo.entity.AssessmentResult;
+import com.example.demo.repository.AssessmentResultRepository;
+import com.example.demo.service.AssessmentService;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class AssessmentServiceImpl implements AssessmentService {
+
+    private final AssessmentResultRepository repository;
+
+    public AssessmentServiceImpl(AssessmentResultRepository repository) {
+        this.repository = repository;
+    }
+
+    @Override
+    public AssessmentResult recordAssessment(AssessmentResult result) {
+
+        Double score = result.getScore();
+        Double max = result.getMaxScore() == null ? 100.0 : result.getMaxScore();
+        result.setMaxScore(max);
+
+        if (score == null || score < 0 || score > max) {
+            throw new IllegalArgumentException("Score must be between 0 and 100");
+        }
+
+        return repository.save(result);
+    }
+
+    @Override
+    public List<AssessmentResult> getResultsByStudent(Long studentId) {
+        return repository.findByStudentProfileId(studentId);
+    }
+
+    @Override
+    public List<AssessmentResult> getResultsByStudentAndSkill(Long studentId, Long skillId) {
+        return repository.findByStudentProfileIdAndSkillId(studentId, skillId);
+    }
+}
