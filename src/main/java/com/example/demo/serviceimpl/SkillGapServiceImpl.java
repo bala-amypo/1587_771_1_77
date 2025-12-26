@@ -1,10 +1,11 @@
+// src/main/java/com/example/demo/serviceimpl/SkillGapServiceImpl.java
 package com.example.demo.serviceimpl;
 
 import com.example.demo.entity.Skill;
 import com.example.demo.entity.SkillGapRecord;
 import com.example.demo.service.SkillGapService;
 import com.example.demo.service.SkillService;
-import com.example.demo.service.AssessmentService;
+import com.example.demo.service.AssessmentService; // Ensure this exists and is imported
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,21 +17,18 @@ import java.util.stream.Collectors;
 public class SkillGapServiceImpl implements SkillGapService {
 
     private final SkillService skillService;
-    private final AssessmentService assessmentService;
+    private final AssessmentService assessmentService; // Injecting the interface
 
-    // Renamed from getGapsByStudent to computeGaps to match interface contract
     @Override
     public List<SkillGapRecord> computeGaps(Long studentId) {
         return skillService.getActiveSkills().stream()
             .map(skill -> {
                 Double gap = calculateGap(studentId, skill);
-                // Use the constructor that accepts the Skill object and the gap
                 return new SkillGapRecord(skill, gap);
             })
             .collect(Collectors.toList());
     }
 
-    // Ensure this matches the @Override in your service interface
     @Override
     public Double calculateGap(Long studentId, Skill skill) {
         var results = assessmentService.getResultsByStudentAndSkill(studentId, skill.getId());
