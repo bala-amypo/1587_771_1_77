@@ -1,7 +1,8 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.SkillGapRecommendation;
-import com.example.demo.service.RecommendationService;
+import com.example.demo.entity.SkillGapRecord;
+import com.example.demo.service.SkillGapService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,19 +11,19 @@ import java.util.List;
 @RequestMapping("/api/gaps")
 public class SkillGapController {
 
-    private final RecommendationService service;
+    private final SkillGapService service;
 
-    public SkillGapController(RecommendationService service) {
+    public SkillGapController(SkillGapService service) {
         this.service = service;
     }
 
     @PostMapping("/compute/{studentId}")
-    public List<SkillGapRecommendation> compute(@PathVariable Long studentId) {
-        return service.computeRecommendationsForStudent(studentId);
+    public ResponseEntity<List<SkillGapRecord>> compute(@PathVariable Long studentId) {
+        return ResponseEntity.ok(service.computeGaps(studentId));
     }
 
     @GetMapping("/student/{studentId}")
-    public List<SkillGapRecommendation> get(@PathVariable Long studentId) {
-        return service.getRecommendationsForStudent(studentId);
+    public ResponseEntity<List<SkillGapRecord>> getGaps(@PathVariable Long studentId) {
+        return ResponseEntity.ok(service.getGapsByStudent(studentId));
     }
 }
