@@ -14,18 +14,31 @@ public class AssessmentResult {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // This MUST be named 'score' to match the Repository query
-    private Double score; 
-
-    private String cohort;
+    @ManyToOne
+    @JoinColumn(name = "student_profile_id", nullable = false)
+    private StudentProfile studentProfile;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "skill_id")
+    @JoinColumn(name = "skill_id", nullable = false)
     private Skill skill;
 
+    @Column(nullable = false)
+    private String assessmentId;
+
+    @Column(nullable = false)
+    private Double score;
+
+    @Builder.Default
+    private Double maxScore = 100.0;
+
+    private String cohort; // Needed for HQL aggregation in tests
+
     private Instant attemptedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        if (attemptedAt == null) {
+            attemptedAt = Instant.now();
+        }
+    }
 }
