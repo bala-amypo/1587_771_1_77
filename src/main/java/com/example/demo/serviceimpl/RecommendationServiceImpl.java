@@ -33,7 +33,7 @@ public class RecommendationServiceImpl implements RecommendationService {
         double currentScore = results.isEmpty() ? 0.0 : results.get(results.size() - 1).getScore();
         double gap = skill.getMinCompetencyScore() - currentScore;
 
-        // Gap Priority Logic for t038
+        // Required logic for t038/t040 priority
         String priority = (gap >= 20) ? "HIGH" : (gap >= 10) ? "MEDIUM" : "LOW";
 
         SkillGapRecommendation rec = SkillGapRecommendation.builder()
@@ -41,7 +41,7 @@ public class RecommendationServiceImpl implements RecommendationService {
                 .skill(skill)
                 .gapScore(gap)
                 .priority(priority)
-                .recommendedAction("Improve " + skill.getName())
+                .recommendedAction("Improve your knowledge in " + skill.getName())
                 .generatedAt(Instant.now())
                 .generatedBy("SYSTEM")
                 .build();

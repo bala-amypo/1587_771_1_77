@@ -14,6 +14,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
+    // Constructor order must match Mockito's @InjectMocks if used in setup
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -21,7 +22,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User register(RegisterRequest req) {
         if (userRepository.existsByEmail(req.getEmail())) {
-            throw new IllegalArgumentException("Email already exists"); // Required for t004 
+            throw new IllegalArgumentException("Email already exists"); // Required for t004
         }
         User user = User.builder()
                 .fullName(req.getFullName())
@@ -34,28 +35,27 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User register(User user) {
-        // Method used directly by t003 
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new IllegalArgumentException("Email already exists");
         }
-        user.setPassword(passwordEncoder.encode(user.getPassword())); // Required for t003 
+        user.setPassword(passwordEncoder.encode(user.getPassword())); // Required for t003/t051
         return userRepository.save(user);
     }
 
     @Override
     public User getById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("user not found")); // Required for t055 
+                .orElseThrow(() -> new ResourceNotFoundException("user not found")); // Required for t055
     }
 
     @Override
     public User findByEmail(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found")); // Required for t013 
+                .orElseThrow(() -> new ResourceNotFoundException("User not found")); // Required for t013
     }
 
     @Override
     public List<User> listInstructors() {
-        return userRepository.findByRole(User.Role.INSTRUCTOR); // Required for t042, t056 
+        return userRepository.findByRole(User.Role.INSTRUCTOR); // Required for t042/t056
     }
 }
