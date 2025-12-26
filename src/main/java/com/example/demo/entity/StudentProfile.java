@@ -49,17 +49,16 @@ public class StudentProfile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false) // Required for t021
+    @Column(unique = true, nullable = false)
     private String enrollmentId;
 
     private String grade;
     private Long userId;
     private Instant lastUpdatedAt;
 
-    // Fix for t015 and t044: Automatic timestamping
     @PrePersist
     @PreUpdate
-    public void preUpdate() {
+    public void onUpdate() {
         this.lastUpdatedAt = Instant.now();
     }
 }
