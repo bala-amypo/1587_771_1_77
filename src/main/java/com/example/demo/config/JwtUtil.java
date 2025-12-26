@@ -22,17 +22,15 @@ public class JwtUtil {
 
     public String generateToken(User user) {
         return Jwts.builder()
-                .setSubject(user.getEmail())
                 .claim("userId", user.getId())
                 .claim("email", user.getEmail())
                 .claim("role", user.getRole().name())
-                .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    // Required for t026, t027, t039: Must return an object that has a .getBody() method
+    // This return type allows tests to call .getBody()
     public Jws<Claims> validateAndParse(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
