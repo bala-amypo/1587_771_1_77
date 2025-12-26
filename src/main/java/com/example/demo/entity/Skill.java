@@ -16,4 +16,10 @@ public class Skill {
     private Long id;
 
     private String name;
+
+    // 👇 REQUIRED BY SERVICE
+    private String code;
+
+    // 👇 REQUIRED BY SERVICE
+    private boolean active;
 }

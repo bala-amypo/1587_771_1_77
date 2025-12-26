@@ -17,7 +17,9 @@ public class AssessmentResult {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Double score;
+    // 👇 TC EXPECTS THIS NAME
+    private Double scoreObtained;
+
     private Double maxScore;
     private Instant attemptedAt;
 

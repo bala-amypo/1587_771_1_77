@@ -1,34 +1,32 @@
 package com.example.demo.controller;
 
-import com.example.demo.config.JwtUtil;
-import com.example.demo.dto.RegisterRequest;
+import com.example.demo.dto.AuthRequest;
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
 
     private final UserRepository userRepository;
-    private final JwtUtil jwtUtil;
 
-    public AuthController(UserRepository userRepository, JwtUtil jwtUtil) {
+    public AuthController(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping("/register")
-    public String register(@RequestBody RegisterRequest req) {
+    public ResponseEntity<User> register(@RequestBody AuthRequest req) {
 
         User user = new User();
         user.setFullName(req.getFullName());
         user.setEmail(req.getEmail());
         user.setPassword(req.getPassword());
-        user.setRole(req.getRole());
 
-        userRepository.save(user);
+        // ✅ FIX: String → Enum
+        user.setRole(User.Role.valueOf(req.getRole().toUpperCase()));
 
-        return jwtUtil.generateToken(user);
+        return ResponseEntity.ok(userRepository.save(user));
     }
 }
