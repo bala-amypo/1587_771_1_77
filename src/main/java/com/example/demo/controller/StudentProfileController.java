@@ -5,35 +5,32 @@ import com.example.demo.service.StudentProfileService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/students")
 public class StudentProfileController {
+    private final StudentProfileService profileService;
 
-    private final StudentProfileService service;
-
-    public StudentProfileController(StudentProfileService service) {
-        this.service = service;
+    public StudentProfileController(StudentProfileService profileService) {
+        this.profileService = profileService;
     }
 
     @PostMapping("/")
-    public ResponseEntity<?> create(@RequestBody StudentProfile profile) {
-        return ResponseEntity.ok(service.createOrUpdateProfile(profile));
+    public ResponseEntity<?> createProfile(@RequestBody StudentProfile profile) {
+        return ResponseEntity.ok(profileService.createOrUpdateProfile(profile));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(service.getProfileById(id));
+        return ResponseEntity.ok(profileService.getProfileById(id));
     }
 
     @GetMapping("/enrollment/{enrollmentId}")
     public ResponseEntity<?> getByEnrollment(@PathVariable String enrollmentId) {
-        return ResponseEntity.ok(service.getProfileByEnrollmentId(enrollmentId));
+        return ResponseEntity.ok(profileService.getProfileByEnrollmentId(enrollmentId));
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<StudentProfile>> getAll() {
-        return ResponseEntity.ok(service.getAllProfiles());
+    public ResponseEntity<?> getAll() {
+        return ResponseEntity.ok(profileService.getAllProfiles());
     }
 }
