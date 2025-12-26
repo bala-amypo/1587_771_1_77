@@ -17,7 +17,12 @@ public class SkillGapServiceImpl implements SkillGapService {
     }
 
     @Override
+    public List<SkillGapRecord> computeGaps(Long studentId) {
+        return repository.findByStudentProfileId(studentId);
+    }
+
+    @Override
     public List<SkillGapRecord> getGapsByStudent(Long studentId) {
-        return repository.findByStudentId(studentId);
+        return repository.findByStudentProfileId(studentId);
     }
 }

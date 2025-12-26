@@ -12,11 +12,10 @@ import java.util.List;
 public class UserServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder encoder;
+    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.encoder = new BCryptPasswordEncoder();
     }
 
     @Override
@@ -28,8 +27,8 @@ public class UserServiceImpl implements AuthService {
 
         user.setPassword(encoder.encode(user.getPassword()));
 
-        if (user.getRole() == null) {
-            user.setRole(User.Role.STUDENT);
+        if (user.getRole() == null || user.getRole().isBlank()) {
+            user.setRole("STUDENT");   // ✅ STRING
         }
 
         return userRepository.save(user);
@@ -49,6 +48,6 @@ public class UserServiceImpl implements AuthService {
 
     @Override
     public List<User> listInstructors() {
-        return userRepository.findByRole(User.Role.INSTRUCTOR);
+        return userRepository.findByRole("INSTRUCTOR"); // ✅ STRING
     }
 }
