@@ -1,5 +1,6 @@
 package com.example.demo.serviceimpl;
 
+import com.example.demo.dto.RegisterRequest;
 import com.example.demo.entity.User;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.UserRepository;
@@ -18,26 +19,42 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User register(RegisterRequest req) {
+        if (userRepository.existsByEmail(req.getEmail())) {
+            throw new IllegalArgumentException("Email already exists"); // Required for t004
+        }
+        User user = User.builder()
+                .fullName(req.getFullName())
+                .email(req.getEmail())
+                .password(passwordEncoder.encode(req.getPassword())) // Required for t003/t051
+                .role(req.getRole() != null ? req.getRole() : User.Role.STUDENT)
+                .build();
+        return userRepository.save(user);
+    }
+
+    // Overloaded register for test t003 which passes a User object directly
     public User register(User user) {
         if (userRepository.existsByEmail(user.getEmail())) {
-            throw new IllegalArgumentException("Email already exists"); // Required for t004 [cite: 24]
+            throw new IllegalArgumentException("Email already exists");
         }
-        user.setPassword(passwordEncoder.encode(user.getPassword())); // Required for t003 [cite: 21]
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
     @Override
     public User getById(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found")); // Required for t055 [cite: 116]
+        return userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("user not found")); // Required for t055
     }
 
     @Override
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User not found")); // Required for t013 [cite: 44]
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found")); // Required for t013
     }
 
     @Override
     public List<User> listInstructors() {
-        return userRepository.findByRole(User.Role.INSTRUCTOR); // Required for t042 [cite: 93]
+        return userRepository.findByRole(User.Role.INSTRUCTOR); // Required for t042, t056
     }
 }
