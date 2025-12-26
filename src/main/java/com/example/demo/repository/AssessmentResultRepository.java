@@ -9,8 +9,6 @@ import java.util.List;
 
 public interface AssessmentResultRepository extends JpaRepository<AssessmentResult, Long> {
     
-    List<AssessmentResult> findByStudentProfileId(Long studentProfileId);
-
     List<AssessmentResult> findByStudentProfileIdAndSkillId(Long studentId, Long skillId);
 
     @Query("SELECT AVG(a.score) FROM AssessmentResult a WHERE a.studentProfile.cohort = ?1 AND a.skill.id = ?2")

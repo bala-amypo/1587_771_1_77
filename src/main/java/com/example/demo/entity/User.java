@@ -1,37 +1,25 @@
+// src/main/java/com/example/demo/entity/User.java
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.Instant;
 
 @Entity
 @Table(name = "users")
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = false)
-    private String fullName;
-
-    @Column(unique = true, nullable = false)
+    @Column(unique = true)
     private String email;
-
-    @Column(nullable = false) // Stored as BCrypt hash
     private String password;
-
+    private String fullName;
     @Enumerated(EnumType.STRING)
-    @Builder.Default
-    private Role role = Role.STUDENT;
+    private Role role;
 
-    @Builder.Default
-    private Instant createdAt = Instant.now();
-
-    public enum Role {
-        STUDENT, INSTRUCTOR, ADMIN
-    }
+    public enum Role { STUDENT, INSTRUCTOR, ADMIN }
 }

@@ -1,29 +1,21 @@
+// src/main/java/com/example/demo/entity/Skill.java
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "skills")
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Skill {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(unique = true, nullable = false)
-    private String code; // Often referred to as skillName in spec
-
-    @Column(nullable = false)
-    private String category;
-
-    private String description;
-
-    private Double minCompetencyScore;
-
+    @Column(unique = true)
+    private String code;
+    private String name; // This provides the getName() method via @Data
     @Builder.Default
     private boolean active = true;
 }
