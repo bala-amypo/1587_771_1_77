@@ -16,7 +16,7 @@ public class AssessmentServiceImpl implements AssessmentResultService {
 
     @Override
     public AssessmentResult recordAssessment(AssessmentResult result) {
-        // Validation for t008 and t041: Score must be between 0 and 100
+        // Fix for t008 and t041
         if (result.getScore() == null || result.getScore() < 0 || result.getScore() > 100) {
             throw new IllegalArgumentException("Invalid Score: Must be between 0 and 100");
         }
