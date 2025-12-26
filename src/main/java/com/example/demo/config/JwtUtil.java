@@ -15,23 +15,22 @@ public class JwtUtil {
     private final Key key;
     private final long expirationMs;
 
-    // 🔥 REQUIRED BY TEST CASE
+    // ✅ REQUIRED BY TEST CASE
     public JwtUtil(String secret, long expirationMs) {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
         this.expirationMs = expirationMs;
     }
 
-    // 🔥 REQUIRED BY SPRING BOOT
+    // ✅ REQUIRED BY SPRING BOOT
     public JwtUtil(
             @Value("${jwt.secret}") String secret,
             @Value("${jwt.expiration}") long expirationMs,
-            @Value("${spring.application.name:demo}") String dummy // avoids duplicate ctor
+            @Value("${spring.application.name:demo}") String dummy
     ) {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
         this.expirationMs = expirationMs;
     }
 
-    // 🔥 TC EXPECTS USER OBJECT
     public String generateToken(User user) {
         return Jwts.builder()
                 .claim("userId", user.getId())
@@ -43,7 +42,8 @@ public class JwtUtil {
                 .compact();
     }
 
-    public Claims extractClaims(String token) {
+    // ✅ USED BY FILTER
+    public Claims validateAndParse(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
