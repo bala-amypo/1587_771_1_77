@@ -1,7 +1,7 @@
 package com.example.demo.entity;
 
 import lombok.*;
-import javax.persistence.*;
+import jakarta.persistence.*; // Use jakarta for Spring Boot 3+, javax for 2.x
 import java.time.Instant;
 
 @Entity
@@ -22,7 +22,7 @@ public class StudentProfile {
     @Column(name = "enrollment_id", unique = true)
     private String enrollmentId;
 
-    // Added to resolve "cannot find symbol: method grade(java.lang.String)"
+    // Add this field to fix the StudentProfileBuilder error in tests
     private String grade;
 
     private String cohort;
