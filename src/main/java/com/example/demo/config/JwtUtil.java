@@ -1,10 +1,7 @@
 package com.example.demo.config;
 
 import com.example.demo.entity.User;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -12,37 +9,38 @@ import org.springframework.stereotype.Component;
 import java.security.Key;
 import java.util.Date;
 
-@Component   // ⭐ THIS FIXES YOUR RUNTIME ERROR
+@Component
 public class JwtUtil {
 
     private final Key key;
-    private final long validityInMs;
+    private final long expirationMs;
 
-    // ✅ Constructor exactly as TC expects
+    // Spring constructor (used at runtime)
     public JwtUtil(
-            @Value("${jwt.secret:my-secret-key-my-secret-key}") String secret,
-            @Value("${jwt.validity:3600000}") long validityInMs
+            @Value("${jwt.secret}") String secret,
+            @Value("${jwt.expiration}") long expirationMs
     ) {
-        this.key = Keys.hmacShaKeyFor(secret.getBytes());
-        this.validityInMs = validityInMs;
+        this.key = Keys.hmacShaKeyFor(secret.getBytes()); // ✅ FIX
+        this.expirationMs = expirationMs;
     }
 
-    // ✅ TC requires this
-    public String generateToken(User user) {
-        Date now = new Date();
-        Date expiry = new Date(now.getTime() + validityInMs);
+    // TestNG constructor (used in your test file)
+    public JwtUtil(String secret, long expirationMs) {
+        this.key = Keys.hmacShaKeyFor(secret.getBytes()); // ✅ FIX
+        this.expirationMs = expirationMs;
+    }
 
+    public String generateToken(User user) {
         return Jwts.builder()
-                .setSubject(user.getEmail())
                 .claim("userId", user.getId())
-                .claim("role", user.getRole())
-                .setIssuedAt(now)
-                .setExpiration(expiry)
+                .claim("email", user.getEmail())
+                .claim("role", user.getRole().name())
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + expirationMs))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    // ✅ TC requires this
     public Jws<Claims> validateAndParse(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
