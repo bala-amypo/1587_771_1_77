@@ -22,13 +22,13 @@ public class AssessmentServiceImpl implements AssessmentResultService {
         return repository.save(result);
     }
 
-    // FIX 1: Add this to satisfy the specific interface requirement shown in your error log
+    // Fixes "does not override abstract method getResultsByStudent"
     @Override
     public List<AssessmentResult> getResultsByStudent(Long studentId) {
         return repository.findByStudentId(studentId);
     }
 
-    // FIX 2: Ensure this matches the repository method we just added
+    // Fixes "does not override abstract method getResultsByStudentAndSkill"
     @Override
     public List<AssessmentResult> getResultsByStudentAndSkill(Long studentId, Long skillId) {
         return repository.findByStudentIdAndSkillId(studentId, skillId);
