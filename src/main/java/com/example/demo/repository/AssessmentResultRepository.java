@@ -10,16 +10,20 @@ import java.util.List;
 @Repository
 public interface AssessmentResultRepository extends JpaRepository<AssessmentResult, Long> {
 
-    // Fixes compilation error in AssessmentServiceImpl
+    // Fixes AssessmentServiceImpl compilation error
     List<AssessmentResult> findByStudentProfileId(Long studentProfileId);
 
-    // Fixes compilation error in LargeIntegrationTestNGTest
+    // Fixes LargeIntegrationTestNGTest lines 644-645
     @Query("SELECT a FROM AssessmentResult a WHERE a.studentProfile.userId = :userId " +
            "AND a.attemptedAt BETWEEN :start AND :end")
     List<AssessmentResult> findResultsForStudentBetween(Long userId, Instant start, Instant end);
     
-    // Add these for other tests in your LargeIntegrationTest file
+    // Required for HQL tests (t030, t031)
+    @Query("SELECT AVG(a.score) FROM AssessmentResult a WHERE a.studentProfile.cohort = :cohort AND a.skill.id = :skillId")
     Double avgScoreByCohortAndSkill(String cohort, Long skillId);
+
+    @Query("SELECT a FROM AssessmentResult a WHERE a.studentProfile.userId = :userId ORDER BY a.attemptedAt DESC")
     List<AssessmentResult> findRecentByStudent(Long userId);
+
     List<AssessmentResult> findByStudentProfileIdAndSkillId(Long profileId, Long skillId);
 }
