@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface AssessmentResultRepository extends JpaRepository<AssessmentResult, Long> {
     List<AssessmentResult> findByStudentProfileId(Long studentProfileId);
+    
     List<AssessmentResult> findByStudentProfileIdAndSkillId(Long studentId, Long skillId);
 
     @Query("SELECT a FROM AssessmentResult a WHERE a.studentProfile.id = :studentId ORDER BY a.attemptedAt DESC")
