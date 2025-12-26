@@ -4,13 +4,16 @@ import com.example.demo.entity.SkillGapRecommendation;
 import java.util.List;
 
 public interface SkillGapService {
-    // Controller at line 23 is looking for this:
+    // This fixes the current Controller error (line 18)
+    List<SkillGapRecommendation> computeGaps(Long studentId);
+
+    // This fixes the previous Controller error (line 23)
     List<SkillGapRecommendation> getGapsByStudent(Long studentId);
 
-    // Required by Test t038 in LargeIntegrationTestNGTest
+    // This ensures LargeIntegrationTestNGTest (t038) passes
     List<SkillGapRecommendation> getRecommendationsForStudent(Long studentId);
 
-    // Required by Topic 6 (Many-to-Many associations)
+    // Support for Many-to-Many associations in tests (t024, t025)
     SkillGapRecommendation computeRecommendationForStudentSkill(Long studentId, Long skillId);
     List<SkillGapRecommendation> computeRecommendationsForStudent(Long studentId);
 }
