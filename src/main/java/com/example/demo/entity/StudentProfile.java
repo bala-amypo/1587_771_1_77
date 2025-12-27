@@ -24,14 +24,12 @@ public class StudentProfile {
     @Column(unique = true)
     private String enrollmentId;
 
-    // REQUIRED BY TESTS
     private String grade;
 
     private Integer yearLevel;
 
     private Boolean active = true;
 
-    // ✅ MUST NOT BE NULL (required by TestNG)
     @Builder.Default
     private Instant lastUpdatedAt = Instant.now();
 
