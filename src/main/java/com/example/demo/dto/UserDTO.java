@@ -19,7 +19,7 @@ public class UserDTO {
         this.role = role;
     }
 
-    // Optional helper constructor
+
     public UserDTO(User user) {
         this.id = user.getId();
         this.fullName = user.getFullName();
@@ -59,3 +59,7 @@ public class UserDTO {
         this.role = role;
     }
 }
+
+
+
+
