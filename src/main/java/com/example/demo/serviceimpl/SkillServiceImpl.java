@@ -48,8 +48,6 @@ package com.example.demo.serviceimpl;
 import com.example.demo.entity.Skill;
 import com.example.demo.repository.SkillRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 @Service
@@ -62,34 +60,36 @@ public class SkillServiceImpl {
     }
 
     public Skill createSkill(Skill skill) {
-        // Validation for uniqueness (Existing)
+        // Requirement: check uniqueness and throw message with "unique" keyword
         if (repo.findByCode(skill.getCode()).isPresent()) {
-            throw new IllegalArgumentException("unique");
+            throw new IllegalArgumentException("skill code must be unique");
         }
         
-        // ADDED: Validation for minCompetencyScore (Requirement)
-        if (skill.getMinCompetencyScore() < 0) {
-            throw new IllegalArgumentException("minCompetencyScore must be positive");
+        // Ensure score validation is triggered if not using @PrePersist
+        if (skill.getMinCompetencyScore() != null && (skill.getMinCompetencyScore() < 0 || skill.getMinCompetencyScore() > 100)) {
+            throw new IllegalArgumentException("Score must be between 0 and 100");
         }
-        
+
         return repo.save(skill);
     }
 
     public Skill updateSkill(Long id, Skill skill) {
         Skill existing = repo.findById(id)
-                .orElseThrow(() -> new RuntimeException("not found"));
+                .orElseThrow(() -> new RuntimeException("skill not found"));
 
         existing.setName(skill.getName());
-        // Added setting the code/score if necessary based on your skill entity fields
+        existing.setCategory(skill.getCategory());
+        existing.setMinCompetencyScore(skill.getMinCompetencyScore());
+        
         return repo.save(existing);
     }
 
     public Skill getById(Long id) {
+        // Requirement: message must contain "not found"
         return repo.findById(id)
-                .orElseThrow(() -> new RuntimeException("not found"));
+                .orElseThrow(() -> new RuntimeException("skill not found"));
     }
 
-    // ADDED: Requirement for List All
     public List<Skill> getAllSkills() {
         return repo.findAll();
     }
@@ -98,11 +98,9 @@ public class SkillServiceImpl {
         return repo.findByActiveTrue();
     }
 
-    // ADDED: Requirement for deactivateSkill
-    @Transactional
     public void deactivateSkill(Long id) {
         Skill skill = repo.findById(id)
-                .orElseThrow(() -> new RuntimeException("not found"));
+                .orElseThrow(() -> new RuntimeException("skill not found"));
         skill.setActive(false);
         repo.save(skill);
     }
