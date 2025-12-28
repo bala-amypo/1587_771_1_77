@@ -2,9 +2,12 @@
 
 // import com.example.demo.entity.StudentProfile;
 // import com.example.demo.repository.StudentProfileRepository;
+// import com.example.demo.service.StudentProfileService; //1
+// import org.springframework.stereotype.Service; //2
 // import java.util.List;
-
-// public class StudentProfileServiceImpl {
+// @Service
+// public class StudentProfileServiceImpl implements StudentProfileService {
+// {
 
 //     private final StudentProfileRepository repo;
 
@@ -31,12 +34,6 @@
 //     }
 // }
 
-
-
-
-
-
-
 package com.example.demo.serviceimpl;
 
 import com.example.demo.entity.StudentProfile;
@@ -57,10 +54,6 @@ public class StudentProfileServiceImpl implements StudentProfileService {
 
     @Override
     public StudentProfile createOrUpdateProfile(StudentProfile profile) {
-        // ADDED: Requirement to enforce unique enrollmentId
-        if (profile.getId() == null && repo.existsByEnrollmentId(profile.getEnrollmentId())) {
-            throw new IllegalArgumentException("enrollmentId already exists");
-        }
         return repo.save(profile);
     }
 
@@ -79,12 +72,5 @@ public class StudentProfileServiceImpl implements StudentProfileService {
     @Override
     public List<StudentProfile> getAllProfiles() {
         return repo.findAll();
-    }
-
-    // ADDED: Implementation for getProfileByEnrollmentId
-    @Override
-    public StudentProfile getProfileByEnrollmentId(String enrollmentId) {
-        return repo.findByEnrollmentId(enrollmentId)
-                .orElseThrow(() -> new RuntimeException("profile not found"));
     }
 }
