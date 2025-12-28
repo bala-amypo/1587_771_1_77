@@ -1,27 +1,5 @@
 // package com.example.demo.controller;
 
-// import org.springframework.web.bind.annotation.*;
-
-// @RestController
-// @RequestMapping("/auth")
-// public class AuthController {
-
-//     @PostMapping("/login")
-//     public String login() {
-//         return "OK";
-//     }
-
-//     @PostMapping("/register")
-//     public String register() {
-//         return "OK";
-//     }
-// }
-
-
-
-
-// package com.example.demo.controller;  2 imp swagger
-
 // import com.example.demo.entity.User;
 // import com.example.demo.service.UserService;
 // import org.springframework.http.ResponseEntity;
@@ -31,58 +9,114 @@
 
 // @RestController
 // @RequestMapping("/users")
-// public class UserController {
+// public class AuthController {
 
 //     private final UserService userService;
 
-//     public UserController(UserService userService) {
+//     public AuthController(UserService userService) {
 //         this.userService = userService;
 //     }
 
+//     // ✅ NEW POST METHOD (ONLY ADDITION)
+//     @PostMapping
+//     public ResponseEntity<User> createUser(@RequestBody User user) {
+//         return ResponseEntity.ok(userService.register(user));
+//     }
+
+//     // EXISTING METHODS (DO NOT TOUCH)
 //     @GetMapping("/{id}")
-//     public ResponseEntity<User> getUser(@PathVariable Long id) {
+//     public ResponseEntity<User> getById(@PathVariable Long id) {
 //         return ResponseEntity.ok(userService.getById(id));
 //     }
 
 //     @GetMapping("/instructors")
-//     public ResponseEntity<List<User>> instructors() {
+//     public ResponseEntity<List<User>> getInstructors() {
 //         return ResponseEntity.ok(userService.listInstructors());
 //     }
 // }
 
+
+
+
+
 package com.example.demo.controller;
 
+import com.example.demo.config.JwtUtil;
+import com.example.demo.dto.LoginRequest;
+import com.example.demo.dto.LoginResponse;
+import com.example.demo.dto.UserDTO;
 import com.example.demo.entity.User;
 import com.example.demo.service.UserService;
-import org.springframework.http.ResponseEntity;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/auth")
 public class AuthController {
 
     private final UserService userService;
+    private final JwtUtil jwtUtil;
 
-    public AuthController(UserService userService) {
+    public AuthController(UserService userService, JwtUtil jwtUtil) {
         this.userService = userService;
+        this.jwtUtil = jwtUtil;
     }
 
-    // ✅ NEW POST METHOD (ONLY ADDITION)
-    @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        return ResponseEntity.ok(userService.register(user));
+    // REGISTER (PUBLIC)
+    @PostMapping("/register")
+    @Operation(summary = "Register new user")
+    public UserDTO register(@RequestBody User user) {
+        return toDTO(userService.register(user));
     }
 
-    // EXISTING METHODS (DO NOT TOUCH)
-    @GetMapping("/{id}")
-    public ResponseEntity<User> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(userService.getById(id));
+    // LOGIN + RETURN TOKEN (PUBLIC)
+    @PostMapping("/login")
+    @Operation(summary = "User login")
+    public LoginResponse login(@RequestBody LoginRequest request) {
+
+        User user = userService.login(request.getUsername(), request.getPassword());
+
+        String token = jwtUtil.generateToken(user);
+
+        return new LoginResponse(
+                token,
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getRole().name()
+        );
     }
 
-    @GetMapping("/instructors")
-    public ResponseEntity<List<User>> getInstructors() {
-        return ResponseEntity.ok(userService.listInstructors());
+    // PUBLIC APIs
+    // @GetMapping("/user/{id}")
+    // public UserDTO getUser(@PathVariable Long id) {
+    //     return toDTO(userService.getById(id));
+    // }
+
+    // @GetMapping("/users")
+    // public List<User> listUsers() {
+    //     return userService.getAllUsers();
+    // }
+
+    // PROTECTED API
+    // @PutMapping("/deactivate/{id}")
+    // @Operation(
+    //         summary = "Deactivate user (Requires JWT)",
+    //         security = @SecurityRequirement(name = "bearerAuth")
+    // )
+    // public void deactivate(@PathVariable Long id) {
+    //     userService.deactivateUser(id);
+    // }
+
+    private UserDTO toDTO(User u) {
+        return UserDTO.builder()
+                .id(u.getId())
+                .username(u.getUsername())
+                .email(u.getEmail())
+                .role(u.getRole())
+                .build();
     }
 }
