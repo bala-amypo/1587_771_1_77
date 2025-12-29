@@ -28,7 +28,7 @@ public class AssessmentResult {
 
     private Double score;
 
-    // ✅ REQUIRED BY TESTS
+  
     @Builder.Default
     private Double maxScore = 100.0;
 
