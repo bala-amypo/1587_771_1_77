@@ -1,8 +1,12 @@
 
-package com.example.demo.service;
+// package com.example.demo.service;
 
-import com.example.demo.entity.AssessmentResult;
+// import com.example.demo.entity.AssessmentResult;
 
-public interface AssessmentService {
-    AssessmentResult recordAssessment(AssessmentResult result);
-}
+// public interface AssessmentService {
+//     AssessmentResult recordAssessment(AssessmentResult result);
+// }
+
+
+
+
