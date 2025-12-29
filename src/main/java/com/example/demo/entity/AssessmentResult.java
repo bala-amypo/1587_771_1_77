@@ -63,7 +63,7 @@ public class AssessmentResult {
     private String assessmentId;
 
     @Column(nullable = false)
-    private Double score; // scoreObtained
+    private Double score; 
 
     @Builder.Default
     private Double maxScore = 100.0;
