@@ -18,7 +18,7 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
     }
 
-    // Register new user
+ 
     @Override
     public User register(User user) {
 
@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
-    // Login user
+
     @Override
     public User login(String username, String password) {
 
@@ -46,20 +46,18 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-    // Get user by id
     @Override
     public User getById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    // Get all users
     @Override
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
-    // Soft delete / deactivate
+
     @Override
     public void deactivateUser(Long id) {
         User user = getById(id);
