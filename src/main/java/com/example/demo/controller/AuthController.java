@@ -24,14 +24,13 @@ public class AuthController {
         this.jwtUtil = jwtUtil;
     }
 
-    // REGISTER (PUBLIC)
+  
     @PostMapping("/register")
     @Operation(summary = "Register new user")
     public UserDTO register(@RequestBody User user) {
         return toDTO(userService.register(user));
     }
 
-    // LOGIN + RETURN TOKEN (PUBLIC)
     @PostMapping("/login")
     @Operation(summary = "User login")
     public LoginResponse login(@RequestBody LoginRequest request) {
